@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/btn_navigation_first"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/navigation_first"
+            android:button="@null"
+            android:gravity="center_horizontal"/>
+        <RadioButton
+            android:id="@+id/btn_navigation_square"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/navigation_square"
+            android:button="@null"
+            android:gravity="center_horizontal"/>
+        <RadioButton
+            android:id="@+id/btn_navigation_chat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/navigation_chat"
+            android:button="@null"
+            android:gravity="center_horizontal"/>
+        <RadioButton
+            android:id="@+id/btn_navigation_information"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/navigation_information"
+            android:button="@null"
+            android:gravity="center_horizontal"/>
+        <RadioButton
+            android:id="@+id/btn_navigation_my"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/navigation_my"
+            android:button="@null"
+            android:gravity="center_horizontal"/>
+    </RadioGroup>
+
+</LinearLayout>

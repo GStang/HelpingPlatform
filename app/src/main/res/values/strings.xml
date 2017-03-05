@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">HelpingPlatform</string>
+
+
+    /**导航栏*/
+    <string name="navigation_first">首页</string>
+    <string name="navigation_square">广场</string>
+    <string name="navigation_chat">约</string>
+    <string name="navigation_information">资料</string>
+    <string name="navigation_my">我的</string>
 </resources>
+
+
