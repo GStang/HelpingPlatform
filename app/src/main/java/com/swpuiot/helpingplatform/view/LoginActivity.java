@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -70,7 +71,8 @@ public class LoginActivity extends AppCompatActivity {
         loginFragment = LoginFragment.newInstance();
         registerFragment = RegisterFragment.newInstance();
         manager = getSupportFragmentManager();
-        manager.beginTransaction().add(R.id.content_contain, loginFragment).commit();
+        manager.beginTransaction()
+                .add(R.id.content_contain, loginFragment).commit();
     }
 
 }
