@@ -1,15 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#fff">
+    android:background="#fff"
+    android:weightSum="1">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/navigation_chat"
-        android:textSize="30sp"/>
+        android:textSize="30sp"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
-</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="日期"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/textView"
+        android:layout_toStartOf="@+id/editText" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="时间"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/editText"
+        android:layout_toStartOf="@+id/editText" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="time"
+        android:ems="10"
+        android:id="@+id/editText2"
+        android:layout_below="@+id/editText"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:minLines="3"
+        android:maxLines="5"
+        android:ems="10"
+        android:id="@+id/editText3"
+        android:background="@drawable/chat_edit_bg"
+        android:layout_below="@+id/editText2"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="计划"
+        android:id="@+id/textView4"
+        android:layout_alignTop="@+id/editText3"
+        android:layout_alignStart="@+id/textView3" />
+
+    <ImageButton
+        android:id="@+id/chat_button_pic"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/pic"
+        android:layout_below="@+id/editText3"
+        android:layout_alignEnd="@+id/editText3" />
+
+    <ImageButton
+        android:id="@+id/chat_button_success"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/success"
+        android:layout_marginTop="92dp"
+        android:layout_below="@+id/editText3"
+        android:layout_toEndOf="@+id/textView" />
+    <ImageButton
+        android:id="@+id/chat_button_error"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/error"
+        android:layout_alignTop="@+id/chat_button_success"
+        android:layout_toStartOf="@+id/textView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="点击上传图片→"
+        android:id="@+id/textView5"
+        android:layout_alignBottom="@+id/chat_button_pic"
+        android:layout_alignStart="@+id/editText3" />
+
+
+</RelativeLayout>
