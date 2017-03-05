@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.fragment.LoginFragment;
 import com.swpuiot.helpingplatform.fragment.RegisterFragment;
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Fresco.initialize(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         init();

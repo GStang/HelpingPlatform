@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 
 import com.swpuiot.helpingplatform.R;
+import com.swpuiot.helpingplatform.view.MainActivity;
 
 /**
  * Created by DuZeming on 2017/3/5.
@@ -65,18 +66,22 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
             case R.id.btn_navigation_square:
                 fragmentTransaction.replace(R.id.layout_context,squareFragment);
                 fragmentTransaction.commit();
+                ((MainActivity)getActivity()).gettoolbar().setTitle("广场");
                 break;
             case R.id.btn_navigation_chat:
                 fragmentTransaction.replace(R.id.layout_context,chatFragment);
                 fragmentTransaction.commit();
+                ((MainActivity)getActivity()).gettoolbar().setTitle("约");
                 break;
             case R.id.btn_navigation_information:
                 fragmentTransaction.replace(R.id.layout_context,informationFragment);
                 fragmentTransaction.commit();
+                ((MainActivity)getActivity()).gettoolbar().setTitle("资料");
                 break;
             case R.id.btn_navigation_my:
                 fragmentTransaction.replace(R.id.layout_context,myFragment);
                 fragmentTransaction.commit();
+                ((MainActivity)getActivity()).gettoolbar().setTitle("我的");
                 break;
             default:
                 break;
