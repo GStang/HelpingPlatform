@@ -1,36 +1,99 @@
 package com.swpuiot.helpingplatform.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.swpuiot.helpingplatform.R;
+
+import java.util.List;
 
 /**
  * Created by DuZeming on 2017/3/5.
  */
 public class FirstRecyclerAdapter extends RecyclerView.Adapter<FirstViewHolder>{
-    @Override
-    public FirstViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+
+    private LayoutInflater inflater;
+    private Context context;
+    private List<String>titleList;
+    private List<String>wordList;
+    private List<Integer>imageList;
+
+    public interface OnItemClickListener{
+        void onItemClick(View view,int position);
+        void onItemLongClick(View view,int position);
+    }
+
+    private OnItemClickListener onItemClickListener;
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+        this.onItemClickListener=onItemClickListener;
+    }
+
+    public FirstRecyclerAdapter(Context context,List<String>titleList,List<String>wordList,
+                                List<Integer>imageList){
+        this.context=context;
+        this.titleList=titleList;
+        this.wordList=wordList;
+        this.imageList=imageList;
+        inflater=LayoutInflater.from(context);
     }
 
     @Override
-    public void onBindViewHolder(FirstViewHolder holder, int position) {
+    public FirstViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view=inflater.inflate(R.layout.item_first,parent,false);
+        FirstViewHolder firstViewHolder=new FirstViewHolder(view);
+        return firstViewHolder;
+    }
+    public void addData(int pos){
+        notifyItemInserted(pos);
+    }
+    public void removeData(int pos){
+        notifyItemRemoved(pos);
+    }
 
+    @Override
+    public void onBindViewHolder(final FirstViewHolder holder, final int position) {
+        holder.title.setText(titleList.get(position));
+        holder.wordContext.setText(wordList.get(position));
+        holder.imageView.setImageResource(imageList.get(position));
+
+        if(onItemClickListener!=null){
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onItemClick(holder.itemView,position);
+                }
+            });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    onItemClickListener.onItemLongClick(holder.itemView,position);
+                    return false;
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return titleList.size();
     }
 }
 class FirstViewHolder extends RecyclerView.ViewHolder{
 
     TextView title;
     TextView wordContext;
-
+    ImageView imageView;
 
     public FirstViewHolder(View itemView) {
         super(itemView);
+        title= (TextView) itemView.findViewById(R.id.tv_first_title);
+        wordContext= (TextView) itemView.findViewById(R.id.tv_first_word);
+        imageView= (ImageView) itemView.findViewById(R.id.iv_first_image);
     }
 }
