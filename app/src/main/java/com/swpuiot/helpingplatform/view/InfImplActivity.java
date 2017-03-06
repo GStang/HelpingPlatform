@@ -19,7 +19,10 @@ public class InfImplActivity extends AppCompatActivity {
         tv_show = (TextView) findViewById(R.id.tv_show);
 
         String str = getIntent().getStringExtra("sbj");
+        String string=getIntent().getStringExtra("title");
         if (str != null)
             tv_show.setText(str);
+        if (string !=null)
+            tv_show.setText(string);
     }
 }

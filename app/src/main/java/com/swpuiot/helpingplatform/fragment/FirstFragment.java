@@ -1,10 +1,13 @@
 package com.swpuiot.helpingplatform.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,10 +15,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.FirstRecyclerAdapter;
 import com.swpuiot.helpingplatform.utils.BannerLoader;
+import com.swpuiot.helpingplatform.view.InfImplActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.loader.ImageLoader;
@@ -24,11 +29,13 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 /**
  * Created by DuZeming on 2017/3/5.
  */
-public class FirstFragment extends Fragment{
+public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private Banner banner;
     private List<Integer>bannerImage;
@@ -38,6 +45,13 @@ public class FirstFragment extends Fragment{
     private List<Integer>recyclerImage;
     private List<String>recyclerTitle;
     private List<String>recyclerWord;
+    private static final int REFRESH_COMPLETE=0x110;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+
+    private List<String>a=Arrays.asList("你好");
+    private List<String>b=Arrays.asList("好呀好呀");
+    private List<Integer>c=Arrays.asList(R.drawable.car4);
 
 
     @Nullable
@@ -91,7 +105,22 @@ public class FirstFragment extends Fragment{
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        firstRecyclerAdapter.setOnItemClickListener(new FirstRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(getActivity(), InfImplActivity.class);
+                intent.putExtra("title", recyclerTitle.get(position));
+                startActivity(intent);
+            }
 
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        });
+
+        swipeRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.swipe_first);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         banner= (Banner) view.findViewById(R.id.banner_first);
         banner.setImageLoader(new BannerLoader())
@@ -106,4 +135,14 @@ public class FirstFragment extends Fragment{
         return view;
     }
 
+
+    @Override
+    public void onRefresh() {
+
+        Toast.makeText(getActivity(), "访问", Toast.LENGTH_SHORT).show();
+        firstRecyclerAdapter.upData(a, b, c);
+        firstRecyclerAdapter.notifyDataSetChanged();
+        firstRecyclerAdapter.addData(0);
+        swipeRefreshLayout.setRefreshing(false);
+    }
 }

@@ -1,6 +1,7 @@
 package com.swpuiot.helpingplatform.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.swpuiot.helpingplatform.R;
 
 import java.util.List;
@@ -51,6 +53,14 @@ public class FirstRecyclerAdapter extends RecyclerView.Adapter<FirstViewHolder>{
     public void addData(int pos){
         notifyItemInserted(pos);
     }
+
+    public void upData(List<String>titleList,List<String>wordList,
+                       List<Integer>imageList){
+        this.titleList=titleList;
+        this.wordList=wordList;
+        this.imageList=imageList;
+    }
+
     public void removeData(int pos){
         notifyItemRemoved(pos);
     }
@@ -59,7 +69,8 @@ public class FirstRecyclerAdapter extends RecyclerView.Adapter<FirstViewHolder>{
     public void onBindViewHolder(final FirstViewHolder holder, final int position) {
         holder.title.setText(titleList.get(position));
         holder.wordContext.setText(wordList.get(position));
-        holder.imageView.setImageResource(imageList.get(position));
+        Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/"+imageList.get(position));
+        holder.imageView.setImageURI(uri);
 
         if(onItemClickListener!=null){
 
@@ -88,12 +99,12 @@ class FirstViewHolder extends RecyclerView.ViewHolder{
 
     TextView title;
     TextView wordContext;
-    ImageView imageView;
+    SimpleDraweeView imageView;
 
     public FirstViewHolder(View itemView) {
         super(itemView);
         title= (TextView) itemView.findViewById(R.id.tv_first_title);
         wordContext= (TextView) itemView.findViewById(R.id.tv_first_word);
-        imageView= (ImageView) itemView.findViewById(R.id.iv_first_image);
+        imageView= (SimpleDraweeView) itemView.findViewById(R.id.iv_first_image);
     }
 }
