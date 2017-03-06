@@ -60,27 +60,52 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
 
         switch (v.getId()){
             case R.id.btn_navigation_first:
-                fragmentTransaction.replace(R.id.layout_context,firstFragment);
-                fragmentTransaction.commit();
+                if(firstFragment.isAdded()){
+                    fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(informationFragment)
+                            .hide(myFragment).show(firstFragment).commit();
+                }else {
+                    fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(informationFragment)
+                            .hide(myFragment).add(R.id.layout_context,firstFragment).commit();
+                }
                 break;
             case R.id.btn_navigation_square:
-                fragmentTransaction.replace(R.id.layout_context,squareFragment);
-                fragmentTransaction.commit();
+                if(squareFragment.isAdded()){
+                    fragmentTransaction.hide(firstFragment).hide(chatFragment).hide(informationFragment)
+                            .hide(myFragment).show(squareFragment).commit();
+                }else {
+                    fragmentTransaction.hide(firstFragment).hide(chatFragment).hide(informationFragment)
+                            .hide(myFragment).add(R.id.layout_context,squareFragment).commit();
+                }
                 ((MainActivity)getActivity()).gettoolbar().setTitle("广场");
                 break;
             case R.id.btn_navigation_chat:
-                fragmentTransaction.replace(R.id.layout_context,chatFragment);
-                fragmentTransaction.commit();
+                if(chatFragment.isAdded()){
+                    fragmentTransaction.hide(squareFragment).hide(firstFragment).hide(informationFragment)
+                            .hide(myFragment).show(chatFragment).commit();
+                }else {
+                    fragmentTransaction.hide(squareFragment).hide(firstFragment).hide(informationFragment)
+                            .hide(myFragment).add(R.id.layout_context,chatFragment).commit();
+                }
                 ((MainActivity)getActivity()).gettoolbar().setTitle("约");
                 break;
             case R.id.btn_navigation_information:
-                fragmentTransaction.replace(R.id.layout_context,informationFragment);
-                fragmentTransaction.commit();
+                if(informationFragment.isAdded()){
+                    fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(firstFragment)
+                            .hide(myFragment).show(informationFragment).commit();
+                }else {
+                    fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(firstFragment)
+                            .hide(myFragment).add(R.id.layout_context,informationFragment).commit();
+                }
                 ((MainActivity)getActivity()).gettoolbar().setTitle("资料");
                 break;
             case R.id.btn_navigation_my:
-                fragmentTransaction.replace(R.id.layout_context,myFragment);
-                fragmentTransaction.commit();
+                if(myFragment.isAdded()){
+                    fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(informationFragment)
+                            .hide(firstFragment).show(myFragment).commit();
+                }else {
+                    fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(informationFragment)
+                            .hide(firstFragment).add(R.id.layout_context,myFragment).commit();
+                }
                 ((MainActivity)getActivity()).gettoolbar().setTitle("我的");
                 break;
             default:
