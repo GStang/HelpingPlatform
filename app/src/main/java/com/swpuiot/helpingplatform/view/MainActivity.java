@@ -11,8 +11,12 @@ import android.view.View;
 import android.view.Window;
 import android.widget.RadioButton;
 import android.support.v4.app.FragmentActivity;
+import android.widget.Toast;
 
 import com.swpuiot.helpingplatform.R;
+import com.swpuiot.helpingplatform.bean.User;
+
+import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -21,11 +25,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toast.makeText(MainActivity.this, "欢迎您" + BmobUser.getCurrentUser(User.class).getUsername()
+                , Toast.LENGTH_SHORT).show();
         toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         toolbar.setTitle("首页");
     }
 
-    public Toolbar gettoolbar(){
+    public Toolbar gettoolbar() {
         return toolbar;
     }
 

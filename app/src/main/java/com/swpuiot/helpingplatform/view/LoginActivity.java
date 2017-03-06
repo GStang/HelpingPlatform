@@ -36,7 +36,6 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Fresco.initialize(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         init();
@@ -84,6 +83,14 @@ public class LoginActivity extends AppCompatActivity {
         manager = getSupportFragmentManager();
         manager.beginTransaction()
                 .add(R.id.content_contain, loginFragment).commit();
+    }
+
+    public LoginFragment getLoginFragment() {
+        return loginFragment;
+    }
+
+    public RegisterFragment getRegisterFragment() {
+        return registerFragment;
     }
 
 }
