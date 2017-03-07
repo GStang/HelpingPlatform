@@ -19,7 +19,6 @@ import com.swpuiot.helpingplatform.bean.User;
 import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends AppCompatActivity {
-    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +26,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toast.makeText(MainActivity.this, "欢迎您" + BmobUser.getCurrentUser(User.class).getUsername()
                 , Toast.LENGTH_SHORT).show();
-        toolbar = (Toolbar) findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
-    }
-
-    public Toolbar gettoolbar() {
-        return toolbar;
     }
 
 }
