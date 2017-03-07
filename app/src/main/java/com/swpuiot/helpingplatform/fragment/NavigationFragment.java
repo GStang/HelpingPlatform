@@ -67,7 +67,6 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
                     fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(informationFragment)
                             .hide(myFragment).add(R.id.layout_context,firstFragment).commit();
                 }
-                ((MainActivity)getActivity()).gettoolbar().setTitle("首页");
                 break;
             case R.id.btn_navigation_square:
                 if(squareFragment.isAdded()){
@@ -77,7 +76,7 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
                     fragmentTransaction.hide(firstFragment).hide(chatFragment).hide(informationFragment)
                             .hide(myFragment).add(R.id.layout_context,squareFragment).commit();
                 }
-                ((MainActivity)getActivity()).gettoolbar().setTitle("广场");
+
                 break;
             case R.id.btn_navigation_chat:
                 if(chatFragment.isAdded()){
@@ -87,7 +86,6 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
                     fragmentTransaction.hide(squareFragment).hide(firstFragment).hide(informationFragment)
                             .hide(myFragment).add(R.id.layout_context,chatFragment).commit();
                 }
-                ((MainActivity)getActivity()).gettoolbar().setTitle("约");
                 break;
             case R.id.btn_navigation_information:
                 if(informationFragment.isAdded()){
@@ -97,7 +95,6 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
                     fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(firstFragment)
                             .hide(myFragment).add(R.id.layout_context,informationFragment).commit();
                 }
-                ((MainActivity)getActivity()).gettoolbar().setTitle("资料");
                 break;
             case R.id.btn_navigation_my:
                 if(myFragment.isAdded()){
@@ -107,7 +104,6 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
                     fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(informationFragment)
                             .hide(firstFragment).add(R.id.layout_context,myFragment).commit();
                 }
-                ((MainActivity)getActivity()).gettoolbar().setTitle("我的");
                 break;
             default:
                 break;
