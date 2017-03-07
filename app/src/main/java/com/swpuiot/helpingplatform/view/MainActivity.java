@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(MainActivity.this, "欢迎您" + BmobUser.getCurrentUser(User.class).getUsername()
                 , Toast.LENGTH_SHORT).show();
         toolbar = (Toolbar) findViewById(R.id.toolbar_main);
-        toolbar.setTitle("首页");
+        setSupportActionBar(toolbar);
     }
 
     public Toolbar gettoolbar() {

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.swpuiot.helpingplatform.R;
+import com.swpuiot.helpingplatform.view.MainActivity;
 
 /**
  * Created by DuZeming on 2017/3/5.
@@ -17,6 +18,7 @@ public class SquareFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_square,container,false);
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("广场");
         return view;
     }
 }

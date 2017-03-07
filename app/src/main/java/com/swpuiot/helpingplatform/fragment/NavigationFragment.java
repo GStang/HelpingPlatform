@@ -67,6 +67,7 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
                     fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(informationFragment)
                             .hide(myFragment).add(R.id.layout_context,firstFragment).commit();
                 }
+                ((MainActivity)getActivity()).gettoolbar().setTitle("首页");
                 break;
             case R.id.btn_navigation_square:
                 if(squareFragment.isAdded()){
