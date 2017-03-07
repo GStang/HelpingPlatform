@@ -8,6 +8,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.youth.banner.loader.ImageLoader;
 import com.youth.banner.loader.ImageLoaderInterface;
 
+import java.net.URI;
+
 /**
  * Created by DuZeming on 2017/3/5.
  */

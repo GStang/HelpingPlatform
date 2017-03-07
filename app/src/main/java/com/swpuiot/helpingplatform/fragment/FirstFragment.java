@@ -1,5 +1,6 @@
 package com.swpuiot.helpingplatform.fragment;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,7 +13,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,6 +28,7 @@ import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.FirstRecyclerAdapter;
 import com.swpuiot.helpingplatform.utils.BannerLoader;
 import com.swpuiot.helpingplatform.view.InfImplActivity;
+import com.swpuiot.helpingplatform.view.SearchActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.loader.ImageLoader;
@@ -48,6 +55,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private List<String>recyclerWord;
     private static final int REFRESH_COMPLETE=0x110;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private Toolbar toolbar;
 
 
     private List<String>a=Arrays.asList("你好");
@@ -131,6 +139,23 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 .isAutoPlay(true)
                 .start();
 
+        toolbar= (Toolbar) view.findViewById(R.id.toolbar_first);
+        toolbar.setTitle("首页");
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.item_first_search:
+                        Intent intent=new Intent(getActivity(), SearchActivity.class);
+                        startActivity(intent);
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
 
 
         return view;
@@ -146,4 +171,10 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         firstRecyclerAdapter.addData(0);
         swipeRefreshLayout.setRefreshing(false);
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.menu_first_toolbar, menu);
+    }
+
 }

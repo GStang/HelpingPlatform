@@ -16,15 +16,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.RadioGroup;
-
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.fragment.LoginFragment;
 import com.swpuiot.helpingplatform.fragment.RegisterFragment;
-
-import java.sql.SQLOutput;
 import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
