@@ -18,6 +18,6 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Fresco.initialize(getApplicationContext());
-        Bmob.initialize(getApplicationContext(), "key");
+        Bmob.initialize(getApplicationContext(), "key ");
     }
 }
