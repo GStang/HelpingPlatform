@@ -20,9 +20,12 @@ public class InfImplActivity extends AppCompatActivity {
 
         String str = getIntent().getStringExtra("sbj");
         String string=getIntent().getStringExtra("title");
+        String string1=getIntent().getStringExtra("bannerTitle");
         if (str != null)
             tv_show.setText(str);
         if (string !=null)
             tv_show.setText(string);
+        if(string1!=null)
+            tv_show.setText(string1);
     }
 }

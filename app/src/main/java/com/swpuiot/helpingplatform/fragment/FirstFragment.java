@@ -33,6 +33,7 @@ import com.swpuiot.helpingplatform.view.InfImplActivity;
 import com.swpuiot.helpingplatform.view.SearchActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
+import com.youth.banner.listener.OnBannerClickListener;
 import com.youth.banner.loader.ImageLoader;
 
 import java.lang.reflect.Array;
@@ -118,7 +119,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerViewHeader.attachTo(recyclerView,true);
+        recyclerViewHeader.attachTo(recyclerView, true);
 
         firstRecyclerAdapter.setOnItemClickListener(new FirstRecyclerAdapter.OnItemClickListener() {
             @Override
@@ -145,6 +146,16 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 .isAutoPlay(true)
                 .start();
 
+        banner.setOnBannerClickListener(new OnBannerClickListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                Intent intent=new Intent(getActivity(),InfImplActivity.class);
+                intent.putExtra("bannerTitle",bannerTitle.get(position-1));
+                startActivity(intent);
+            }
+        });
+
+
         toolbar= (Toolbar) view.findViewById(R.id.toolbar_first);
         setHasOptionsMenu(true);
         toolbar.inflateMenu(R.menu.menu_first_toolbar);
@@ -166,7 +177,6 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         return view;
     }
-
 
     @Override
     public void onRefresh() {
