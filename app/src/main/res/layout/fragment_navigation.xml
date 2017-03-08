@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
 
     <RadioGroup
@@ -24,14 +25,14 @@
             android:text="@string/navigation_square"
             android:button="@null"
             android:gravity="center_horizontal"/>
-        <RadioButton
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/btn_navigation_chat"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/navigation_chat"
-            android:button="@null"
-            android:gravity="center_horizontal"/>
+            app:backgroundTint="@color/colorYellow"
+
+            />
         <RadioButton
             android:id="@+id/btn_navigation_information"
             android:layout_width="0dp"
