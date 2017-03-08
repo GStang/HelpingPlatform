@@ -1,110 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="#fff"
     android:weightSum="1">
 
-    <TextView
-        android:layout_width="wrap_content"
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_chat"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorYellow" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25dp"
+                android:text="约一下"
+                android:textColor="@color/colorBlack"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+
+            <ImageButton
+                android:id="@+id/chat_button_select"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="3dp"
+                android:background="@drawable/selected"/>
+
+        </RelativeLayout>
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/navigation_chat"
-        android:textSize="30sp"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="日期"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/textView"
-        android:layout_toStartOf="@+id/editText" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="date"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:layout_alignTop="@+id/textView2"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="时间"
-        android:id="@+id/textView3"
-        android:layout_below="@+id/editText"
-        android:layout_toStartOf="@+id/editText" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="time"
-        android:ems="10"
-        android:id="@+id/editText2"
-        android:layout_below="@+id/editText"
-        android:layout_centerHorizontal="true"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:minLines="3"
-        android:maxLines="5"
-        android:ems="10"
-        android:id="@+id/editText3"
-        android:background="@drawable/chat_edit_bg"
-        android:layout_below="@+id/editText2"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="计划"
-        android:id="@+id/textView4"
-        android:layout_alignTop="@+id/editText3"
-        android:layout_alignStart="@+id/textView3" />
-
-    <ImageButton
-        android:id="@+id/chat_button_pic"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/pic"
-        android:layout_below="@+id/editText3"
-        android:layout_alignEnd="@+id/editText3" />
-
-    <ImageButton
-        android:id="@+id/chat_button_success"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/success"
-        android:layout_marginTop="92dp"
-        android:layout_below="@+id/editText3"
-        android:layout_toEndOf="@+id/textView" />
-    <ImageButton
-        android:id="@+id/chat_button_error"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/error"
-        android:layout_alignTop="@+id/chat_button_success"
-        android:layout_toStartOf="@+id/textView" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="点击上传图片→"
-        android:id="@+id/textView5"
-        android:layout_alignBottom="@+id/chat_button_pic"
-        android:layout_alignStart="@+id/editText3" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text=" "/>
 
 
-</RelativeLayout>
+        <EditText
+            android:id="@+id/chat_edit_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:hint="在此输入日期"
+            android:background="@android:drawable/edit_text"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text=" "/>
+
+        <EditText
+            android:id="@+id/chat_edit_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="datetime"
+            android:hint="在此输入时间"
+            android:background="@android:drawable/edit_text"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text=" "/>
+
+        <EditText
+            android:id="@+id/chat_edit_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:hint="在此输入标题"
+            android:background="@android:drawable/edit_text"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text=" "/>
+
+        <EditText
+            android:id="@+id/chat_edit_plan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="true"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:minLines="3"
+            android:maxLines="5"
+            android:scrollbars="vertical"
+            android:hint="描述一下你的计划吧..."
+            android:background="@android:drawable/edit_text"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text=" "/>
+
+        <EditText
+            android:id="@+id/chat_edit_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:hint="请输入手机号"
+            android:background="@android:drawable/edit_text"/>
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="5dp"-->
+            <!--android:text=" "/>-->
+
+        <ImageButton
+            android:layout_gravity="center"
+            android:id="@+id/chat_button_add"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:src="@drawable/add"
+            android:scaleType="centerInside"/>
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加张图片吧！"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
