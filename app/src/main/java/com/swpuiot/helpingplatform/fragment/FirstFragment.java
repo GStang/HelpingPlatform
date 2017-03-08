@@ -146,10 +146,9 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 .start();
 
         toolbar= (Toolbar) view.findViewById(R.id.toolbar_first);
-
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         setHasOptionsMenu(true);
+        toolbar.inflateMenu(R.menu.menu_first_toolbar);
+
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -165,7 +164,6 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
         });
 
-
         return view;
     }
 
@@ -180,9 +178,5 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.menu_first_toolbar, menu);
-    }
 
 }

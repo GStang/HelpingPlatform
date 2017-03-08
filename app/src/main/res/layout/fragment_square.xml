@@ -5,11 +5,19 @@
     android:orientation="vertical"
     android:background="#fff">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_square"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/navigation_square"
-        android:textSize="30sp"/>
+        android:minHeight="?actionBarSize"
+        android:background="@color/colorYellow">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/navigation_square"
+            android:textColor="@color/colorBlack"
+            android:layout_gravity="center_horizontal"
+            android:textSize="25sp"/>
+    </android.support.v7.widget.Toolbar>
 
 </LinearLayout>

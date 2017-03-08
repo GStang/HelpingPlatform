@@ -24,7 +24,7 @@
         <activity
             android:name=".view.LoginActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".view.MainActivity"></activity>
+        <activity android:name=".view.MainActivity"/>
         <activity android:name=".view.InfImplActivity" />
         <activity
             android:name=".view.LoadingActivity"
