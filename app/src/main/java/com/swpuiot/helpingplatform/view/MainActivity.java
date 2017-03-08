@@ -22,6 +22,7 @@ import com.swpuiot.helpingplatform.fragment.NavigationFragment;
 import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends AppCompatActivity {
+    private User user;
 //    private FirstFragment fragment = new FirstFragment();
     private NavigationFragment fragment = new NavigationFragment();
     @Override
@@ -29,8 +30,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         fragment.setRetainInstance(true);
-        Toast.makeText(MainActivity.this, "欢迎您" + BmobUser.getCurrentUser(User.class).getUsername()
-                , Toast.LENGTH_SHORT).show();
+        user = BmobUser.getCurrentUser(User.class);
+        if (user!=null) {
+            Toast.makeText(MainActivity.this, "欢迎您" + BmobUser.getCurrentUser(User.class).getUsername()
+                    , Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(MainActivity.this, "游客登录", Toast.LENGTH_SHORT).show();
+        }
         getSupportFragmentManager().beginTransaction().add(R.id.layout_content,fragment).commit();
 //        getSupportFragmentManager().beginTransaction().add(R.id.layout_context, fragment).commit();
     }

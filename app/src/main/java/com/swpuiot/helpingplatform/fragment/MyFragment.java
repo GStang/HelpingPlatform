@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.MyAdapter;
 import com.swpuiot.helpingplatform.view.MainActivity;
@@ -25,8 +26,9 @@ import com.swpuiot.helpingplatform.view.MainActivity;
  * Created by DuZeming on 2017/3/5.
  */
 public class MyFragment extends Fragment {
-    RecyclerView recyclerView;
-    Toolbar toolbar;
+    private RecyclerView recyclerView;
+    private Toolbar toolbar;
+
 
     @Nullable
     @Override
@@ -34,6 +36,7 @@ public class MyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_my);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_my);
+
         setHasOptionsMenu(true);
         toolbar.inflateMenu(R.menu.menu_my);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -48,7 +51,7 @@ public class MyFragment extends Fragment {
                 }
             }
         });
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,true));
         recyclerView.setAdapter(new MyAdapter(getActivity()));
         return view;
     }
