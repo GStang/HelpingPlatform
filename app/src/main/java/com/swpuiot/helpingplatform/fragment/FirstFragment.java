@@ -9,6 +9,7 @@ import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -56,6 +57,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private static final int REFRESH_COMPLETE=0x110;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
+    private ActionBar actionBar;
 
 
     private List<String>a=Arrays.asList("你好");
@@ -140,8 +142,10 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 .start();
 
         toolbar= (Toolbar) view.findViewById(R.id.toolbar_first);
-        toolbar.setTitle("首页");
+
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        setHasOptionsMenu(true);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
