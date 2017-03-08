@@ -3,6 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorRefresh">#20000000</color>\
     <color name="colorYellow">#FFCC00</color>
-    <color name="colorRefresh">#20000000</color>
+    <color name="colorBlack">#000000</color>
 </resources>
