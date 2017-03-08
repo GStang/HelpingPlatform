@@ -2,6 +2,7 @@ package com.swpuiot.helpingplatform.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -22,7 +23,7 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
 
     private RadioButton navigationFirst;
     private RadioButton navigationSquare;
-    private RadioButton navigationChat;
+    private FloatingActionButton navigationChat;
     private RadioButton navigationInformation;
     private RadioButton navigationMy;
     private FragmentManager manager;
@@ -68,7 +69,7 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
         navigationFirst.setOnClickListener(this);
         navigationSquare = (RadioButton) view.findViewById(R.id.btn_navigation_square);
         navigationSquare.setOnClickListener(this);
-        navigationChat = (RadioButton) view.findViewById(R.id.btn_navigation_chat);
+        navigationChat = (FloatingActionButton) view.findViewById(R.id.btn_navigation_chat);
         navigationChat.setOnClickListener(this);
         navigationInformation = (RadioButton) view.findViewById(R.id.btn_navigation_information);
         navigationInformation.setOnClickListener(this);

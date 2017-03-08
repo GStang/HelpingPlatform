@@ -23,22 +23,31 @@
         android:id="@+id/swipe_first"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-    <com.youth.banner.Banner
-        android:id="@+id/banner_first"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"/>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_first"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+        <com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader
+            android:id="@+id/header_first"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.youth.banner.Banner
+                android:id="@+id/banner_first"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"/>
 
-        </LinearLayout>
+        </com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader>
+
+
+
+        </FrameLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

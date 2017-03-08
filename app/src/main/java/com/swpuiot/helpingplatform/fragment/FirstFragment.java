@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.FirstRecyclerAdapter;
 import com.swpuiot.helpingplatform.utils.BannerLoader;
@@ -57,7 +58,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private static final int REFRESH_COMPLETE=0x110;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
-    private ActionBar actionBar;
+    private RecyclerViewHeader recyclerViewHeader;
 
 
     private List<String>a=Arrays.asList("你好");
@@ -109,12 +110,15 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerView= (RecyclerView) view.findViewById(R.id.recycler_first);
         firstRecyclerAdapter=new FirstRecyclerAdapter(getActivity(),recyclerTitle,recyclerWord,recyclerImage);
         recyclerView.setAdapter(firstRecyclerAdapter);
+        recyclerViewHeader= (RecyclerViewHeader) view.findViewById(R.id.header_first);
+
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity()
-                , LinearLayoutManager.VERTICAL, false);
+                ,LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerViewHeader.attachTo(recyclerView,true);
 
         firstRecyclerAdapter.setOnItemClickListener(new FirstRecyclerAdapter.OnItemClickListener() {
             @Override
