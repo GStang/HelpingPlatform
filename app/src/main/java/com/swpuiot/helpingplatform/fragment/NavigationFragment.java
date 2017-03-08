@@ -3,6 +3,10 @@ package com.swpuiot.helpingplatform.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +25,39 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
     private RadioButton navigationChat;
     private RadioButton navigationInformation;
     private RadioButton navigationMy;
+    private FragmentManager manager;
+    private FirstFragment firstFragment;
+    private SquareFragment squareFragment;
+    private ChatFragment chatFragment;
+    private InformationFragment informationFragment;
+    private MyFragment myFragment;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.e("Test", "Oncreate");
+        manager = getActivity().getSupportFragmentManager();
+        firstFragment = new FirstFragment();
+        chatFragment = new ChatFragment();
+        squareFragment = new SquareFragment();
+        informationFragment = new InformationFragment();
+        myFragment = new MyFragment();
+        manager.beginTransaction().add(R.id.layout_context, firstFragment).add(R.id.layout_context, chatFragment)
+                .add(R.id.layout_context, squareFragment)
+                .add(R.id.layout_context, informationFragment)
+                .add(R.id.layout_context, myFragment).commit();
+        manager.beginTransaction().hide(squareFragment)
+                .hide(chatFragment)
+                .hide(informationFragment)
+                .hide(myFragment).commit();
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_navigation, container, false);
+//        Log.e("Test", firstFragment.toString());
+//        manager.beginTransaction().add(R.id.layout_context, firstFragment).commit();
         return view;
     }
 
@@ -48,62 +79,51 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-
-        android.support.v4.app.FragmentManager fragmentManager=getFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-
-        FirstFragment firstFragment=new FirstFragment();
-        SquareFragment squareFragment=new SquareFragment();
-        ChatFragment chatFragment=new ChatFragment();
-        InformationFragment informationFragment=new InformationFragment();
-        MyFragment myFragment=new MyFragment();
-
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_navigation_first:
-                if(firstFragment.isAdded()){
-                    fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(informationFragment)
-                            .hide(myFragment).show(firstFragment).commit();
-                }else {
-                    fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(informationFragment)
-                            .hide(myFragment).add(R.id.layout_context,firstFragment).commit();
-                }
+                manager.beginTransaction().hide(squareFragment)
+                        .hide(chatFragment)
+                        .hide(informationFragment)
+                        .hide(myFragment)
+                        .show(firstFragment).commit();
+                Log.e("Test", manager.getFragments().size() + "");
+                System.out.println(manager.getFragments());
                 break;
             case R.id.btn_navigation_square:
-                if(squareFragment.isAdded()){
-                    fragmentTransaction.hide(firstFragment).hide(chatFragment).hide(informationFragment)
-                            .hide(myFragment).show(squareFragment).commit();
-                }else {
-                    fragmentTransaction.hide(firstFragment).hide(chatFragment).hide(informationFragment)
-                            .hide(myFragment).add(R.id.layout_context,squareFragment).commit();
-                }
-
+                manager.beginTransaction().hide(firstFragment)
+                        .hide(chatFragment)
+                        .hide(informationFragment)
+                        .hide(myFragment)
+                        .show(squareFragment).commit();
+                System.out.println(manager.getFragments());
+                Log.e("Test", manager.getFragments().size() + "");
                 break;
             case R.id.btn_navigation_chat:
-                if(chatFragment.isAdded()){
-                    fragmentTransaction.hide(squareFragment).hide(firstFragment).hide(informationFragment)
-                            .hide(myFragment).show(chatFragment).commit();
-                }else {
-                    fragmentTransaction.hide(squareFragment).hide(firstFragment).hide(informationFragment)
-                            .hide(myFragment).add(R.id.layout_context,chatFragment).commit();
-                }
+                manager.beginTransaction().hide(squareFragment)
+                        .hide(firstFragment)
+                        .hide(informationFragment)
+                        .hide(myFragment)
+                        .show(chatFragment).commit();
+                System.out.println(manager.getFragments());
+                Log.e("Test", manager.getFragments().size() + "");
                 break;
             case R.id.btn_navigation_information:
-                if(informationFragment.isAdded()){
-                    fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(firstFragment)
-                            .hide(myFragment).show(informationFragment).commit();
-                }else {
-                    fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(firstFragment)
-                            .hide(myFragment).add(R.id.layout_context,informationFragment).commit();
-                }
+                manager.beginTransaction().hide(squareFragment)
+                        .hide(chatFragment)
+                        .hide(firstFragment)
+                        .hide(myFragment)
+                        .show(informationFragment).commit();
+                System.out.println(manager.getFragments());
+                Log.e("Test", manager.getFragments().size() + "");
                 break;
             case R.id.btn_navigation_my:
-                if(myFragment.isAdded()){
-                    fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(informationFragment)
-                            .hide(firstFragment).show(myFragment).commit();
-                }else {
-                    fragmentTransaction.hide(squareFragment).hide(chatFragment).hide(informationFragment)
-                            .hide(firstFragment).add(R.id.layout_context,myFragment).commit();
-                }
+                manager.beginTransaction().hide(squareFragment)
+                        .hide(chatFragment)
+                        .hide(informationFragment)
+                        .hide(firstFragment)
+                        .show(myFragment).commit();
+                System.out.println(manager.getFragments());
+                Log.e("Test", manager.getFragments().size() + "");
                 break;
             default:
                 break;

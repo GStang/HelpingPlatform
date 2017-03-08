@@ -23,17 +23,26 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".view.LoginActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".view.MainActivity">
+
         </activity>
-        <activity android:name=".view.MainActivity" />
         <activity android:name=".view.InfImplActivity" />
         <activity
             android:name=".view.LoadingActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".view.SearchActivity" >
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".activity.SearchResultActivity"
+                />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
     </application>
