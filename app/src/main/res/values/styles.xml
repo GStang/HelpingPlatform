@@ -12,4 +12,30 @@
 
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <style name="Dialog" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowAnimationStyle">@android:style/Theme.Dialog</item>
+
+    </style>
+
+
+
+    <style name="notfullscreen" parent="@style/Dialog">
+                <item name="android:windowBackground">@drawable/plaground</item>
+                <item name="android:windowNoTitle">true</item>
+                <item name="android:layout_width">wrap_content</item>
+                <item name="android:layout_height">wrap_content</item>
+                <item name="android:windowIsTranslucent">true</item>
+                <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+         </style>
+
+    <style name="ToastAnimTheme" parent="@style/notfullscreen" >
+        <item name="android:windowAnimationStyle">@style/Animation</item>
+
+    </style>
+
+    <style name="Animation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/in_from_bottom</item>
+        <item name="android:activityOpenExitAnimation">@anim/in_from_bottom</item>
+    </style>
 </resources>

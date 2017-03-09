@@ -31,6 +31,7 @@ import com.swpuiot.helpingplatform.adapter.FirstRecyclerAdapter;
 import com.swpuiot.helpingplatform.utils.BannerLoader;
 import com.swpuiot.helpingplatform.view.InfImplActivity;
 import com.swpuiot.helpingplatform.view.SearchActivity;
+import com.swpuiot.helpingplatform.view.ToastActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerClickListener;
@@ -131,7 +132,10 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
             @Override
             public void onItemLongClick(View view, int position) {
-
+                Intent intent=new Intent();
+                intent.setClassName(getActivity(),"com.swpuiot.helpingplatform.view.ToastActivity");
+                getActivity().startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.in_from_bottom,0);
             }
         });
 
