@@ -2,22 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#fff">
+    android:background="#fff"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_square"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="?actionBarSize"
-        android:background="@color/colorYellow">
+        android:background="@color/colorYellow"
+        android:minHeight="?actionBarSize">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:text="@string/navigation_square"
             android:textColor="@color/colorBlack"
-            android:layout_gravity="center_horizontal"
-            android:textSize="25sp"/>
+            android:textSize="25sp" />
     </android.support.v7.widget.Toolbar>
+
+    <Button
+        android:id="@+id/btn_get"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="获得数据" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_test"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

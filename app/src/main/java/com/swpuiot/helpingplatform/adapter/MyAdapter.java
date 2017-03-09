@@ -1,6 +1,7 @@
 package com.swpuiot.helpingplatform.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.swpuiot.helpingplatform.R;
+import com.swpuiot.helpingplatform.bean.User;
+import com.swpuiot.helpingplatform.view.LoginActivity;
+import com.swpuiot.helpingplatform.view.MainActivity;
+
+import cn.bmob.v3.BmobUser;
 
 /**
  * Created by DELL on 2017/3/8.
@@ -54,7 +60,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MyHolder) {
-            ((MyHolder) holder).textView.setText(datas[position-1]);
+            ((MyHolder) holder).textView.setText(datas[position - 1]);
         }
         if (holder instanceof FootHolder) {
             ((FootHolder) holder).btn_out.getText();
@@ -91,7 +97,10 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             btn_out.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Button", Toast.LENGTH_SHORT).show();
+                    BmobUser.logOut();
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    context.startActivity(intent);
+                    ((MainActivity) context).finish();
                 }
             });
         }

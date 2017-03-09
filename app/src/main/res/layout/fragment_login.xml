@@ -77,7 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:text="跳过登录"
+                android:text="游客登录"
                 android:textSize="10sp" />
 
             <Button
