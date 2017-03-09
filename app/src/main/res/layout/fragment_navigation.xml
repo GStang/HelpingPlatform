@@ -17,8 +17,10 @@
             android:layout_weight="2"
             android:text="@string/navigation_first"
             android:button="@null"
+            android:checked="true"
             android:textColor="@drawable/navigation_text"
             android:drawableTop="@drawable/navigation_first"
+
             android:gravity="center_horizontal"/>
         <RadioButton
             android:id="@+id/btn_navigation_square"

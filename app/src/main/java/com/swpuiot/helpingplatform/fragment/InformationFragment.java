@@ -15,6 +15,7 @@ import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.InfRecyclerAdapter;
 import com.swpuiot.helpingplatform.bean.InfBean;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,9 +33,16 @@ public class InformationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_information, container, false);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_infmation);
-        datas = new LinkedList<>();
-        for (int i = 0; i < 8; i++)
-            datas.add(new InfBean(R.drawable.login, "测试"));
+        datas = Arrays.asList(
+                new InfBean(R.drawable.inf1,"高数"),
+                new InfBean(R.drawable.inf2,"大物"),
+                new InfBean(R.drawable.inf3,"化学"),
+                new InfBean(R.drawable.inf4,"线代"),
+                new InfBean(R.drawable.inf5,"模电"),
+                new InfBean(R.drawable.inf6,"英语"),
+                new InfBean(R.drawable.inf7,"JAVA"),
+                new InfBean(R.drawable.inf8,"安卓")
+        );
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_information);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         recyclerView.setAdapter(new InfRecyclerAdapter(getActivity(), datas));
