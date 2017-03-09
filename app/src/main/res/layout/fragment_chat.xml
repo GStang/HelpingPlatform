@@ -38,7 +38,8 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="3dp"
-                android:background="@drawable/selected"/>
+                android:background="@drawable/selected"
+                />
 
         </RelativeLayout>
     </FrameLayout>
@@ -53,7 +54,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
+            android:textSize="5dp"
             android:text=" "/>
 
 
@@ -63,12 +64,13 @@
             android:layout_height="wrap_content"
             android:inputType="date"
             android:hint="在此输入日期"
-            android:background="@android:drawable/edit_text"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:text=" "/>
+            android:background="@android:drawable/edit_text"
+            android:windowSoftInputMode="adjustResize"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="15dp"-->
+            <!--android:text=" "/>-->
 
         <EditText
             android:id="@+id/chat_edit_time"
@@ -76,12 +78,13 @@
             android:layout_height="wrap_content"
             android:inputType="datetime"
             android:hint="在此输入时间"
-            android:background="@android:drawable/edit_text"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:text=" "/>
+            android:background="@android:drawable/edit_text"
+            android:windowSoftInputMode="adjustResize"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="15dp"-->
+            <!--android:text=" "/>-->
 
         <EditText
             android:id="@+id/chat_edit_title"
@@ -89,12 +92,13 @@
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:hint="在此输入标题"
-            android:background="@android:drawable/edit_text"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:text=" "/>
+            android:background="@android:drawable/edit_text"
+            android:windowSoftInputMode="adjustResize"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="15dp"-->
+            <!--android:text=" "/>-->
 
         <EditText
             android:id="@+id/chat_edit_plan"
@@ -107,12 +111,13 @@
             android:maxLines="5"
             android:scrollbars="vertical"
             android:hint="描述一下你的计划吧..."
-            android:background="@android:drawable/edit_text"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:text=" "/>
+            android:background="@android:drawable/edit_text"
+            android:windowSoftInputMode="adjustResize"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="15dp"-->
+            <!--android:text=" "/>-->
 
         <EditText
             android:id="@+id/chat_edit_phone"
@@ -120,28 +125,45 @@
             android:layout_height="wrap_content"
             android:inputType="phone"
             android:hint="请输入手机号"
-            android:background="@android:drawable/edit_text"/>
+            android:background="@android:drawable/edit_text"
+            android:windowSoftInputMode="adjustResize"/>
 
-        <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textSize="5dp"-->
-            <!--android:text=" "/>-->
 
-        <ImageButton
-            android:layout_gravity="center"
-            android:id="@+id/chat_button_add"
-            android:layout_width="200dp"
-            android:layout_height="60dp"
-            android:src="@drawable/add"
-            android:scaleType="centerInside"/>
+        <!--<ImageButton-->
+            <!--android:layout_gravity="center"-->
+            <!--android:id="@+id/chat_button_add"-->
+            <!--android:layout_width="200dp"-->
+            <!--android:layout_height="60dp"-->
+            <!--android:src="@drawable/add"-->
+            <!--android:scaleType="centerInside"-->
+            <!--android:background="@android:color/transparent"/>-->
         <TextView
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="添加张图片吧！"/>
 
+
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="170dp">
 
+        <GridView
+            android:id="@+id/gridView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/colorWhite"
+            android:horizontalSpacing="5dp"
+            android:verticalSpacing="5dp"
+            android:numColumns="4"
+            android:columnWidth="90dp"
+            android:stretchMode="columnWidth"
+            android:gravity="center">
+
+        </GridView>
+
+    </LinearLayout>
 </LinearLayout>
