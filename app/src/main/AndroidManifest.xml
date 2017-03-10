@@ -48,8 +48,6 @@
                 android:resource="@xml/searchable"/></span>
 
         </activity>
-        <activity android:name=".view.ToastActivity"
-            android:theme="@style/ToastAnimTheme" />
     </application>
 
 </manifest>

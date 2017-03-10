@@ -19,7 +19,6 @@
     </style>
 
 
-
     <style name="notfullscreen" parent="@style/Dialog">
                 <item name="android:windowBackground">@drawable/plaground</item>
                 <item name="android:windowNoTitle">true</item>
@@ -34,8 +33,11 @@
 
     </style>
 
-    <style name="Animation" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/in_from_bottom</item>
-        <item name="android:activityOpenExitAnimation">@anim/in_from_bottom</item>
+    <style name="Animation" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowEnterAnimation">@anim/in_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/out_from_bottom</item>
+        <item name="android:background">@drawable/plaground</item>
+
+                <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
     </style>
 </resources>

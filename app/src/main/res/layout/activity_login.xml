@@ -32,6 +32,8 @@
                 android:button="@null"
                 android:checked="true"
                 android:gravity="center"
+                android:textColor="@drawable/navigation_text"
+                android:drawableBottom="@drawable/check_login"
                 android:text="登录"
                 android:textSize="20sp" />
 
@@ -42,6 +44,8 @@
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
+                android:textColor="@drawable/navigation_text"
+                android:drawableBottom="@drawable/check_login"
                 android:text="注册"
                 android:textSize="20sp" />
         </RadioGroup>
