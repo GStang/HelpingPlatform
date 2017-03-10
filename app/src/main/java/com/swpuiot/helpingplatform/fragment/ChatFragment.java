@@ -122,14 +122,6 @@ public class ChatFragment extends Fragment{
 
         gridView1.setAdapter(simpleAdapter);
 
-//        gridView1.setOnClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                if( imageItem.size() == 10) { //第一张为默认图片
-////                    Toast.makeText(getActivity(), "图片数9张已满", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
 
 
         gridView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
