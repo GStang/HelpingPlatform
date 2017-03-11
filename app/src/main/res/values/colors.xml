@@ -4,8 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorRefresh">#20000000</color>\
-    <color name="colorYellow">#FFCC00</color>
-    <color name="colorLightYellow">#CCC78d</color>
+    <color name="colorYellow">#f5d451</color>
+    <color name="colorLightYellow">#e8e3a7</color>
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#fffffb</color>
 </resources>
