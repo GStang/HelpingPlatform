@@ -108,6 +108,10 @@ public class MyFragment extends Fragment {
         userInformation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (user == null) {
+                    Toast.makeText(getActivity(), "您还没有登录", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent=new Intent(getActivity(), UserInformationActivity.class);
                 startActivityForResult(intent, CHANGE_INFORMATION_SIGN);
             }

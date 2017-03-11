@@ -3,14 +3,24 @@ package com.swpuiot.helpingplatform.view;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +52,12 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
     private TextView showAge;
     private User user;
     private File tempFile;
+    private PopupWindow mPopupWindow;
+    private View popupWindow;
+    private Button showImage;
+    private Button photo;
+    private Button takePhoto;
+    private Button imageCancel;
     public static final String PHOTO_IMAGE_FILE_NAME = BmobUser.getCurrentUser(User.class).getUsername()+"head.jpg";
     public static final int CAMERA_REQUEST_CODE = 100;
     public static final int IMAGE_REQUEST_CODE = 101;
@@ -68,6 +84,8 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
 
         user=BmobUser.getCurrentUser(User.class);
 
+        showName.setText(user.getUsername());
+
         Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.head_none);
         if (user==null||user.getHeadimg() == null) {
             showHeadImage.setImageURI(uri);
@@ -75,7 +93,64 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
             showHeadImage.setImageURI(user.getHeadimg().getFileUrl());
         }
 
+        popupWindow=getLayoutInflater().inflate(R.layout.layout_image_toast,null);
+        mPopupWindow=new PopupWindow(popupWindow, WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,true);
+        mPopupWindow.setTouchable(true);
+        mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.setAnimationStyle(R.style.Animation);
 
+        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                WindowManager.LayoutParams params = getWindow().getAttributes();
+                params.alpha = 1f;
+                getWindow().setAttributes(params);
+            }
+        });
+        mPopupWindow.getContentView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_MENU && event.getRepeatCount() == 0
+                        && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (mPopupWindow != null && mPopupWindow.isShowing()) {
+                        mPopupWindow.dismiss();
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        showImage= (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_show);
+        photo= (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_photo);
+        takePhoto= (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_take);
+        imageCancel= (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_cancel);
+        showImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater=LayoutInflater.from(UserInformationActivity.this);
+                View imageView=inflater.inflate(R.layout.dialog_image, null);
+                final AlertDialog dialog=new AlertDialog.Builder(UserInformationActivity.this).create();
+                SimpleDraweeView imageView1= (SimpleDraweeView) imageView.findViewById(R.id.simdra_show);
+                System.out.println(user.getHeadimg().getFileUrl());
+                imageView1.setImageURI(user.getHeadimg().getFileUrl());
+                dialog.setView(imageView);
+                dialog.show();
+                Log.e("Success","Heae");
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.cancel();
+                    }
+                });
+            }
+        });
+        photo.setOnClickListener(this);
+        takePhoto.setOnClickListener(this);
+        imageCancel.setOnClickListener(this);
 
 
     }
@@ -84,33 +159,14 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.ll_userinformation_image:
-//                Toast.makeText(getActivity(), "头像", Toast.LENGTH_SHORT).show();
                 if (user == null) {
                     Toast.makeText(this, "您还没有登录", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("请选择照片来源")
-                        .setPositiveButton("照片", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                openphotoshop();
-                            }
-                        })
-                        .setNeutralButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        })
-
-                        .setNegativeButton("拍照", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                opencmera();
-                            }
-                        });
-                builder.create().show();
+                mPopupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);
+                WindowManager.LayoutParams params = getWindow().getAttributes();
+                params.alpha = 0.7f;
+                getWindow().setAttributes(params);
                 break;
             case R.id.ll_userinformation_name:
 
@@ -120,6 +176,21 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                 break;
             case R.id.ll_userinformation_age:
 
+                break;
+//            case R.id.btn_image_show:
+
+
+//                break;
+            case R.id.btn_image_photo:
+                openphotoshop();
+                mPopupWindow.dismiss();
+                break;
+            case R.id.btn_image_take:
+                opencmera();
+                mPopupWindow.dismiss();
+                break;
+            case R.id.btn_image_cancel:
+                mPopupWindow.dismiss();
                 break;
             default:
                 break;
