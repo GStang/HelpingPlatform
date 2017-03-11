@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,8 +43,13 @@ public class SquareFragment extends Fragment {
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private List<TestBean> datas;
-    private Button btnGetDatas;
     private TestAdapter adapter;
+    private SwipeRefreshLayout layout;
+    private static final int STATE_REFRESH = 0; // 下拉刷新
+    private static final int STATE_MORE = 1; // 加载更多
+    private boolean isloading = false;
+    private int limit = 5; // 每页的数据是10条
+    private String lastTime;
 
     @Nullable
     @Override
@@ -51,10 +57,12 @@ public class SquareFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_square, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_test);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_square);
-        setHasOptionsMenu(true);
-        btnGetDatas = (Button) view.findViewById(R.id.btn_get);
-        toolbar.inflateMenu(R.menu.menu_square_toolbar);
+        layout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         datas = new ArrayList<>();
+
+
+        setHasOptionsMenu(true);
+        toolbar.inflateMenu(R.menu.menu_square_toolbar);
         adapter = new TestAdapter(getActivity(), datas);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -71,15 +79,19 @@ public class SquareFragment extends Fragment {
                 return true;
             }
         });
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
-        btnGetDatas.setOnClickListener(new View.OnClickListener() {
+        layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
-                getDatas();
+            public void onRefresh() {
+                if (isloading) {
+                    Toast.makeText(getActivity(), "正在加载...", Toast.LENGTH_SHORT).show();
+                } else {
+                    getDatas();
+                }
             }
         });
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
+
 
         return view;
     }
@@ -87,6 +99,7 @@ public class SquareFragment extends Fragment {
     public void getDatas() {
         BmobQuery<TestBean> query = new BmobQuery<>("TestBean");
         query.setLimit(2);
+        query.order("-createdAt");
         query.findObjects(new FindListener<TestBean>() {
             @Override
             public void done(List<TestBean> list, BmobException e) {
@@ -99,8 +112,10 @@ public class SquareFragment extends Fragment {
                     System.out.println(bean.getImg().getFileUrl());
                     datas.addAll(list);
                     adapter.notifyDataSetChanged();
+                    layout.setRefreshing(false);
                 } else {
                     Log.i("bmob", "失败" + e.getMessage());
+                    layout.setRefreshing(false);
                 }
             }
         });

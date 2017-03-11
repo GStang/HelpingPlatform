@@ -30,26 +30,26 @@
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/iv_head"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_marginLeft="20dp"
-                    fresco:cardCornerRadius="25dp">
+                    fresco:cardCornerRadius="50dp">
 
                     <com.facebook.drawee.view.SimpleDraweeView
                         android:id="@+id/sdv_head"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-
-                        android:background="@drawable/head_none" />
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        />
                 </android.support.v7.widget.CardView>
 
                 <TextView
                     android:id="@+id/tv_username"
                     android:textColor="@color/colorBlack"
-                    android:textSize="20sp"
-                    android:gravity="center"
+                    android:textSize="25sp"
+                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
                     android:text="tgs" />
             </LinearLayout>
 

@@ -44,7 +44,6 @@ public class TestAdapter extends RecyclerView.Adapter<TestAdapter.TestHolder> {
     @Override
     public void onBindViewHolder(TestHolder holder, int position) {
         holder.textView.setText(datas.get(position).getTest());
-//        System.out.println(datas.get(position).getImg().getFileUrl());
         holder.ivTest.setImageURI(datas.get(position).getImg().getFileUrl());
     }
 
