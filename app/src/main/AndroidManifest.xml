@@ -15,7 +15,6 @@
     <!-- 允许读取手机状态 用于创建BmobInstallation -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -50,7 +49,8 @@
                     android:value=".activity.SearchResultActivity" />
             </span>
         </activity>
-        <activity android:name=".view.UserInformationActivity"></activity>
+        <activity android:name=".view.UserInformationActivity" />
+        <activity android:name=".view.RegisterActivity"></activity>
     </application>
 
 </manifest>
