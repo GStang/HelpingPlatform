@@ -2,6 +2,7 @@ package com.swpuiot.helpingplatform.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.bean.User;
 import com.swpuiot.helpingplatform.view.LoginActivity;
@@ -23,7 +25,7 @@ import cn.bmob.v3.BmobUser;
  */
 public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
-    private String[] datas = {"我的信息", "我的订单", "我的钱包", "我的好友", "我的收藏"};
+    private String[] datas = {"我的订单", "我的钱包", "我的好友", "我的收藏"};
     private static final int TYPE_TEXT = 0;
     private static final int TYPE_OUT = 1;
 
@@ -34,12 +36,10 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         System.out.println(position);
-        if (position == 0)
+        if (position == 4)
             return TYPE_OUT;
-        else if (position == 5)
-            return TYPE_TEXT;
         else
-            return super.getItemViewType(position);
+            return TYPE_TEXT;
     }
 
     @Override
@@ -59,10 +59,11 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof MyHolder) {
-            ((MyHolder) holder).textView.setText(datas[position - 1]);
+//        ((MyHolder)holder).textView.setText(datas[position]);
+        if (position != 4) {
+            ((MyHolder) holder).textView.setText(datas[position]);
         }
-        if (holder instanceof FootHolder) {
+        if (position == 4) {
             ((FootHolder) holder).btn_out.getText();
         }
     }
@@ -70,15 +71,19 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 6;
+        return datas.length + 1;
     }
 
     class MyHolder extends RecyclerView.ViewHolder {
         TextView textView;
+        SimpleDraweeView simpleDraweeView;
+        Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.add);
 
         public MyHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.tv_my_item);
+            simpleDraweeView = (SimpleDraweeView) itemView.findViewById(R.id.item_img);
+            simpleDraweeView.setImageURI(uri);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

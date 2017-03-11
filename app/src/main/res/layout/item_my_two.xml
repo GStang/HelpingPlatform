@@ -4,15 +4,14 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:paddingBottom="20dp">
+    >
 
     <Button
-        android:layout_marginBottom="40dp"
         android:id="@+id/btn_out"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="@drawable/selector_btn_type"
-        android:padding="16dp"
+        android:padding="8dp"
         android:text="退出登录"
         android:textSize="20sp" />
 

@@ -14,16 +14,14 @@ import cn.bmob.v3.BmobUser;
  * Created by DELL on 2017/3/6.
  */
 public class MyApplication extends Application {
-    private User user;
+//    private User user;
     @Override
     public void onCreate() {
         super.onCreate();
         Fresco.initialize(getApplicationContext());
         Bmob.initialize(getApplicationContext(), "9541a295b6acddf6d9bf7ddb52f1227c");
-        user = BmobUser.getCurrentUser(User.class);
+//        user = BmobUser.getCurrentUser(User.class);
     }
 
-    public User getUser(){
-        return user;
-    }
+
 }
