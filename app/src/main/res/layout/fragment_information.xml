@@ -22,7 +22,7 @@
             android:layout_gravity="center"
             android:text="资料"
             android:textColor="@color/colorBlack"
-            android:textSize="20sp" />
+            android:textSize="25sp" />
     </FrameLayout>
 
     <android.support.v7.widget.RecyclerView

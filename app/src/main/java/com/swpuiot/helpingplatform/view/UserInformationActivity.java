@@ -1,125 +1,144 @@
-package com.swpuiot.helpingplatform.fragment;
+package com.swpuiot.helpingplatform.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.swpuiot.helpingplatform.MyApplication;
 import com.swpuiot.helpingplatform.R;
-import com.swpuiot.helpingplatform.adapter.MyAdapter;
-import com.swpuiot.helpingplatform.bean.TestBean;
 import com.swpuiot.helpingplatform.bean.User;
-import com.swpuiot.helpingplatform.view.MainActivity;
-import com.swpuiot.helpingplatform.view.UserInformationActivity;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
-/**
- * Created by DuZeming on 2017/3/5.
- */
-public class MyFragment extends Fragment {
-    private RecyclerView recyclerView;
-    private Toolbar toolbar;
-    private TextView tv_name;
+public class UserInformationActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private LinearLayout headImage;
+    private LinearLayout name;
+    private LinearLayout sex;
+    private LinearLayout age;
+    private SimpleDraweeView showHeadImage;
+    private TextView showName;
+    private TextView showSex;
+    private TextView showAge;
     private User user;
     private File tempFile;
-    private SimpleDraweeView sdvHeader;
-    private LinearLayout userInformation;
     public static final String PHOTO_IMAGE_FILE_NAME = BmobUser.getCurrentUser(User.class).getUsername()+"head.jpg";
     public static final int CAMERA_REQUEST_CODE = 100;
     public static final int IMAGE_REQUEST_CODE = 101;
     public static final int RESULT_REQUEST_CODE = 102;
-    public static final int CHANGE_INFORMATION_SIGN = 103;
 
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.rv_my);
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar_my);
-        tv_name = (TextView) view.findViewById(R.id.tv_username);
-        sdvHeader = (SimpleDraweeView) view.findViewById(R.id.sdv_head);
-        user = BmobUser.getCurrentUser(User.class);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_information);
+
+        headImage= (LinearLayout) findViewById(R.id.ll_userinformation_image);
+        name= (LinearLayout) findViewById(R.id.ll_userinformation_name);
+        sex= (LinearLayout) findViewById(R.id.ll_userinformation_sex);
+        age= (LinearLayout) findViewById(R.id.ll_userinformation_age);
+        headImage.setOnClickListener(this);
+        name.setOnClickListener(this);
+        sex.setOnClickListener(this);
+        age.setOnClickListener(this);
+
+        showHeadImage= (SimpleDraweeView) findViewById(R.id.simdra_userinformation_image);
+        showName= (TextView) findViewById(R.id.tv_userinformation_name);
+        showSex= (TextView) findViewById(R.id.tv_userinformation_sex);
+        showAge= (TextView) findViewById(R.id.tv_userinformation_age);
+
+        user=BmobUser.getCurrentUser(User.class);
+
         Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.head_none);
         if (user==null||user.getHeadimg() == null) {
-            sdvHeader.setImageURI(uri);
+            showHeadImage.setImageURI(uri);
         } else {
-            sdvHeader.setImageURI(user.getHeadimg().getFileUrl());
+            showHeadImage.setImageURI(user.getHeadimg().getFileUrl());
         }
-//        user.setHeadimg();
-//        File file = new File()
 
-        setHasOptionsMenu(true);
-        toolbar.inflateMenu(R.menu.menu_my);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_chat:
-                        Toast.makeText(getActivity(), "chat", Toast.LENGTH_SHORT).show();
-                        return true;
-                    default:
-                        return false;
+
+
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.ll_userinformation_image:
+//                Toast.makeText(getActivity(), "头像", Toast.LENGTH_SHORT).show();
+                if (user == null) {
+                    Toast.makeText(this, "您还没有登录", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-            }
-        });
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, true));
-        recyclerView.setAdapter(new MyAdapter(getActivity()));
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("请选择照片来源")
+                        .setPositiveButton("照片", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                openphotoshop();
+                            }
+                        })
+                        .setNeutralButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
 
-        if (user != null)
-            tv_name.setText(user.getUsername());
-        else
-            tv_name.setText("游客您好，请登录");
+                        .setNegativeButton("拍照", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                opencmera();
+                            }
+                        });
+                builder.create().show();
+                break;
+            case R.id.ll_userinformation_name:
 
-        userInformation= (LinearLayout) view.findViewById(R.id.ll_my_login);
-        userInformation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(getActivity(), UserInformationActivity.class);
-                startActivityForResult(intent, CHANGE_INFORMATION_SIGN);
-            }
-        });
+                break;
+            case R.id.ll_userinformation_sex:
 
-        return view;
+                break;
+            case R.id.ll_userinformation_age:
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void openphotoshop() {
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, IMAGE_REQUEST_CODE);
+    }
+
+    public void opencmera() {
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE); // 调用系统的拍照功能
+        // 判断内存卡是否可用，可用的话就进行储存
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                Uri.fromFile(new File(Environment.getExternalStorageDirectory(), PHOTO_IMAGE_FILE_NAME)));
+        startActivityForResult(intent, CAMERA_REQUEST_CODE);
     }
 
     public File bitmapToFile(Bitmap bitmap) {
@@ -137,7 +156,6 @@ public class MyFragment extends Fragment {
         }
         return tempFile;
     }
-
 
     private void startPhotoZoom(Uri uri) {
         if (uri == null) {
@@ -176,9 +194,6 @@ public class MyFragment extends Fragment {
                     // 拿到图片设置, 然后需要删除tempFile
                     setImageToView(data);
                 }
-            case CHANGE_INFORMATION_SIGN:
-                user = BmobUser.getCurrentUser(User.class);
-                sdvHeader.setImageURI(user.getHeadimg().getFileUrl());
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -206,7 +221,7 @@ public class MyFragment extends Fragment {
                             @Override
                             public void done(BmobException e) {
                                 if (e == null) {
-                                    sdvHeader.setImageURI(bmobFile.getFileUrl());
+                                    showHeadImage.setImageURI(bmobFile.getFileUrl());
 //                                    mProfileImage.setImageBitmap(bitmap);
 //                                    ToastUtils.showShort(getActivity(), getString(R.string.avatar_editor_success));
                                 } else {
@@ -231,5 +246,4 @@ public class MyFragment extends Fragment {
             });
         }
     }
-
 }

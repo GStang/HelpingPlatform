@@ -25,9 +25,10 @@
         <activity
             android:name=".view.LoginActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".view.MainActivity"/>
-        <activity android:name=".view.InfImplActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".view.MainActivity" />
+        <activity
+            android:name=".view.InfImplActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".view.LoadingActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
@@ -38,17 +39,18 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.SearchActivity">
+            <span style="font-size:18px;">
+                <intent-filter>
+                    <action android:name="android.intent.action.SEARCH" />
+                </intent-filter>
 
-            <span style="font-size:18px;"><intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".activity.SearchResultActivity"
-                android:resource="@xml/searchable"/></span>
-
+                <meta-data
+                    android:name="android.app.default_searchable"
+                    android:resource="@xml/searchable"
+                    android:value=".activity.SearchResultActivity" />
+            </span>
         </activity>
+        <activity android:name=".view.UserInformationActivity"></activity>
     </application>
 
 </manifest>
