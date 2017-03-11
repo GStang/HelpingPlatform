@@ -48,8 +48,10 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //                , parent, false));
 //        return holder;
         if (viewType == TYPE_TEXT) {
-            return new MyHolder(LayoutInflater.from(context).inflate(R.layout.item_my
+
+            MyHolder holder = new MyHolder(LayoutInflater.from(context).inflate(R.layout.item_my
                     , parent, false));
+            return holder;
         } else {
             System.out.println(viewType);
             return new FootHolder(LayoutInflater.from(context).inflate(R.layout.item_my_two
@@ -62,6 +64,22 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //        ((MyHolder)holder).textView.setText(datas[position]);
         if (position != 4) {
             ((MyHolder) holder).textView.setText(datas[position]);
+            switch (position){
+                case 0:
+                    ((MyHolder) holder).uri = Uri.parse("res://com.swpuiot.helpingplatform/"+R.drawable.ic_bookpng);
+                    break;
+                case 1:
+                    ((MyHolder) holder).uri =  Uri.parse("res://com.swpuiot.helpingplatform/"+R.drawable.ic_wallet);
+                    break;
+                case 2:
+                    ((MyHolder) holder).uri =  Uri.parse("res://com.swpuiot.helpingplatform/"+R.drawable.ic_friend);
+                    break;
+                case 3:
+                    ((MyHolder) holder).uri =  Uri.parse("res://com.swpuiot.helpingplatform/"+R.drawable.ic_important);
+                    break;
+            }
+            System.out.println(((MyHolder) holder).uri);
+            ((MyHolder) holder).simpleDraweeView.setImageURI(((MyHolder) holder).uri);
         }
         if (position == 4) {
             ((FootHolder) holder).btn_out.getText();
@@ -77,13 +95,13 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     class MyHolder extends RecyclerView.ViewHolder {
         TextView textView;
         SimpleDraweeView simpleDraweeView;
-        Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.add);
+        Uri uri;
 
         public MyHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.tv_my_item);
             simpleDraweeView = (SimpleDraweeView) itemView.findViewById(R.id.item_img);
-            simpleDraweeView.setImageURI(uri);
+//            simpleDraweeView.setImageURI(uri);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
