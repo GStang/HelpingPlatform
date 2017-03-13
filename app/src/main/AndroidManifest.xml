@@ -14,6 +14,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 允许读取手机状态 用于创建BmobInstallation -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- SD卡读取权限，用户写入离线定位数据-->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <!--获取wifi网络状态的信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
 
     <application
@@ -51,7 +55,8 @@
                     android:value=".activity.SearchResultActivity" />
             </span>
         </activity>
-        <activity android:name=".view.UserInformationActivity"></activity>
+        <activity android:name=".view.UserInformationActivity"/>
+        <activity android:name=".view.ChangeNameACtivity"/>
     </application>
 
 </manifest>

@@ -98,7 +98,7 @@ public class SquareFragment extends Fragment {
 
     public void getDatas() {
         BmobQuery<TestBean> query = new BmobQuery<>("TestBean");
-        query.setLimit(2);
+        query.setLimit(5);
         query.order("-createdAt");
         query.findObjects(new FindListener<TestBean>() {
             @Override

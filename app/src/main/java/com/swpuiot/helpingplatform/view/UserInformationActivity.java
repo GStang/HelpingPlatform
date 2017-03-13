@@ -40,7 +40,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
-public class UserInformationActivity extends AppCompatActivity implements View.OnClickListener{
+public class UserInformationActivity extends AppCompatActivity implements View.OnClickListener {
 
     private LinearLayout headImage;
     private LinearLayout name;
@@ -58,44 +58,45 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
     private Button photo;
     private Button takePhoto;
     private Button imageCancel;
-    public static final String PHOTO_IMAGE_FILE_NAME = BmobUser.getCurrentUser(User.class).getUsername()+"head.jpg";
+    public static final String PHOTO_IMAGE_FILE_NAME = BmobUser.getCurrentUser(User.class).getUsername() + "head.jpg";
     public static final int CAMERA_REQUEST_CODE = 100;
     public static final int IMAGE_REQUEST_CODE = 101;
     public static final int RESULT_REQUEST_CODE = 102;
+    public static final int REQUEST_CHANGENAME_CODE = 103;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_information);
 
-        headImage= (LinearLayout) findViewById(R.id.ll_userinformation_image);
-        name= (LinearLayout) findViewById(R.id.ll_userinformation_name);
-        sex= (LinearLayout) findViewById(R.id.ll_userinformation_sex);
-        age= (LinearLayout) findViewById(R.id.ll_userinformation_age);
+        headImage = (LinearLayout) findViewById(R.id.ll_userinformation_image);
+        name = (LinearLayout) findViewById(R.id.ll_userinformation_name);
+        sex = (LinearLayout) findViewById(R.id.ll_userinformation_sex);
+        age = (LinearLayout) findViewById(R.id.ll_userinformation_age);
         headImage.setOnClickListener(this);
         name.setOnClickListener(this);
         sex.setOnClickListener(this);
         age.setOnClickListener(this);
 
-        showHeadImage= (SimpleDraweeView) findViewById(R.id.simdra_userinformation_image);
-        showName= (TextView) findViewById(R.id.tv_userinformation_name);
-        showSex= (TextView) findViewById(R.id.tv_userinformation_sex);
-        showAge= (TextView) findViewById(R.id.tv_userinformation_age);
+        showHeadImage = (SimpleDraweeView) findViewById(R.id.simdra_userinformation_image);
+        showName = (TextView) findViewById(R.id.tv_userinformation_name);
+        showSex = (TextView) findViewById(R.id.tv_userinformation_sex);
+        showAge = (TextView) findViewById(R.id.tv_userinformation_age);
 
-        user=BmobUser.getCurrentUser(User.class);
+        user = BmobUser.getCurrentUser(User.class);
 
-        showName.setText(user.getUsername());
+        showName.setText(user.getNickName());
 
         Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.head_none);
-        if (user==null||user.getHeadimg() == null) {
+        if (user == null || user.getHeadimg() == null) {
             showHeadImage.setImageURI(uri);
         } else {
             showHeadImage.setImageURI(user.getHeadimg().getFileUrl());
         }
 
-        popupWindow=getLayoutInflater().inflate(R.layout.layout_image_toast,null);
-        mPopupWindow=new PopupWindow(popupWindow, WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,true);
+        popupWindow = getLayoutInflater().inflate(R.layout.layout_image_toast, null);
+        mPopupWindow = new PopupWindow(popupWindow, WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT, true);
         mPopupWindow.setTouchable(true);
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
@@ -124,10 +125,10 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
             }
         });
 
-        showImage= (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_show);
-        photo= (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_photo);
-        takePhoto= (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_take);
-        imageCancel= (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_cancel);
+        showImage = (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_show);
+        photo = (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_photo);
+        takePhoto = (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_take);
+        imageCancel = (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_cancel);
         showImage.setOnClickListener(this);
         photo.setOnClickListener(this);
         takePhoto.setOnClickListener(this);
@@ -137,8 +138,14 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("User", "onResume");
+    }
+
+    @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ll_userinformation_image:
                 if (user == null) {
                     Toast.makeText(this, "您还没有登录", Toast.LENGTH_SHORT).show();
@@ -150,9 +157,9 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                 getWindow().setAttributes(params);
                 break;
             case R.id.ll_userinformation_name:
-                Intent intent=new Intent(this,ChangeNameACtivity.class);
-                intent.putExtra("name",showName.getText().toString());
-                startActivity(intent);
+                Intent intent = new Intent(this, ChangeNameACtivity.class);
+                intent.putExtra("name", user.getNickName());
+                startActivityForResult(intent, REQUEST_CHANGENAME_CODE);
                 break;
             case R.id.ll_userinformation_sex:
 
@@ -161,15 +168,15 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
 
                 break;
             case R.id.btn_image_show:
-                LayoutInflater inflater=LayoutInflater.from(UserInformationActivity.this);
-                View imageView=inflater.inflate(R.layout.dialog_image, null);
-                final AlertDialog dialog=new AlertDialog.Builder(UserInformationActivity.this).create();
-                SimpleDraweeView imageView1= (SimpleDraweeView) imageView.findViewById(R.id.simdra_show);
+                LayoutInflater inflater = LayoutInflater.from(UserInformationActivity.this);
+                View imageView = inflater.inflate(R.layout.dialog_image, null);
+                final AlertDialog dialog = new AlertDialog.Builder(UserInformationActivity.this).create();
+                SimpleDraweeView imageView1 = (SimpleDraweeView) imageView.findViewById(R.id.simdra_show);
                 System.out.println(user.getHeadimg().getFileUrl());
                 imageView1.setImageURI(user.getHeadimg().getFileUrl());
                 dialog.setView(imageView);
                 dialog.show();
-                Log.e("Success","Heae");
+                Log.e("Success", "Heae");
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -208,6 +215,9 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
         startActivityForResult(intent, CAMERA_REQUEST_CODE);
     }
 
+    /**
+     * bitmap转换为File
+     */
     public File bitmapToFile(Bitmap bitmap) {
         tempFile = new File(Environment.getExternalStorageDirectory(), PHOTO_IMAGE_FILE_NAME);
         try {
@@ -261,6 +271,10 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                     // 拿到图片设置, 然后需要删除tempFile
                     setImageToView(data);
                 }
+                break;
+            case REQUEST_CHANGENAME_CODE:
+                if (data != null)
+                    showName.setText(data.getStringExtra("name"));
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);

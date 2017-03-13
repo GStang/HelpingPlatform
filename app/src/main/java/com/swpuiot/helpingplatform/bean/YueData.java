@@ -1,10 +1,13 @@
 package com.swpuiot.helpingplatform.bean;
 
+import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobFile;
+
 /**
  * Created by admin on 2017/3/7.
  */
-public class YueData {
-
+public class YueData extends BmobObject {
+    private BmobFile file;
     private String date;
     private String time;
     private String title;

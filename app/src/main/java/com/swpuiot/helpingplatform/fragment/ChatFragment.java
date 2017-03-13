@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,17 +32,31 @@ import android.widget.Toast;
 
 
 import com.swpuiot.helpingplatform.R;
+import com.swpuiot.helpingplatform.bean.TestBean;
+import com.swpuiot.helpingplatform.bean.User;
 import com.swpuiot.helpingplatform.bean.YueData;
 import com.swpuiot.helpingplatform.view.MainActivity;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
+import cn.bmob.v3.listener.UploadFileListener;
+
 /**
  * Created by DuZeming on 2017/3/5.
  */
-public class ChatFragment extends Fragment{
+public class ChatFragment extends Fragment {
 
     private YueData yueData;
     private EditText editText_date;
@@ -49,7 +65,7 @@ public class ChatFragment extends Fragment{
     private EditText editText_plan;
     private EditText editText_phone;
     private ImageButton button_select;       //发布按钮
-//    private ImageButton chat_button_add;
+    //    private ImageButton chat_button_add;
     private Toolbar toolbar_chat;
 
     private GridView gridView1;              //网格显示缩略图
@@ -59,13 +75,14 @@ public class ChatFragment extends Fragment{
     private ArrayList<HashMap<String, Object>> imageItem;
     private SimpleAdapter simpleAdapter;     //适配器
     private ImageView imageView1;
-
-
+    private File tempFile;
+    public static final String PHOTO_IMAGE_FILE_NAME = BmobUser.getCurrentUser(User.class).getUsername() + "question.jpg";
+    private boolean success = false;
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_chat,container,false);
+        View view = inflater.inflate(R.layout.fragment_chat, container, false);
         toolbar_chat = (Toolbar) view.findViewById(R.id.toolbar_chat);
         editText_date = (EditText) view.findViewById(R.id.chat_edit_date);
         editText_time = (EditText) view.findViewById(R.id.chat_edit_time);
@@ -78,20 +95,20 @@ public class ChatFragment extends Fragment{
         imageView1 = (ImageView) view.findViewById(R.id.imageView1);
 
 
-        bmp = BitmapFactory.decodeResource(getResources(),R.drawable.add);
+        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.add);
         imageItem = new ArrayList<HashMap<String, Object>>();
-        HashMap<String,Object> map = new HashMap<String, Object>();
-        map.put("itemImage",bmp);
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("itemImage", bmp);
         imageItem.add(map);
         simpleAdapter = new SimpleAdapter(this.getContext(), imageItem,
                 R.layout.fragment_chat_griditem_addpic,
-                new String[] {"itemImage"},new int[] {R.id.imageView1});
+                new String[]{"itemImage"}, new int[]{R.id.imageView1});
 
         simpleAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Object data, String textRepresentation) {
                 if (view instanceof ImageView && data instanceof Bitmap) {
-                    ImageView i = (ImageView)view;
+                    ImageView i = (ImageView) view;
                     i.setImageBitmap((Bitmap) data);
                     return true;
                 }
@@ -104,42 +121,70 @@ public class ChatFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 yueData = new YueData();
+                final TestBean test = new TestBean();
                 yueData.setDate(editText_date.getText().toString());
                 yueData.setTime(editText_time.getText().toString());
                 yueData.setTitle(editText_title.getText().toString());
                 yueData.setPlan(editText_plan.getText().toString());
                 yueData.getPhone(editText_phone.getText().toString());
 
+                final BmobFile file = new BmobFile(bitmapToFile(bmp));
+                test.setTest(editText_plan.getText().toString());
+//                test.setImg(file);
                 editText_date.setText("");
                 editText_time.setText("");
                 editText_title.setText("");
                 editText_plan.setText("");
                 editText_phone.setText("");
 
-                Toast.makeText(getActivity(), "发布成功", Toast.LENGTH_SHORT).show();
+                file.uploadblock(new UploadFileListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                            success = true;
+                            test.setTest("我是测试");
+                            test.setImg(file);
+                            test.save(new SaveListener<String>() {
+                                @Override
+                                public void done(String s, BmobException e) {
+                                    if (e == null) {
+                                        Toast.makeText(getActivity(), "成功", Toast.LENGTH_SHORT).show();
+                                        success = false;
+                                    } else {
+                                        Toast.makeText(getActivity(), "失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } else
+                            Toast.makeText(getActivity(), "Failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+
+//                Toast.makeText(getActivity(), "发布成功", Toast.LENGTH_SHORT).show();
+
             }
         });
+
 
         gridView1.setAdapter(simpleAdapter);
 
 
-
         gridView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id)
-            {
-                if( imageItem.size() == 10) { //第一张为默认图片
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                if (imageItem.size() == 10) { //第一张为默认图片
                     Toast.makeText(getActivity(), "图片数9张已满", Toast.LENGTH_SHORT).show();
-                }
-                else if(position == 0) { //点击图片位置为+ 0对应0张图片
+                } else if (position == 0) { //点击图片位置为+ 0对应0张图片
                     Toast.makeText(getActivity(), "添加图片", Toast.LENGTH_SHORT).show();
                     //选择图片
                     Intent intent = new Intent(Intent.ACTION_PICK,
                             android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, IMAGE_OPEN);
                     //通过onResume()刷新数据
-                }
-                else {
+                } else {
                     dialog(position);
                     //Toast.makeText(MainActivity.this, "点击第"+(position + 1)+" 号图片",
                     //      Toast.LENGTH_SHORT).show();
@@ -154,13 +199,13 @@ public class ChatFragment extends Fragment{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //打开图片
-        if(resultCode== Activity.RESULT_OK && requestCode==IMAGE_OPEN) {
+        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_OPEN) {
             Uri uri = data.getData();
             if (!TextUtils.isEmpty(uri.getAuthority())) {
                 //查询选择图片
                 Cursor cursor = this.getContext().getContentResolver().query(
                         uri,
-                        new String[] { MediaStore.Images.Media.DATA },
+                        new String[]{MediaStore.Images.Media.DATA},
                         null,
                         null,
                         null);
@@ -199,20 +244,20 @@ public class ChatFragment extends Fragment{
 
     public void onResume() {
         super.onResume();
-        if(!TextUtils.isEmpty(pathImage)){
-            Bitmap addbmp=BitmapFactory.decodeFile(pathImage);
+        if (!TextUtils.isEmpty(pathImage)) {
+            Bitmap addbmp = BitmapFactory.decodeFile(pathImage);
             HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("itemImage", addbmp);
             imageItem.add(map);
             simpleAdapter = new SimpleAdapter(this.getContext(),
                     imageItem, R.layout.fragment_chat_griditem_addpic,
-                    new String[] { "itemImage"}, new int[] { R.id.imageView1});
+                    new String[]{"itemImage"}, new int[]{R.id.imageView1});
             simpleAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
                 @Override
                 public boolean setViewValue(View view, Object data,
                                             String textRepresentation) {
-                    if(view instanceof ImageView && data instanceof Bitmap){
-                        ImageView i = (ImageView)view;
+                    if (view instanceof ImageView && data instanceof Bitmap) {
+                        ImageView i = (ImageView) view;
                         i.setImageBitmap((Bitmap) data);
                         return true;
                     }
@@ -227,4 +272,24 @@ public class ChatFragment extends Fragment{
     }
 
 //    protected void onActivityResult
+
+    /**
+     * bitmap转换为File
+     */
+    public File bitmapToFile(Bitmap bitmap) {
+        tempFile = new File(Environment.getExternalStorageDirectory(), PHOTO_IMAGE_FILE_NAME);
+        System.out.println(tempFile.getName());
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(tempFile));
+            if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos)) {
+                bos.flush();
+                bos.close();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return tempFile;
+    }
 }
