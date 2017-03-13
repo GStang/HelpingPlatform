@@ -128,26 +128,7 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
         photo= (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_photo);
         takePhoto= (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_take);
         imageCancel= (Button) mPopupWindow.getContentView().findViewById(R.id.btn_image_cancel);
-        showImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LayoutInflater inflater=LayoutInflater.from(UserInformationActivity.this);
-                View imageView=inflater.inflate(R.layout.dialog_image, null);
-                final AlertDialog dialog=new AlertDialog.Builder(UserInformationActivity.this).create();
-                SimpleDraweeView imageView1= (SimpleDraweeView) imageView.findViewById(R.id.simdra_show);
-                System.out.println(user.getHeadimg().getFileUrl());
-                imageView1.setImageURI(user.getHeadimg().getFileUrl());
-                dialog.setView(imageView);
-                dialog.show();
-                Log.e("Success","Heae");
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                });
-            }
-        });
+        showImage.setOnClickListener(this);
         photo.setOnClickListener(this);
         takePhoto.setOnClickListener(this);
         imageCancel.setOnClickListener(this);
@@ -169,7 +150,9 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                 getWindow().setAttributes(params);
                 break;
             case R.id.ll_userinformation_name:
-
+                Intent intent=new Intent(this,ChangeNameACtivity.class);
+                intent.putExtra("name",showName.getText().toString());
+                startActivity(intent);
                 break;
             case R.id.ll_userinformation_sex:
 
@@ -177,10 +160,23 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
             case R.id.ll_userinformation_age:
 
                 break;
-//            case R.id.btn_image_show:
-
-
-//                break;
+            case R.id.btn_image_show:
+                LayoutInflater inflater=LayoutInflater.from(UserInformationActivity.this);
+                View imageView=inflater.inflate(R.layout.dialog_image, null);
+                final AlertDialog dialog=new AlertDialog.Builder(UserInformationActivity.this).create();
+                SimpleDraweeView imageView1= (SimpleDraweeView) imageView.findViewById(R.id.simdra_show);
+                System.out.println(user.getHeadimg().getFileUrl());
+                imageView1.setImageURI(user.getHeadimg().getFileUrl());
+                dialog.setView(imageView);
+                dialog.show();
+                Log.e("Success","Heae");
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.cancel();
+                    }
+                });
+                break;
             case R.id.btn_image_photo:
                 openphotoshop();
                 mPopupWindow.dismiss();
