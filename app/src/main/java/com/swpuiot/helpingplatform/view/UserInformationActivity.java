@@ -92,7 +92,7 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
 
         user=BmobUser.getCurrentUser(User.class);
 
-        showName.setText(user.getUsername());
+        showName.setText(user.getNickName());
 
         Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.head_none);
         if (user==null||user.getHeadimg() == null) {
