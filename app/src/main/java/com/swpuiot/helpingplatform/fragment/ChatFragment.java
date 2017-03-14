@@ -152,7 +152,7 @@ public class ChatFragment extends Fragment {
                                         Toast.makeText(getActivity(), "成功", Toast.LENGTH_SHORT).show();
                                         success = false;
                                     } else {
-                                        Toast.makeText(getActivity(), "失败", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), "失败了", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
