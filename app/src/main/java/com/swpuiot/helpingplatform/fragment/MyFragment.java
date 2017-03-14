@@ -1,25 +1,15 @@
 package com.swpuiot.helpingplatform.fragment;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,30 +17,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.swpuiot.helpingplatform.MyApplication;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.MyAdapter;
-import com.swpuiot.helpingplatform.bean.TestBean;
 import com.swpuiot.helpingplatform.bean.User;
-import com.swpuiot.helpingplatform.view.MainActivity;
 import com.swpuiot.helpingplatform.view.UserInformationActivity;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.UpdateListener;
-import cn.bmob.v3.listener.UploadFileListener;
 
 /**
  * Created by DuZeming on 2017/3/5.
