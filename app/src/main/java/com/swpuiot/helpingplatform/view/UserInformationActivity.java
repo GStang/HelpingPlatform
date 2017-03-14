@@ -180,6 +180,8 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
         checkGirl= (LinearLayout) mSexPopupWindow.getContentView().findViewById(R.id.ll_sex_girl);
         checkBoy.setOnClickListener(this);
         checkGirl.setOnClickListener(this);
+        choseBoy.setOnClickListener(this);
+        choseGirl.setOnClickListener(this);
 
 
 
@@ -244,6 +246,17 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                 mSexPopupWindow.dismiss();
                 break;
             case R.id.ll_sex_girl:
+                showSex.setText(choseGirl.getText().toString());
+                choseBoy.setChecked(false);
+                mSexPopupWindow.dismiss();
+                break;
+            case R.id.rabtn_sex_boy:
+                showSex.setText(choseBoy.getText().toString());
+                choseBoy.setChecked(true);
+                choseGirl.setChecked(false);
+                mSexPopupWindow.dismiss();
+                break;
+            case R.id.rabtn_sex_girl:
                 showSex.setText(choseGirl.getText().toString());
                 choseBoy.setChecked(true);
                 choseBoy.setChecked(false);
