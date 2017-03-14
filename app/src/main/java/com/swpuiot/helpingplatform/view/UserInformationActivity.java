@@ -69,6 +69,7 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
     public static final int CAMERA_REQUEST_CODE = 100;
     public static final int IMAGE_REQUEST_CODE = 101;
     public static final int RESULT_REQUEST_CODE = 102;
+    public static final int REQUEST_CHANGENAME_CODE = 103;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,7 +198,7 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
             case R.id.ll_userinformation_name:
                 Intent intent=new Intent(this,ChangeNameACtivity.class);
                 intent.putExtra("name",showName.getText().toString());
-                startActivity(intent);
+                startActivityForResult(intent,REQUEST_CHANGENAME_CODE);
                 break;
             case R.id.ll_userinformation_sex:
                 mSexPopupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);
@@ -321,6 +322,10 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                     // 拿到图片设置, 然后需要删除tempFile
                     setImageToView(data);
                 }
+                break;
+            case REQUEST_CHANGENAME_CODE:
+                if (data != null)
+                    showName.setText(data.getStringExtra("name"));
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
