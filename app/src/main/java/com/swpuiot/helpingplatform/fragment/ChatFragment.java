@@ -12,17 +12,13 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -32,10 +28,9 @@ import android.widget.Toast;
 
 
 import com.swpuiot.helpingplatform.R;
-import com.swpuiot.helpingplatform.bean.TestBean;
+import com.swpuiot.helpingplatform.bean.PostBean;
 import com.swpuiot.helpingplatform.bean.User;
 import com.swpuiot.helpingplatform.bean.YueData;
-import com.swpuiot.helpingplatform.view.MainActivity;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -44,13 +39,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 /**
@@ -121,7 +114,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 yueData = new YueData();
-                final TestBean test = new TestBean();
+                final PostBean test = new PostBean();
                 yueData.setDate(editText_date.getText().toString());
                 yueData.setTime(editText_time.getText().toString());
                 yueData.setTitle(editText_title.getText().toString());
@@ -129,37 +122,37 @@ public class ChatFragment extends Fragment {
                 yueData.getPhone(editText_phone.getText().toString());
 
                 final BmobFile file = new BmobFile(bitmapToFile(bmp));
-                test.setTest(editText_plan.getText().toString());
+//                test.setTest(editText_plan.getText().toString());
 //                test.setImg(file);
                 editText_date.setText("");
                 editText_time.setText("");
                 editText_title.setText("");
                 editText_plan.setText("");
                 editText_phone.setText("");
-
-                file.uploadblock(new UploadFileListener() {
-                    @Override
-                    public void done(BmobException e) {
-                        if (e == null) {
-                            Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
-                            success = true;
-                            test.setTest("我是测试");
-                            test.setImg(file);
-                            test.save(new SaveListener<String>() {
-                                @Override
-                                public void done(String s, BmobException e) {
-                                    if (e == null) {
-                                        Toast.makeText(getActivity(), "成功", Toast.LENGTH_SHORT).show();
-                                        success = false;
-                                    } else {
-                                        Toast.makeText(getActivity(), "失败了", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                        } else
-                            Toast.makeText(getActivity(), "Failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
+//
+//                file.uploadblock(new UploadFileListener() {
+//                    @Override
+//                    public void done(BmobException e) {
+//                        if (e == null) {
+//                            Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+//                            success = true;
+//                            test.setTest("我是测试");
+//                            test.setImg(file);
+//                            test.save(new SaveListener<String>() {
+//                                @Override
+//                                public void done(String s, BmobException e) {
+//                                    if (e == null) {
+//                                        Toast.makeText(getActivity(), "成功", Toast.LENGTH_SHORT).show();
+//                                        success = false;
+//                                    } else {
+//                                        Toast.makeText(getActivity(), "失败了", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//                            });
+//                        } else
+//                            Toast.makeText(getActivity(), "Failed", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
 
 
 
