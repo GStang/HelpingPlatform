@@ -1,5 +1,7 @@
 package com.swpuiot.helpingplatform.bean;
 
+import java.util.List;
+
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.datatype.BmobRelation;
@@ -8,7 +10,7 @@ import cn.bmob.v3.datatype.BmobRelation;
  * Created by DELL on 2017/3/9.
  */
 public class PostBean extends BmobObject {
-    private BmobFile img;//图片
+    private List<BmobFile> imgs;//图片
     private String title;//帖子标题
     private String content;//帖子内容
     private User user;//帖子的作者
@@ -31,12 +33,13 @@ public class PostBean extends BmobObject {
         this.content = content;
     }
 
-    public BmobFile getImg() {
-        return img;
+
+    public List<BmobFile> getImgs() {
+        return imgs;
     }
 
-    public void setImg(BmobFile img) {
-        this.img = img;
+    public void setImgs(List<BmobFile> imgs) {
+        this.imgs = imgs;
     }
 
     public BmobRelation getLikes() {

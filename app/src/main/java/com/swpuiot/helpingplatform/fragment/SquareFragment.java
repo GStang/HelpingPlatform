@@ -2,12 +2,15 @@ package com.swpuiot.helpingplatform.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,7 @@ import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.PostAdapter;
 import com.swpuiot.helpingplatform.bean.PostBean;
 import com.swpuiot.helpingplatform.bean.User;
+import com.swpuiot.helpingplatform.view.PublishActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +44,7 @@ public class SquareFragment extends Fragment implements View.OnClickListener {
     private PostAdapter adapter;
     private User user;
     private Toolbar toolbar;
+    private FloatingActionButton fabButton;
 
     @Nullable
     @Override
@@ -52,6 +57,8 @@ public class SquareFragment extends Fragment implements View.OnClickListener {
         System.out.println(adapter);
 
         btnCommit = (Button) view.findViewById(R.id.btn_commit);
+        fabButton = (FloatingActionButton) view.findViewById(R.id.fb_add);
+        fabButton.setOnClickListener(this);
         btnCommit.setOnClickListener(this);
         btnGetdata = (Button) view.findViewById(R.id.btn_getdate);
         btnGetdata.setOnClickListener(this);
@@ -98,7 +105,14 @@ public class SquareFragment extends Fragment implements View.OnClickListener {
             case R.id.btn_getdate:
                 getDatas();
                 break;
+            case R.id.fb_add:
+                publishData();
         }
+    }
+
+    private void publishData() {
+        Intent intent = new Intent(getActivity(),PublishActivity.class);
+        startActivity(intent);
     }
 
     private void commitDatas() {
@@ -111,6 +125,7 @@ public class SquareFragment extends Fragment implements View.OnClickListener {
                 if (e == null) {
                     Toast.makeText(context, "发布成功", Toast.LENGTH_SHORT).show();
                 } else {
+                    Log.e("Error", e.getErrorCode() + e.getMessage());
                     Toast.makeText(context, "发布失败", Toast.LENGTH_SHORT).show();
                 }
             }

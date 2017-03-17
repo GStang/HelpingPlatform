@@ -10,10 +10,7 @@
     <string name="navigation_information" translatable="false">资料</string>
     <string name="navigation_my" translatable="false">我的</string>
     <string name="title_activity_main2">Main2Activity</string>
-    <string name="content">abasdffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        asfdsafsdfsdfsdafffffffffffffffcdsajdkfljsdalkfjsdklfjsdflkjsdflksdajflksdjflkasdjfklsdajfkl
-        asdfdsafsdafwqtwqoejjflksadjflksajflkjitquplksajfjalfjsalfjsakfjljasldkfjsakldfjsadlkfjsaklf
-        asfsadfsadfsdafsdaflksajdfklsdajfksdaljfsdajfklsdjflksdajflksdajflsjdaflksdajflsadk</string>
+    <string name="content">最近心情不太好，很多事情，很忙很忙，很累很累</string>
 </resources>
 
 

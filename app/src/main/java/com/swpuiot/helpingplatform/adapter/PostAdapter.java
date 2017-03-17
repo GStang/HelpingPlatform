@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.bean.PostBean;
+import com.swpuiot.helpingplatform.bean.User;
 
 import java.net.URL;
 import java.util.List;
@@ -29,6 +30,7 @@ import cn.bmob.v3.datatype.BmobFile;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
     private Context context;
     private List<PostBean> datas;
+    private User user;
 
     public PostAdapter(Context context, List<PostBean> datas) {
         this.datas = datas;
@@ -44,12 +46,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
 
     @Override
     public void onBindViewHolder(PostHolder holder, int position) {
-        holder.tvTitle.setText(datas.get(position).getTitle());
-        BmobFile file = datas.get(position).getUser().getHeadimg();
-        if (file ==null){
+//        holder.tvTitle.setText(datas.get(position).getTitle());
+        user = datas.get(position).getUser();
+        BmobFile file = user.getHeadimg();
+        if (user.getNickName() == null || user.getNickName().equals("")) {
+            System.out.println(user.getUsername());
+            holder.tvNickName.setText(user.getUsername());
+        } else {
+            holder.tvNickName.setText(user.getNickName());
+        }
+        if (file == null) {
             Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.head_none);
             holder.ivTest.setImageURI(uri);
-        }else {
+        } else {
             holder.ivTest.setImageURI(datas.get(position).getUser().getHeadimg().getFileUrl());
         }
         holder.tvContent.setText(datas.get(position).getContent());
@@ -65,11 +74,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
         SimpleDraweeView ivTest;
         TextView tvTitle;
         TextView tvContent;
+        TextView tvNickName;
 
         public PostHolder(View itemView) {
             super(itemView);
             ivTest = (SimpleDraweeView) itemView.findViewById(R.id.iv_test);
-            tvTitle = (TextView) itemView.findViewById(R.id.tv_test);
+            tvNickName = (TextView) itemView.findViewById(R.id.tv_nickname);
+//            tvTitle = (TextView) itemView.findViewById(R.id.tv_test);
             tvContent = (TextView) itemView.findViewById(R.id.tv_content);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -77,7 +88,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
 
                     String s = datas.get(getAdapterPosition()).getUser().getUsername();
 //                    Log.e("Test",s);
-                    Toast.makeText(context,s, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
                 }
             });
         }
