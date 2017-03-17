@@ -89,6 +89,7 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
                         .show(firstFragment).commit();
                 Log.e("Test", manager.getFragments().size() + "");
                 System.out.println(manager.getFragments());
+                navigationFirst.setChecked(true);
                 break;
             case R.id.btn_navigation_square:
                 manager.beginTransaction().hide(firstFragment)
@@ -98,6 +99,7 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
                         .show(squareFragment).commit();
                 System.out.println(manager.getFragments());
                 Log.e("Test", manager.getFragments().size() + "");
+                navigationSquare.setChecked(true);
                 break;
             case R.id.btn_navigation_chat:
                 manager.beginTransaction().hide(squareFragment)
@@ -107,6 +109,10 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
                         .show(chatFragment).commit();
                 System.out.println(manager.getFragments());
                 Log.e("Test", manager.getFragments().size() + "");
+                navigationFirst.setChecked(false);
+                navigationSquare.setChecked(false);
+                navigationInformation.setChecked(false);
+                navigationMy.setChecked(false);
                 break;
             case R.id.btn_navigation_information:
                 manager.beginTransaction().hide(squareFragment)
@@ -116,6 +122,7 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
                         .show(informationFragment).commit();
                 System.out.println(manager.getFragments());
                 Log.e("Test", manager.getFragments().size() + "");
+                navigationInformation.setChecked(true);
                 break;
             case R.id.btn_navigation_my:
                 manager.beginTransaction().hide(squareFragment)
@@ -125,6 +132,7 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
                         .show(myFragment).commit();
                 System.out.println(manager.getFragments());
                 Log.e("Test", manager.getFragments().size() + "");
+                navigationMy.setChecked(true);
                 break;
             default:
                 break;

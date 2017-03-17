@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00000000"
-    tools:context="com.swpuiot.helpingplatform.view.InfImplActivity">
-    <TextView
-        android:id="@+id/tv_show"
+    xmlns:tools="http://schemas.android.com/tools">
+    <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:textSize="20sp"/>
-</RelativeLayout>
+        android:layout_height="?actionBarSize">
+        <TextView
+            android:id="@+id/tv_im_toolbar_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            tools:text="这是测试文本"
+            android:maxLines="1"/>
+    </android.support.v7.widget.Toolbar>
+
+
+</LinearLayout>
