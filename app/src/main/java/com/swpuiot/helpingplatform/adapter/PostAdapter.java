@@ -5,6 +5,7 @@ package com.swpuiot.helpingplatform.adapter;
  */
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +18,10 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.bean.PostBean;
 
+import java.net.URL;
 import java.util.List;
+
+import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * Created by DELL on 2017/3/5.
@@ -41,7 +45,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
     @Override
     public void onBindViewHolder(PostHolder holder, int position) {
         holder.tvTitle.setText(datas.get(position).getTitle());
-        holder.ivTest.setImageURI(datas.get(position).getUser().getHeadimg().getFileUrl());
+        BmobFile file = datas.get(position).getUser().getHeadimg();
+        if (file ==null){
+            Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.head_none);
+            holder.ivTest.setImageURI(uri);
+        }else {
+            holder.ivTest.setImageURI(datas.get(position).getUser().getHeadimg().getFileUrl());
+        }
         holder.tvContent.setText(datas.get(position).getContent());
     }
 

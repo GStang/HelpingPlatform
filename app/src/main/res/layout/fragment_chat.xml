@@ -51,11 +51,11 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="5dp"
-            android:text=" "/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="5dp"-->
+            <!--android:text=" "/>-->
 
 
         <EditText
@@ -91,7 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
-            android:hint="在此输入标题"
+            android:hint="输入科目"
             android:background="@android:drawable/edit_text"
             android:windowSoftInputMode="adjustResize"/>
         <!--<TextView-->

@@ -129,34 +129,6 @@ public class ChatFragment extends Fragment {
                 editText_title.setText("");
                 editText_plan.setText("");
                 editText_phone.setText("");
-//
-//                file.uploadblock(new UploadFileListener() {
-//                    @Override
-//                    public void done(BmobException e) {
-//                        if (e == null) {
-//                            Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
-//                            success = true;
-//                            test.setTest("我是测试");
-//                            test.setImg(file);
-//                            test.save(new SaveListener<String>() {
-//                                @Override
-//                                public void done(String s, BmobException e) {
-//                                    if (e == null) {
-//                                        Toast.makeText(getActivity(), "成功", Toast.LENGTH_SHORT).show();
-//                                        success = false;
-//                                    } else {
-//                                        Toast.makeText(getActivity(), "失败了", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }
-//                            });
-//                        } else
-//                            Toast.makeText(getActivity(), "Failed", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-
-
-
-//                Toast.makeText(getActivity(), "发布成功", Toast.LENGTH_SHORT).show();
 
             }
         });

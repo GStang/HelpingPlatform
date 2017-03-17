@@ -41,7 +41,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
-public class UserInformationActivity extends AppCompatActivity implements View.OnClickListener{
+public class UserInformationActivity extends AppCompatActivity implements View.OnClickListener {
 
     private LinearLayout headImage;
     private LinearLayout name;
@@ -65,7 +65,8 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
     private LinearLayout checkBoy;
     private LinearLayout checkGirl;
     private TextView showSex;
-    public static final String PHOTO_IMAGE_FILE_NAME = BmobUser.getCurrentUser(User.class).getUsername()+"head.jpg";
+    private User newUser;
+    public static final String PHOTO_IMAGE_FILE_NAME = BmobUser.getCurrentUser(User.class).getUsername() + "head.jpg";
     public static final int CAMERA_REQUEST_CODE = 100;
     public static final int IMAGE_REQUEST_CODE = 101;
     public static final int RESULT_REQUEST_CODE = 102;
@@ -76,34 +77,43 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_information);
 
-        headImage= (LinearLayout) findViewById(R.id.ll_userinformation_image);
-        name= (LinearLayout) findViewById(R.id.ll_userinformation_name);
-        sex= (LinearLayout) findViewById(R.id.ll_userinformation_sex);
-        age= (LinearLayout) findViewById(R.id.ll_userinformation_age);
+        headImage = (LinearLayout) findViewById(R.id.ll_userinformation_image);
+        name = (LinearLayout) findViewById(R.id.ll_userinformation_name);
+        sex = (LinearLayout) findViewById(R.id.ll_userinformation_sex);
+        age = (LinearLayout) findViewById(R.id.ll_userinformation_age);
         headImage.setOnClickListener(this);
         name.setOnClickListener(this);
         sex.setOnClickListener(this);
         age.setOnClickListener(this);
+        newUser = new User();
 
-        showHeadImage= (SimpleDraweeView) findViewById(R.id.simdra_userinformation_image);
-        showName= (TextView) findViewById(R.id.tv_userinformation_name);
-        showSex= (TextView) findViewById(R.id.tv_userinformation_sex);
-        showAge= (TextView) findViewById(R.id.tv_userinformation_age);
+        showHeadImage = (SimpleDraweeView) findViewById(R.id.simdra_userinformation_image);
+        showName = (TextView) findViewById(R.id.tv_userinformation_name);
+        showSex = (TextView) findViewById(R.id.tv_userinformation_sex);
+        showAge = (TextView) findViewById(R.id.tv_userinformation_age);
 
-        user=BmobUser.getCurrentUser(User.class);
+        user = BmobUser.getCurrentUser(User.class);
+        int sexnum;
+        if (user.getSex() != null) {
+            sexnum = user.getSex();
+            if (sexnum == 1)
+                showSex.setText("男");
+            else
+                showSex.setText("女");
+        }
 
         showName.setText(user.getNickName());
 
         Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.head_none);
-        if (user==null||user.getHeadimg() == null) {
+        if (user == null || user.getHeadimg() == null) {
             showHeadImage.setImageURI(uri);
         } else {
             showHeadImage.setImageURI(user.getHeadimg().getFileUrl());
         }
 
-        iamgePopupWindow=getLayoutInflater().inflate(R.layout.layout_image_toast,null);
-        mImagePopupWindow=new PopupWindow(iamgePopupWindow, WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,true);
+        iamgePopupWindow = getLayoutInflater().inflate(R.layout.layout_image_toast, null);
+        mImagePopupWindow = new PopupWindow(iamgePopupWindow, WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT, true);
         mImagePopupWindow.setTouchable(true);
         mImagePopupWindow.setOutsideTouchable(true);
         mImagePopupWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
@@ -132,20 +142,19 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
             }
         });
 
-        showImage= (Button) mImagePopupWindow.getContentView().findViewById(R.id.btn_image_show);
-        photo= (Button) mImagePopupWindow.getContentView().findViewById(R.id.btn_image_photo);
-        takePhoto= (Button) mImagePopupWindow.getContentView().findViewById(R.id.btn_image_take);
-        imageCancel= (Button) mImagePopupWindow.getContentView().findViewById(R.id.btn_image_cancel);
+        showImage = (Button) mImagePopupWindow.getContentView().findViewById(R.id.btn_image_show);
+        photo = (Button) mImagePopupWindow.getContentView().findViewById(R.id.btn_image_photo);
+        takePhoto = (Button) mImagePopupWindow.getContentView().findViewById(R.id.btn_image_take);
+        imageCancel = (Button) mImagePopupWindow.getContentView().findViewById(R.id.btn_image_cancel);
         showImage.setOnClickListener(this);
         photo.setOnClickListener(this);
         takePhoto.setOnClickListener(this);
         imageCancel.setOnClickListener(this);
 
 
-
-        sexPopupWindow=getLayoutInflater().inflate(R.layout.layout_change_sex,null);
-        mSexPopupWindow=new PopupWindow(sexPopupWindow, WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,true);
+        sexPopupWindow = getLayoutInflater().inflate(R.layout.layout_change_sex, null);
+        mSexPopupWindow = new PopupWindow(sexPopupWindow, WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT, true);
         mSexPopupWindow.setTouchable(true);
         mSexPopupWindow.setOutsideTouchable(true);
         mSexPopupWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
@@ -174,23 +183,21 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
             }
         });
 
-        choseBoy= (RadioButton) mSexPopupWindow.getContentView().findViewById(R.id.rabtn_sex_boy);
-        choseGirl= (RadioButton) mSexPopupWindow.getContentView().findViewById(R.id.rabtn_sex_girl);
-        checkBoy= (LinearLayout) mSexPopupWindow.getContentView().findViewById(R.id.ll_sex_boy);
-        checkGirl= (LinearLayout) mSexPopupWindow.getContentView().findViewById(R.id.ll_sex_girl);
+        choseBoy = (RadioButton) mSexPopupWindow.getContentView().findViewById(R.id.rabtn_sex_boy);
+        choseGirl = (RadioButton) mSexPopupWindow.getContentView().findViewById(R.id.rabtn_sex_girl);
+        checkBoy = (LinearLayout) mSexPopupWindow.getContentView().findViewById(R.id.ll_sex_boy);
+        checkGirl = (LinearLayout) mSexPopupWindow.getContentView().findViewById(R.id.ll_sex_girl);
         checkBoy.setOnClickListener(this);
         checkGirl.setOnClickListener(this);
         choseBoy.setOnClickListener(this);
         choseGirl.setOnClickListener(this);
 
 
-
-
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ll_userinformation_image:
                 mImagePopupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);
                 WindowManager.LayoutParams imageParams = getWindow().getAttributes();
@@ -198,9 +205,9 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                 getWindow().setAttributes(imageParams);
                 break;
             case R.id.ll_userinformation_name:
-                Intent intent=new Intent(this,ChangeNameACtivity.class);
-                intent.putExtra("name",showName.getText().toString());
-                startActivityForResult(intent,REQUEST_CHANGENAME_CODE);
+                Intent intent = new Intent(this, ChangeNameACtivity.class);
+                intent.putExtra("name", showName.getText().toString());
+                startActivityForResult(intent, REQUEST_CHANGENAME_CODE);
                 break;
             case R.id.ll_userinformation_sex:
                 mSexPopupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);
@@ -209,18 +216,18 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                 getWindow().setAttributes(sexParams);
                 break;
             case R.id.ll_userinformation_age:
-
+                
                 break;
             case R.id.btn_image_show:
-                LayoutInflater inflater=LayoutInflater.from(UserInformationActivity.this);
-                View imageView=inflater.inflate(R.layout.dialog_image, null);
-                final AlertDialog dialog=new AlertDialog.Builder(UserInformationActivity.this).create();
-                SimpleDraweeView imageView1= (SimpleDraweeView) imageView.findViewById(R.id.simdra_show);
+                LayoutInflater inflater = LayoutInflater.from(UserInformationActivity.this);
+                View imageView = inflater.inflate(R.layout.dialog_image, null);
+                final AlertDialog dialog = new AlertDialog.Builder(UserInformationActivity.this).create();
+                SimpleDraweeView imageView1 = (SimpleDraweeView) imageView.findViewById(R.id.simdra_show);
                 System.out.println(user.getHeadimg().getFileUrl());
                 imageView1.setImageURI(user.getHeadimg().getFileUrl());
                 dialog.setView(imageView);
                 dialog.show();
-                Log.e("Success","Heae");
+                Log.e("Success", "Heae");
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -243,23 +250,64 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                 showSex.setText(choseBoy.getText().toString());
                 choseBoy.setChecked(true);
                 choseGirl.setChecked(false);
+
+                newUser.setSex(1);
+                newUser.update(user.getObjectId(), new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Toast.makeText(UserInformationActivity.this, "性别修改成功", Toast.LENGTH_SHORT).show();
+                        }else
+                            Toast.makeText(UserInformationActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
                 mSexPopupWindow.dismiss();
                 break;
             case R.id.ll_sex_girl:
                 showSex.setText(choseGirl.getText().toString());
                 choseBoy.setChecked(false);
+                newUser.setSex(0);
+                newUser.update(user.getObjectId(), new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Toast.makeText(UserInformationActivity.this, "性别修改成功", Toast.LENGTH_SHORT).show();
+                        } else
+                            Toast.makeText(UserInformationActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
                 mSexPopupWindow.dismiss();
                 break;
             case R.id.rabtn_sex_boy:
                 showSex.setText(choseBoy.getText().toString());
                 choseBoy.setChecked(true);
                 choseGirl.setChecked(false);
+                newUser.setSex(1);
+                newUser.update(user.getObjectId(), new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Toast.makeText(UserInformationActivity.this, "性别修改成功", Toast.LENGTH_SHORT).show();
+                        }else
+                            Toast.makeText(UserInformationActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
                 mSexPopupWindow.dismiss();
                 break;
             case R.id.rabtn_sex_girl:
                 showSex.setText(choseGirl.getText().toString());
                 choseBoy.setChecked(true);
                 choseBoy.setChecked(false);
+                newUser.setSex(0);
+                newUser.update(user.getObjectId(), new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Toast.makeText(UserInformationActivity.this, "性别修改成功", Toast.LENGTH_SHORT).show();
+                        } else
+                            Toast.makeText(UserInformationActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
                 mSexPopupWindow.dismiss();
                 break;
             default:

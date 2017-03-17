@@ -9,7 +9,7 @@ import cn.bmob.v3.datatype.BmobFile;
 public class User extends BmobUser {
     BmobFile headimg;
     Integer age;
-    Boolean sex;
+    Integer sex;
 
     public String getNickName() {
         return nickName;
@@ -21,11 +21,11 @@ public class User extends BmobUser {
 
     String nickName;
 
-    public Boolean getSex() {
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(Boolean sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 

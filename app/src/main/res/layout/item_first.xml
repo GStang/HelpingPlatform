@@ -8,13 +8,7 @@
     android:clickable="true"
     android:background="#f2ebeb">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_margin="5dp"
-        app:cardCornerRadius="10dp"
-        app:cardBackgroundColor="#fff"
-        android:foreground="?android:attr/selectableItemBackgroundBorderless">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,10 +47,5 @@
             </LinearLayout>
 
         </LinearLayout>
-
-
-    </android.support.v7.widget.CardView>
-
-
 
 </LinearLayout>
