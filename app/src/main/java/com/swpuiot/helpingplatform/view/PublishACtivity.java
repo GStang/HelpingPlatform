@@ -3,7 +3,6 @@ package com.swpuiot.helpingplatform.view;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,11 +10,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.swpuiot.helpingplatform.R;
@@ -33,7 +30,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadBatchListener;
 
-public class PublishActivity extends AppCompatActivity implements View.OnClickListener {
+public class PublishACtivity extends AppCompatActivity implements View.OnClickListener {
     private Toolbar toolbar;
     private EditText editContent;
     private User user;
@@ -71,7 +68,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 switch (item.getItemId()) {
                     case R.id.menu_publish:
                         if (editContent.getText().toString().trim().equals("")) {
-                            Toast.makeText(PublishActivity.this, "内容不能为空", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PublishACtivity.this, "内容不能为空", Toast.LENGTH_SHORT).show();
                             return false;
                         }
                         doupdateFile();
@@ -94,7 +91,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             public void onSuccess(List<BmobFile> list, List<String> list1) {
                 if (list.size() == filePaths.length) {//如果数量相等，则代表文件全部上传完成
                     //do something
-                    Toast.makeText(PublishActivity.this, "所有图片上传成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PublishACtivity.this, "所有图片上传成功", Toast.LENGTH_SHORT).show();
                     postBean.setImgs(list);
                     for (String file :filePaths){
                         File file1 = new File(file);
@@ -113,7 +110,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onError(int i, String s) {
-                Toast.makeText(PublishActivity.this, s, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PublishACtivity.this, s, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -127,11 +124,11 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void done(String s, BmobException e) {
                 if (e == null) {
-                    Toast.makeText(PublishActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PublishACtivity.this, "发布成功", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     Log.e("Error", e.getMessage() + e.getErrorCode());
-                    Toast.makeText(PublishActivity.this, "发布失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PublishACtivity.this, "发布失败", Toast.LENGTH_SHORT).show();
                 }
             }
         });

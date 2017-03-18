@@ -14,14 +14,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.utils.CameraUtils;
-import com.swpuiot.helpingplatform.view.PublishActivity;
+import com.swpuiot.helpingplatform.view.PublishACtivity;
 
 import java.util.List;
 
@@ -75,22 +73,22 @@ public class PublishAdapter extends RecyclerView.Adapter<PublishAdapter.MyPhoto>
                 @Override
                 public void onClick(View v) {
                     if (getAdapterPosition() == 0) {
-                        popupWindow = ((PublishActivity) context).getLayoutInflater().inflate(R.layout
+                        popupWindow = ((PublishACtivity) context).getLayoutInflater().inflate(R.layout
                                 .layout_square_choseimage, null);
                         mPopupWindow = new PopupWindow(popupWindow, WindowManager.LayoutParams.MATCH_PARENT, WindowManager
                                 .LayoutParams.WRAP_CONTENT, true);
                         mPopupWindow.setTouchable(true);
                         mPopupWindow.setOutsideTouchable(true);
-                        mPopupWindow.setBackgroundDrawable(new BitmapDrawable(((PublishActivity) context).getResources()
+                        mPopupWindow.setBackgroundDrawable(new BitmapDrawable(((PublishACtivity) context).getResources()
                                 , (Bitmap) null));
                         mPopupWindow.setFocusable(true);
                         mPopupWindow.setAnimationStyle(R.style.Animation);
                         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                             @Override
                             public void onDismiss() {
-                                WindowManager.LayoutParams params = ((PublishActivity) context).getWindow().getAttributes();
+                                WindowManager.LayoutParams params = ((PublishACtivity) context).getWindow().getAttributes();
                                 params.alpha = 1f;
-                                ((PublishActivity) context).getWindow().setAttributes(params);
+                                ((PublishACtivity) context).getWindow().setAttributes(params);
                             }
                         });
                         mPopupWindow.getContentView().setOnKeyListener(new View.OnKeyListener() {
@@ -140,9 +138,9 @@ public class PublishAdapter extends RecyclerView.Adapter<PublishAdapter.MyPhoto>
                             }
                         });
                         mPopupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);
-                        WindowManager.LayoutParams imageParams = ((PublishActivity) context).getWindow().getAttributes();
+                        WindowManager.LayoutParams imageParams = ((PublishACtivity) context).getWindow().getAttributes();
                         imageParams.alpha = 0.7f;
-                        ((PublishActivity) context).getWindow().setAttributes(imageParams);
+                        ((PublishACtivity) context).getWindow().setAttributes(imageParams);
                     }else{
                         view.setImageBitmap(datas.get(getAdapterPosition()));
                         dialog.setView(view);

@@ -56,7 +56,7 @@
         </activity>
         <activity android:name=".view.UserInformationActivity" />
         <activity android:name=".view.ChangeNameACtivity" />
-        <activity android:name=".view.PublishActivity"></activity>
+        <activity android:name=".view.PublishACtivity"></activity>
     </application>
 
 </manifest>

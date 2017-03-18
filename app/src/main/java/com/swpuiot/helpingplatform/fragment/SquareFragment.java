@@ -22,7 +22,7 @@ import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.PostAdapter;
 import com.swpuiot.helpingplatform.bean.PostBean;
 import com.swpuiot.helpingplatform.bean.User;
-import com.swpuiot.helpingplatform.view.PublishActivity;
+import com.swpuiot.helpingplatform.view.PublishACtivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +110,7 @@ public class SquareFragment extends Fragment implements View.OnClickListener {
     }
 
     private void publishData() {
-        Intent intent = new Intent(getActivity(),PublishActivity.class);
+        Intent intent = new Intent(getActivity(),PublishACtivity.class);
         startActivity(intent);
     }
 

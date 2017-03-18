@@ -65,6 +65,8 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private List<Integer>recyclerImage;
     private List<String>recyclerTitle;
     private List<String>recyclerWord;
+    private List<String>recyclerName;
+    private List<String>recyclerTime;
     private static final int REFRESH_COMPLETE=0x110;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
@@ -77,6 +79,8 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private List<String>a=Arrays.asList("你好");
     private List<String>b=Arrays.asList("好呀好呀");
     private List<Integer>c=Arrays.asList(R.drawable.car4);
+    private List<String>d=Arrays.asList("3.18 17:30");
+    private List<String>e=Arrays.asList("唐骚猪");
 
 
     @Nullable
@@ -119,9 +123,24 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 "蜀道驿传接力马拉松结束，我校几只队伍均获得不错的名次",
                 "新学期到来，翼灵团队安卓组成员另类合照演绎青春"
         );
+        recyclerTime=Arrays.asList(
+                "3.18 17:14",
+                "3.18 17:10",
+                "3.18 17:07",
+                "3.18 17:05",
+                "3.18 17:00"
+        );
+        recyclerName=Arrays.asList(
+                "笨笨的故事",
+                "唐光圣",
+                "苏烟梧桐",
+                "羊荣毅",
+                "吴豪杰"
+        );
 
         recyclerView= (RecyclerView) view.findViewById(R.id.recycler_first);
-        firstRecyclerAdapter=new FirstRecyclerAdapter(getActivity(),recyclerTitle,recyclerWord,recyclerImage);
+        firstRecyclerAdapter=new FirstRecyclerAdapter(getActivity(),recyclerTitle,recyclerWord,recyclerImage
+        ,recyclerTime,recyclerName);
         recyclerView.setAdapter(firstRecyclerAdapter);
         recyclerViewHeader= (RecyclerViewHeader) view.findViewById(R.id.header_first);
 
@@ -248,7 +267,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public void onRefresh() {
 
         Toast.makeText(getActivity(), "访问", Toast.LENGTH_SHORT).show();
-        firstRecyclerAdapter.upData(a, b, c);
+        firstRecyclerAdapter.upData(a, b, c,d,e);
         firstRecyclerAdapter.notifyDataSetChanged();
         firstRecyclerAdapter.addData(0);
         swipeRefreshLayout.setRefreshing(false);

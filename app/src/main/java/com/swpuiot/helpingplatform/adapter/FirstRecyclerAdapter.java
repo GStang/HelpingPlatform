@@ -24,6 +24,8 @@ public class FirstRecyclerAdapter extends RecyclerView.Adapter<FirstViewHolder>{
     private List<String>titleList;
     private List<String>wordList;
     private List<Integer>imageList;
+    private List<String>timeList;
+    private List<String>nameList;
 
     public interface OnItemClickListener{
         void onItemClick(View view,int position);
@@ -36,11 +38,13 @@ public class FirstRecyclerAdapter extends RecyclerView.Adapter<FirstViewHolder>{
     }
 
     public FirstRecyclerAdapter(Context context,List<String>titleList,List<String>wordList,
-                                List<Integer>imageList){
+                                List<Integer>imageList,List<String>timeList,List<String>nameList){
         this.context=context;
         this.titleList=titleList;
         this.wordList=wordList;
         this.imageList=imageList;
+        this.timeList=timeList;
+        this.nameList=nameList;
         inflater=LayoutInflater.from(context);
     }
 
@@ -55,10 +59,12 @@ public class FirstRecyclerAdapter extends RecyclerView.Adapter<FirstViewHolder>{
     }
 
     public void upData(List<String>titleList,List<String>wordList,
-                       List<Integer>imageList){
+                       List<Integer>imageList,List<String>timeList,List<String>nameList){
         this.titleList=titleList;
         this.wordList=wordList;
         this.imageList=imageList;
+        this.timeList=timeList;
+        this.nameList=nameList;
     }
 
     public void removeData(int pos){
@@ -71,6 +77,8 @@ public class FirstRecyclerAdapter extends RecyclerView.Adapter<FirstViewHolder>{
         holder.wordContext.setText(wordList.get(position));
         Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/"+imageList.get(position));
         holder.imageView.setImageURI(uri);
+        holder.time.setText(timeList.get(position));
+        holder.name.setText(nameList.get(position));
 
         if(onItemClickListener!=null){
 
@@ -100,11 +108,15 @@ class FirstViewHolder extends RecyclerView.ViewHolder{
     TextView title;
     TextView wordContext;
     SimpleDraweeView imageView;
+    TextView time;
+    TextView name;
 
     public FirstViewHolder(View itemView) {
         super(itemView);
         title= (TextView) itemView.findViewById(R.id.tv_first_title);
         wordContext= (TextView) itemView.findViewById(R.id.tv_first_word);
         imageView= (SimpleDraweeView) itemView.findViewById(R.id.iv_first_image);
+        time= (TextView) itemView.findViewById(R.id.tv_first_time);
+        name= (TextView) itemView.findViewById(R.id.tv_first_name);
     }
 }
