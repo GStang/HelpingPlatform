@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.FirstRecyclerAdapter;
+import com.swpuiot.helpingplatform.bean.First;
 import com.swpuiot.helpingplatform.utils.BannerLoader;
 import com.swpuiot.helpingplatform.view.InfImplActivity;
 import com.swpuiot.helpingplatform.view.SearchActivity;
@@ -62,11 +63,6 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private List<String>bannerTitle;
     private RecyclerView recyclerView;
     private FirstRecyclerAdapter firstRecyclerAdapter;
-    private List<Integer>recyclerImage;
-    private List<String>recyclerTitle;
-    private List<String>recyclerWord;
-    private List<String>recyclerName;
-    private List<String>recyclerTime;
     private static final int REFRESH_COMPLETE=0x110;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
@@ -74,6 +70,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private PopupWindow mPopupWindow;
     private View popopWindow;
     private Button toastCancel;
+    private First first;
 
 
     private List<String>a=Arrays.asList("你好");
@@ -86,8 +83,8 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_first,container,false);
-
+        View view=inflater.inflate(R.layout.fragment_first, container, false);
+        first = new First();
         bannerImage= Arrays.asList(
                 R.drawable.car3,
                 R.drawable.car4,
@@ -103,44 +100,12 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 "第四届翼灵超跑大赛拉开序幕"
         );
 
-        recyclerImage=Arrays.asList(
-                R.drawable.new1,
-                R.drawable.new2,
-                R.drawable.new3,
-                R.drawable.new4
-        );
 
-        recyclerTitle=Arrays.asList(
-                "石大春景",
-                "纸上传奇",
-                "田径喜讯",
-                "翼灵热血"
-        );
-
-        recyclerWord=Arrays.asList(
-                "石大春景|春风十里不如石大美景",
-                "手绘牛人用画笔赋予动物神奇色彩，震撼人心",
-                "蜀道驿传接力马拉松结束，我校几只队伍均获得不错的名次",
-                "新学期到来，翼灵团队安卓组成员另类合照演绎青春"
-        );
-        recyclerTime=Arrays.asList(
-                "3.18 17:14",
-                "3.18 17:10",
-                "3.18 17:07",
-                "3.18 17:05",
-                "3.18 17:00"
-        );
-        recyclerName=Arrays.asList(
-                "笨笨的故事",
-                "唐光圣",
-                "苏烟梧桐",
-                "羊荣毅",
-                "吴豪杰"
-        );
+        first.initData();
 
         recyclerView= (RecyclerView) view.findViewById(R.id.recycler_first);
-        firstRecyclerAdapter=new FirstRecyclerAdapter(getActivity(),recyclerTitle,recyclerWord,recyclerImage
-        ,recyclerTime,recyclerName);
+        firstRecyclerAdapter=new FirstRecyclerAdapter(getActivity(),first.getRecyclerTitle(),first.getRecyclerWord()
+                ,first.getRecyclerImage(),first.getRecyclerTime(),first.getRecyclerName());
         recyclerView.setAdapter(firstRecyclerAdapter);
         recyclerViewHeader= (RecyclerViewHeader) view.findViewById(R.id.header_first);
 
@@ -156,7 +121,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(getActivity(), InfImplActivity.class);
-                intent.putExtra("title", recyclerTitle.get(position));
+                intent.putExtra("position",position);
                 startActivity(intent);
             }
 
