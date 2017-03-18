@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -52,9 +53,7 @@ public class SquareFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_square, container, false);
         context = getActivity();
         datas = new ArrayList<>();
-        adapter = new PostAdapter(context, datas);
-        System.out.println(datas.toString());
-        System.out.println(adapter);
+        adapter = new PostAdapter((AppCompatActivity) context, datas);
 
         btnCommit = (Button) view.findViewById(R.id.btn_commit);
         fabButton = (FloatingActionButton) view.findViewById(R.id.fb_add);
