@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -34,6 +35,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
@@ -60,22 +62,46 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
     private Button photo;
     private Button takePhoto;
     private Button imageCancel;
+    private DatePicker picker;
     private RadioButton choseBoy;
     private RadioButton choseGirl;
     private LinearLayout checkBoy;
     private LinearLayout checkGirl;
     private TextView showSex;
+    private AlertDialog dialog2;
     private User newUser;
     public static final String PHOTO_IMAGE_FILE_NAME = BmobUser.getCurrentUser(User.class).getUsername() + "head.jpg";
     public static final int CAMERA_REQUEST_CODE = 100;
     public static final int IMAGE_REQUEST_CODE = 101;
     public static final int RESULT_REQUEST_CODE = 102;
     public static final int REQUEST_CHANGENAME_CODE = 103;
+    private View view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_information);
+        Calendar now = Calendar.getInstance();
+        final int nowyear = now.get(Calendar.YEAR);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        view = LayoutInflater.from(this).inflate(R.layout.item_data_picker, null);
+        builder.setView(view).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int Year = picker.getYear();
+                showAge.setText((nowyear - Year) + "");
+                newUser = new User();
+                newUser.setAge(nowyear - Year);
+                newUser.update(user.getObjectId(), new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null)
+                            Toast.makeText(UserInformationActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        dialog2 = builder.create();
 
         headImage = (LinearLayout) findViewById(R.id.ll_userinformation_image);
         name = (LinearLayout) findViewById(R.id.ll_userinformation_name);
@@ -87,6 +113,7 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
         age.setOnClickListener(this);
         newUser = new User();
 
+        picker = (DatePicker) view.findViewById(R.id.date_picker);
         showHeadImage = (SimpleDraweeView) findViewById(R.id.simdra_userinformation_image);
         showName = (TextView) findViewById(R.id.tv_userinformation_name);
         showSex = (TextView) findViewById(R.id.tv_userinformation_sex);
@@ -101,7 +128,8 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
             else
                 showSex.setText("女");
         }
-
+        if (user.getAge() != null)
+            showAge.setText(user.getAge()+"");
         showName.setText(user.getNickName());
 
         Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.head_none);
@@ -216,7 +244,8 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                 getWindow().setAttributes(sexParams);
                 break;
             case R.id.ll_userinformation_age:
-                
+                Toast.makeText(UserInformationActivity.this, "年龄", Toast.LENGTH_SHORT).show();
+                dialog2.show();
                 break;
             case R.id.btn_image_show:
                 LayoutInflater inflater = LayoutInflater.from(UserInformationActivity.this);
@@ -257,7 +286,7 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                     public void done(BmobException e) {
                         if (e == null) {
                             Toast.makeText(UserInformationActivity.this, "性别修改成功", Toast.LENGTH_SHORT).show();
-                        }else
+                        } else
                             Toast.makeText(UserInformationActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -288,7 +317,7 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                     public void done(BmobException e) {
                         if (e == null) {
                             Toast.makeText(UserInformationActivity.this, "性别修改成功", Toast.LENGTH_SHORT).show();
-                        }else
+                        } else
                             Toast.makeText(UserInformationActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -407,18 +436,16 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                 public void done(BmobException e) {
                     if (e == null) {
                         // 此时上传成功
-
-                        user.setHeadimg(bmobFile);// 获取文件并赋值给实体类
-                        BmobUser bmobUser = BmobUser.getCurrentUser();
-                        user.update(user.getObjectId(), new UpdateListener() {
+                        deletehead();
+                        User newUser = new User();
+                        newUser.setHeadimg(bmobFile);// 获取文件并赋值给实体类
+                        newUser.update(user.getObjectId(), new UpdateListener() {
                             @Override
                             public void done(BmobException e) {
                                 if (e == null) {
                                     showHeadImage.setImageURI(bmobFile.getFileUrl());
-//                                    mProfileImage.setImageBitmap(bitmap);
-//                                    ToastUtils.showShort(getActivity(), getString(R.string.avatar_editor_success));
                                 } else {
-//                                    ToastUtils.showShort(getActivity(), getString(R.string.avatar_editor_failure));
+                                    Toast.makeText(UserInformationActivity.this, "设置头像失败", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -438,5 +465,16 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                 }
             });
         }
+    }
+
+    private void deletehead() {
+        BmobFile head = user.getHeadimg();
+        if (head != null)
+            head.delete(new UpdateListener() {
+                @Override
+                public void done(BmobException e) {
+                    Toast.makeText(UserInformationActivity.this, "success", Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 }
