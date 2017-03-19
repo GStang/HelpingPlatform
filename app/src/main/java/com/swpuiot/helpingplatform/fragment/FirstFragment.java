@@ -39,6 +39,7 @@ import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.FirstRecyclerAdapter;
 import com.swpuiot.helpingplatform.bean.First;
 import com.swpuiot.helpingplatform.utils.BannerLoader;
+import com.swpuiot.helpingplatform.view.BannerActivity;
 import com.swpuiot.helpingplatform.view.InfImplActivity;
 import com.swpuiot.helpingplatform.view.SearchActivity;
 import com.youth.banner.Banner;
@@ -78,6 +79,12 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private List<Integer>c=Arrays.asList(R.drawable.car4);
     private List<String>d=Arrays.asList("3.18 17:30");
     private List<String>e=Arrays.asList("唐骚猪");
+    private List<String>bannerUri=Arrays.asList(
+            "https://kuaibao.qq.com/s/20170318A03LZN00\n",
+            "https://kuaibao.qq.com/s/20170107I01ACJ00\n",
+            "https://kuaibao.qq.com/s/20170319A00U5700\n",
+            "https://kuaibao.qq.com/s/20170317C06DLA00\n"
+    );
 
 
     @Nullable
@@ -86,18 +93,16 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         View view=inflater.inflate(R.layout.fragment_first, container, false);
         first = new First();
         bannerImage= Arrays.asList(
-                R.drawable.car3,
-                R.drawable.car4,
-                R.drawable.car7,
-                R.drawable.car8,
-                R.drawable.car9
+                R.drawable.banner1,
+                R.drawable.banner2,
+                R.drawable.banner3,
+                R.drawable.banner4
         );
         bannerTitle=Arrays.asList(
-                "成都街头惊现镀金兰博基尼",
-                "布加迪是否如传说中的那么厉害",
-                "超跑地狱崭露头角，震撼来袭",
-                "美国地产大亨的大院与超跑",
-                "第四届翼灵超跑大赛拉开序幕"
+                "每日一笑",
+                "思维问答",
+                "时事政要",
+                "前沿科技"
         );
 
 
@@ -156,8 +161,8 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         banner.setOnBannerClickListener(new OnBannerClickListener() {
             @Override
             public void OnBannerClick(int position) {
-                Intent intent = new Intent(getActivity(), InfImplActivity.class);
-                intent.putExtra("bannerTitle", bannerTitle.get(position - 1));
+                Intent intent = new Intent(getActivity(), BannerActivity.class);
+                intent.putExtra("bannerUri", bannerUri.get(position - 1));
                 startActivity(intent);
             }
         });

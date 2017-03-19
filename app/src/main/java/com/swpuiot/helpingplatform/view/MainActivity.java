@@ -3,6 +3,7 @@ package com.swpuiot.helpingplatform.view;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.bean.User;
+import com.swpuiot.helpingplatform.fragment.ChatFragment;
 import com.swpuiot.helpingplatform.fragment.FirstFragment;
 import com.swpuiot.helpingplatform.fragment.NavigationFragment;
 
@@ -27,9 +29,7 @@ import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends AppCompatActivity {
     private User user;
-    //    private FirstFragment fragment = new FirstFragment();
     private NavigationFragment fragment = new NavigationFragment();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,9 +60,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "游客登录", Toast.LENGTH_SHORT).show();
         }
         getSupportFragmentManager().beginTransaction().add(R.id.layout_content, fragment).commit();
-//        getSupportFragmentManager().beginTransaction().add(R.id.layout_context, fragment).commit();
     }
-//    public FirstFragment getFragment(){
-//        return fragment;
-//    }
+
 }
