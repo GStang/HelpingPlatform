@@ -5,6 +5,7 @@ package com.swpuiot.helpingplatform.adapter;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,6 +21,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.bean.PostBean;
 import com.swpuiot.helpingplatform.bean.User;
+import com.swpuiot.helpingplatform.view.DetailsActivity;
 
 import java.net.URL;
 import java.util.List;
@@ -34,6 +36,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
     private List<PostBean> datas;
     private User user;
     private ImgAdapter mAdapter;
+    public static final String Details = "DETAILS";
 //    private
 
     public PostAdapter(AppCompatActivity context, List<PostBean> datas) {
@@ -98,9 +101,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String s = datas.get(getAdapterPosition()).getUser().getUsername();
-//                    Log.e("Test",s);
-                    Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, DetailsActivity.class);
+                    intent.putExtra(Details, datas.get(getAdapterPosition()));
+                    context.startActivity(intent);
                 }
             });
         }

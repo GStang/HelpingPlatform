@@ -39,7 +39,7 @@ import cn.bmob.v3.listener.SaveListener;
 public class SquareFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private Context context;
-    private Button btnCommit;
+//    private Button btnCommit;
     private Button btnGetdata;
     private List<PostBean> datas;
     private PostAdapter adapter;
@@ -55,10 +55,10 @@ public class SquareFragment extends Fragment implements View.OnClickListener {
         datas = new ArrayList<>();
         adapter = new PostAdapter((AppCompatActivity) context, datas);
 
-        btnCommit = (Button) view.findViewById(R.id.btn_commit);
+//        btnCommit = (Button) view.findViewById(R.id.btn_commit);
         fabButton = (FloatingActionButton) view.findViewById(R.id.fb_add);
         fabButton.setOnClickListener(this);
-        btnCommit.setOnClickListener(this);
+//        btnCommit.setOnClickListener(this);
         btnGetdata = (Button) view.findViewById(R.id.btn_getdate);
         btnGetdata.setOnClickListener(this);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar_square);
@@ -98,14 +98,12 @@ public class SquareFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_commit:
-                commitDatas();
-                break;
             case R.id.btn_getdate:
                 getDatas();
                 break;
             case R.id.fb_add:
                 publishData();
+                break;
         }
     }
 
@@ -114,21 +112,5 @@ public class SquareFragment extends Fragment implements View.OnClickListener {
         startActivity(intent);
     }
 
-    private void commitDatas() {
-        PostBean postBean = new PostBean();
-        postBean.setContent(context.getResources().getString(R.string.content));
-        postBean.setUser(user);
-        postBean.save(new SaveListener<String>() {
-            @Override
-            public void done(String s, BmobException e) {
-                if (e == null) {
-                    Toast.makeText(context, "发布成功", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.e("Error", e.getErrorCode() + e.getMessage());
-                    Toast.makeText(context, "发布失败", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
 }
 

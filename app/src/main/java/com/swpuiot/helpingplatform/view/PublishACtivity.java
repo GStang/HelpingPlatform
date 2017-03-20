@@ -51,7 +51,7 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_publish_activity);
         datas = new LinkedList<>();
         myAdapter = new PublishAdapter(this, datas);
-        postBean = new PostBean();
+
         toolbar = (Toolbar) findViewById(R.id.toolbar_publish);
         editContent = (EditText) findViewById(R.id.et_publish);
         user = BmobUser.getCurrentUser(User.class);
@@ -71,7 +71,13 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
                             Toast.makeText(PublishACtivity.this, "内容不能为空", Toast.LENGTH_SHORT).show();
                             return false;
                         }
-                        doupdateFile();
+                        if (datas.size() != 1) {
+                            postBean = new PostBean();
+                            doupdateFile();
+                        } else {
+                            postBean = new PostBean();
+                            dopublish();
+                        }
                         return true;
                     default:
                         return false;
@@ -93,9 +99,9 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
                     //do something
                     Toast.makeText(PublishACtivity.this, "所有图片上传成功", Toast.LENGTH_SHORT).show();
                     postBean.setImgs(list);
-                    for (String file :filePaths){
+                    for (String file : filePaths) {
                         File file1 = new File(file);
-                        if (file1!=null){
+                        if (file1 != null) {
                             file1.delete();
                         }
                     }
