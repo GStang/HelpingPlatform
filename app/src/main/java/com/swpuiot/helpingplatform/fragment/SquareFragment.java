@@ -24,11 +24,15 @@ import com.swpuiot.helpingplatform.bean.PostBean;
 import com.swpuiot.helpingplatform.bean.User;
 import com.swpuiot.helpingplatform.view.PublishACtivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
@@ -39,20 +43,21 @@ import cn.bmob.v3.listener.SaveListener;
 public class SquareFragment extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private Context context;
-//    private Button btnCommit;
+    //    private Button btnCommit;
     private Button btnGetdata;
     private List<PostBean> datas;
     private PostAdapter adapter;
     private User user;
     private Toolbar toolbar;
     private FloatingActionButton fabButton;
+    private String lastTime;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_square, container, false);
         context = getActivity();
-        datas = new ArrayList<>();
+        datas = new LinkedList<>();
         adapter = new PostAdapter((AppCompatActivity) context, datas);
 
 //        btnCommit = (Button) view.findViewById(R.id.btn_commit);
@@ -77,8 +82,17 @@ public class SquareFragment extends Fragment implements View.OnClickListener {
     }
 
     public void getDatas() {
+        Date date = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        try {
+//            date = sdf.parse(lastTime);
+//        } catch (java.text.ParseException e) {
+//            e.printStackTrace();
+//        }
         BmobQuery<PostBean> query = new BmobQuery<>();
         query.include("user");
+        query.order("-createdAt");
+//        query.addWhereLessThanOrEqualTo("createdAt", new BmobDate(date));
         query.findObjects(new FindListener<PostBean>() {
             @Override
             public void done(List<PostBean> list, BmobException e) {
@@ -86,8 +100,7 @@ public class SquareFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(context, "查询成功，共有" + list.size() + "条数据", Toast.LENGTH_SHORT).show();
                     datas.addAll(list);
                     adapter.notifyDataSetChanged();
-                    System.out.println(datas.toString());
-                    System.out.println(adapter);
+                    lastTime = list.get(0).getCreatedAt();
                 } else {
                     Toast.makeText(context, "查询失败", Toast.LENGTH_SHORT).show();
                 }
@@ -108,7 +121,7 @@ public class SquareFragment extends Fragment implements View.OnClickListener {
     }
 
     private void publishData() {
-        Intent intent = new Intent(getActivity(),PublishACtivity.class);
+        Intent intent = new Intent(getActivity(), PublishACtivity.class);
         startActivity(intent);
     }
 
