@@ -9,13 +9,13 @@ import cn.bmob.v3.datatype.BmobFile;
  * Created by DELL on 2017/3/17.
  */
 public class FirstBean extends BmobObject {
-    String title;
-    String content;
-    User author;
-    List<BmobFile> files;
-    Boolean isSolved;
-    Boolean isAlive;
-    User acceptUser;
+    String title;//任务标题
+    String content;//任务内容
+    User author;//任务发布者
+    List<BmobFile> files;//发布者头像
+    Boolean isSolved;//是否被解决
+    Boolean isAlive;//是否可以接单
+    User acceptUser;//接单人
 
     public User getAcceptUser() {
         return acceptUser;

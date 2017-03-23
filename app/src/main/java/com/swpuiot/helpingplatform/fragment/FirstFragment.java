@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -38,7 +40,10 @@ import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.FirstRecyclerAdapter;
 import com.swpuiot.helpingplatform.bean.First;
+import com.swpuiot.helpingplatform.bean.FirstBean;
+import com.swpuiot.helpingplatform.bean.User;
 import com.swpuiot.helpingplatform.utils.BannerLoader;
+import com.swpuiot.helpingplatform.utils.CameraUtils;
 import com.swpuiot.helpingplatform.view.BannerActivity;
 import com.swpuiot.helpingplatform.view.InfImplActivity;
 import com.swpuiot.helpingplatform.view.SearchActivity;
@@ -50,9 +55,18 @@ import com.youth.banner.loader.ImageLoader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
 
 /**
  * Created by DuZeming on 2017/3/5.
@@ -72,13 +86,13 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private View popopWindow;
     private Button toastCancel;
     private First first;
+    private Button addData;
+    private List<FirstBean>datas;
+    private User user;
+    public static final String InFlmp = "InFlmp";
 
 
-    private List<String>a=Arrays.asList("你好");
-    private List<String>b=Arrays.asList("好呀好呀");
-    private List<Integer>c=Arrays.asList(R.drawable.car4);
-    private List<String>d=Arrays.asList("3.18 17:30");
-    private List<String>e=Arrays.asList("唐骚猪");
+
     private List<String>bannerUri=Arrays.asList(
             "https://kuaibao.qq.com/s/20170318A03LZN00\n",
             "https://kuaibao.qq.com/s/20170107I01ACJ00\n",
@@ -86,12 +100,73 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             "https://kuaibao.qq.com/s/20170317C06DLA00\n"
     );
 
+    public void getDatas(){
+        BmobQuery<FirstBean>query=new BmobQuery<>();
+        query.include("author");
+        query.findObjects(new FindListener<FirstBean>() {
+            @Override
+            public void done(List<FirstBean> list, BmobException e) {
+
+                if (e==null){
+                    datas.clear();
+                    firstRecyclerAdapter.notifyItemRangeRemoved(0,firstRecyclerAdapter.getItemCount());
+                    swipeRefreshLayout.setRefreshing(false);
+                    Toast.makeText(getContext(),"查询成功，共有"+list.size()+"条数据",Toast.LENGTH_SHORT).show();
+                    datas.addAll(list);
+                    firstRecyclerAdapter.notifyDataSetChanged();
+                }
+                else {
+                    Toast.makeText(getContext(),"查询失败",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_first, container, false);
-        first = new First();
+        datas=new ArrayList<>();
+//        first = new First();
+
+
+        user=BmobUser.getCurrentUser(User.class);
+        addData= (Button) view.findViewById(R.id.add_data_first);
+        addData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final FirstBean bean = new FirstBean();
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.new1);
+                final BmobFile file = new BmobFile(new CameraUtils((AppCompatActivity) getActivity()).bitmapToFile(bitmap));
+
+                file.upload(new UploadFileListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            bean.setAuthor(user);
+                            bean.setContent("大三了，想把英语四级过了，希望有大神带我一起学英语，把四级过了，谢谢。");
+                            bean.setTitle("英语四级");
+                            List<BmobFile> list = new LinkedList<BmobFile>();
+                            list.add(file);
+                            bean.setFiles(list);
+                            bean.setSolved(true);
+                            bean.setAlive(false);
+                            bean.save(new SaveListener<String>() {
+                                @Override
+                                public void done(String s, BmobException e) {
+                                    if (e == null) {
+                                        Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
         bannerImage= Arrays.asList(
                 R.drawable.banner1,
                 R.drawable.banner2,
@@ -106,11 +181,10 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         );
 
 
-        first.initData();
+//        first.initData();
 
         recyclerView= (RecyclerView) view.findViewById(R.id.recycler_first);
-        firstRecyclerAdapter=new FirstRecyclerAdapter(getActivity(),first.getRecyclerTitle(),first.getRecyclerWord()
-                ,first.getRecyclerImage(),first.getRecyclerTime(),first.getRecyclerName());
+        firstRecyclerAdapter=new FirstRecyclerAdapter(getActivity(),datas);
         recyclerView.setAdapter(firstRecyclerAdapter);
         recyclerViewHeader= (RecyclerViewHeader) view.findViewById(R.id.header_first);
 
@@ -126,20 +200,16 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(getActivity(), InfImplActivity.class);
-                intent.putExtra("position",position);
+                intent.putExtra(InFlmp, datas.get(position));
                 startActivity(intent);
+
             }
 
 
-            ;
+
 
             @Override
             public void onItemLongClick(View view, int position) {
-//                Intent intent = new Intent();
-//                intent.setClassName(getActivity(), "com.swpuiot.helpingplatform.view.ToastActivity");
-//                getActivity().startActivity(intent);
-//                getActivity().overridePendingTransition(R.anim.in_from_bottom, 0);
-
                 mPopupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
                 WindowManager.LayoutParams params = getActivity().getWindow().getAttributes();
                 params.alpha = 0.7f;
@@ -229,6 +299,8 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         });
 
 
+
+
         return view;
     }
 
@@ -236,11 +308,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onRefresh() {
 
-        Toast.makeText(getActivity(), "访问", Toast.LENGTH_SHORT).show();
-        firstRecyclerAdapter.upData(a, b, c,d,e);
-        firstRecyclerAdapter.notifyDataSetChanged();
-        firstRecyclerAdapter.addData(0);
-        swipeRefreshLayout.setRefreshing(false);
+        getDatas();
     }
 
 
