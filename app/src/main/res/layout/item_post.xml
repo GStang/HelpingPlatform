@@ -3,7 +3,8 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="2dp">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -15,26 +16,38 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp">
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
 
                 <com.facebook.drawee.view.SimpleDraweeView
-
                     android:id="@+id/iv_test"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:layout_gravity="center"
                     fresco:roundAsCircle="true" />
 
                 <TextView
                     android:id="@+id/tv_nickname"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="4dp"
+                    android:layout_marginStart="36dp"
                     android:textColor="#1b1919"
                     tool:text="我是昵称" />
-            </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    tool:text="2017/3/23" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,34 +69,42 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_content"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <Button
+                <com.swpuiot.helpingplatform.customview.CustomButton
+                    android:id="@+id/btn_zan"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_btn_zan"
+                    android:drawableStart="@drawable/ic_action_zan"
+                    android:gravity="left|center_vertical"
                     android:text="赞"
                     android:textColor="#ed7e74" />
 
-                <Button
+                <com.swpuiot.helpingplatform.customview.CustomButton
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_btn_zan"
+                    android:drawableStart="@drawable/ic_friend"
+                    android:gravity="left|center_vertical"
                     android:text="分享"
                     android:textColor="#0ba0e4" />
 
-                <Button
+                <com.swpuiot.helpingplatform.customview.CustomButton
+                    android:id="@+id/btn_talk"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_btn_zan"
+                    android:drawableLeft="@drawable/ic_action_talk"
+                    android:gravity="left|center_vertical"
                     android:text="评论"
                     android:textColor="#0ba0e4" />
             </LinearLayout>

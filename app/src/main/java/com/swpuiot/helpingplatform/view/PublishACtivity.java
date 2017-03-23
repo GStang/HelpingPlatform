@@ -73,9 +73,11 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
                         }
                         if (datas.size() != 1) {
                             postBean = new PostBean();
+                            postBean.setZan(0);
                             doupdateFile();
                         } else {
                             postBean = new PostBean();
+                            postBean.setZan(0);
                             dopublish();
                         }
                         return true;

@@ -22,11 +22,11 @@
             android:textSize="25sp" />
     </android.support.v7.widget.Toolbar>
 
-    <Button
-        android:id="@+id/btn_getdate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="获取数据" />
+    <!--<Button-->
+    <!--android:id="@+id/btn_getdate"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="获取数据" />-->
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -45,6 +45,13 @@
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"
             app:rippleColor="#FFD700" />
+
+        <ProgressBar
+            android:id="@+id/pb_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+            android:layout_marginTop="50dp" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/refresh_layout"

@@ -15,13 +15,13 @@ public class PostBean extends BmobObject {
     private String content;//帖子内容
     private User user;//帖子的作者
     private BmobRelation likes;
-    private int zan;
+    private Integer zan;
 
-    public int getZan() {
+    public Integer getZan() {
         return zan;
     }
 
-    public void setZan(int zan) {
+    public void setZan(Integer zan) {
         this.zan = zan;
     }
 
