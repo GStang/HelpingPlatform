@@ -1,41 +1,28 @@
 package com.swpuiot.helpingplatform.fragment;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
-
 import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.FirstRecyclerAdapter;
@@ -50,16 +37,10 @@ import com.swpuiot.helpingplatform.view.SearchActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerClickListener;
-import com.youth.banner.loader.ImageLoader;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
-
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
@@ -90,6 +71,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private List<FirstBean>datas;
     private User user;
     public static final String InFlmp = "InFlmp";
+    private Boolean refreshing=false;
 
 
 
@@ -109,8 +91,9 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                 if (e==null){
                     datas.clear();
-                    firstRecyclerAdapter.notifyItemRangeRemoved(0,firstRecyclerAdapter.getItemCount());
+                    firstRecyclerAdapter.notifyItemRangeRemoved(0, firstRecyclerAdapter.getItemCount());
                     swipeRefreshLayout.setRefreshing(false);
+                    refreshing=false;
                     Toast.makeText(getContext(),"查询成功，共有"+list.size()+"条数据",Toast.LENGTH_SHORT).show();
                     datas.addAll(list);
                     firstRecyclerAdapter.notifyDataSetChanged();
@@ -128,7 +111,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_first, container, false);
         datas=new ArrayList<>();
-//        first = new First();
+
 
 
         user=BmobUser.getCurrentUser(User.class);
@@ -206,8 +189,6 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
 
 
-
-
             @Override
             public void onItemLongClick(View view, int position) {
                 mPopupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
@@ -218,6 +199,8 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         });
 
         swipeRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.swipe_first);
+        refreshing = true;
+        swipeRefreshLayout.setRefreshing(true);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         banner= (Banner) view.findViewById(R.id.banner_first);
@@ -304,11 +287,24 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        swipeRefreshLayout.setRefreshing(true);
+        refreshing=true;
+        getDatas();
+    }
 
     @Override
     public void onRefresh() {
+        if (refreshing){
+            return;
+        }
+        else {
+            refreshing=true;
+            getDatas();
+        }
 
-        getDatas();
     }
 
 

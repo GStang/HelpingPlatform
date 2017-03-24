@@ -1,6 +1,8 @@
 package com.swpuiot.helpingplatform.view;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,14 +21,18 @@ import com.swpuiot.helpingplatform.bean.First;
 import com.swpuiot.helpingplatform.bean.FirstBean;
 import com.swpuiot.helpingplatform.bean.User;
 import com.swpuiot.helpingplatform.fragment.FirstFragment;
+import com.swpuiot.helpingplatform.utils.CameraUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
 
 public class InfImplActivity extends AppCompatActivity {
 
@@ -37,8 +43,7 @@ public class InfImplActivity extends AppCompatActivity {
     private TextView time;
     private TextView word;
     private FloatingActionButton getMission;
-    private List<FirstBean>datas;
-    private User user;
+    private List<FirstBean> datas;
     FirstBean firstBean;
 
     @Override
@@ -59,11 +64,11 @@ public class InfImplActivity extends AppCompatActivity {
         getMission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(InfImplActivity.this, "抢单", Toast.LENGTH_SHORT).show();
+
             }
         });
 
-        Intent intent=getIntent();
+        Intent intent = getIntent();
         firstBean = (FirstBean) intent.getSerializableExtra(FirstFragment.InFlmp);
 
         name.setText(firstBean.getAuthor().getNickName() == null ? firstBean.getAuthor().getUsername()
@@ -78,10 +83,6 @@ public class InfImplActivity extends AppCompatActivity {
         time.setText(firstBean.getCreatedAt());
 
     }
-
-
-
-
 
 
 }

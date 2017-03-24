@@ -58,7 +58,8 @@
         <activity android:name=".view.ChangeNameACtivity" />
         <activity android:name=".view.PublishACtivity" />
         <activity android:name=".view.BannerActivity" />
-        <activity android:name=".view.DetailsActivity"></activity>
+        <activity android:name=".view.DetailsActivity" />
+        <activity android:name=".view.ShowUserActivity"></activity>
     </application>
 
 </manifest>

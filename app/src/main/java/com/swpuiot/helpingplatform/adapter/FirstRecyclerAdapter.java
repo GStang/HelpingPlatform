@@ -1,6 +1,7 @@
 package com.swpuiot.helpingplatform.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.bean.FirstBean;
 import com.swpuiot.helpingplatform.bean.User;
+import com.swpuiot.helpingplatform.view.ShowUserActivity;
 
 import java.util.List;
 
@@ -138,6 +140,14 @@ public class FirstRecyclerAdapter extends RecyclerView.Adapter<FirstRecyclerAdap
             time= (TextView) itemView.findViewById(R.id.tv_first_time);
             name= (TextView) itemView.findViewById(R.id.tv_first_name);
             condition= (SimpleDraweeView) itemView.findViewById(R.id.iv_first_condition);
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(context, ShowUserActivity.class);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 }
