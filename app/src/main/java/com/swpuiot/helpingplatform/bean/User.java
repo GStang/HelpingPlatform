@@ -7,9 +7,18 @@ import cn.bmob.v3.datatype.BmobFile;
  * Created by DELL on 2017/3/6.
  */
 public class User extends BmobUser {
-    BmobFile headimg;
-    Integer age;
-    Integer sex;
+    private BmobFile headimg;
+    private Integer age;
+    private Integer sex;
+    private String avatar;
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     public String getNickName() {
         return nickName;

@@ -37,4 +37,6 @@ dependencies {
     compile 'cn.bmob.android:http-legacy:1.0'
     compile 'com.android.support:design:23.2.0'
     compile 'com.bartoszlipinski:recyclerviewheader:1.2.1'
+    compile 'com.orhanobut:logger:1.4'
+    compile 'org.greenrobot:eventbus:3.0.0'
 }

@@ -18,6 +18,12 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <!-- 获取wifi网络状态的信息 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 摄像头 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 录音 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- 通知震动 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".MyApplication"
@@ -25,6 +31,10 @@
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <meta-data
+            android:name="Bmob_APP_KEY"
+            android:value="9541a295b6acddf6d9bf7ddb52f1227c" />
+
         <activity
             android:name=".view.LoginActivity"
             android:windowSoftInputMode="adjustPan" />
@@ -59,7 +69,28 @@
         <activity android:name=".view.PublishACtivity" />
         <activity android:name=".view.BannerActivity" />
         <activity android:name=".view.DetailsActivity" />
-        <activity android:name=".view.ShowUserActivity"></activity>
+        <activity android:name=".view.ShowUserActivity" />
+
+        <receiver android:name="cn.bmob.newim.core.ConnectChangeReceiver">
+            <intent-filter>
+                <action android:name="cn.bmob.action.RECONNECT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="cn.bmob.newim.core.service.BmobIMService"
+            android:process=":bmobcore" />
+        <service
+            android:name="cn.bmob.newim.core.service.NotifyService"
+            android:process=":bmobcore" />
+        <service android:name="cn.bmob.newim.core.service.ReConnectService" />
+        <service android:name="cn.bmob.newim.core.service.HeartBeatService" />
+
+        <activity android:name=".view.MyFriendActivity" />
+        <activity android:name=".view.ChatActivity"></activity>
     </application>
 
 </manifest>

@@ -8,15 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.swpuiot.helpingplatform.R;
-import com.swpuiot.helpingplatform.bean.User;
 import com.swpuiot.helpingplatform.view.LoginActivity;
 import com.swpuiot.helpingplatform.view.MainActivity;
+import com.swpuiot.helpingplatform.view.MyFriendActivity;
 
 import cn.bmob.v3.BmobUser;
 
@@ -64,21 +62,21 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //        ((MyHolder)holder).textView.setText(datas[position]);
         if (position != 4) {
             ((MyHolder) holder).textView.setText(datas[position]);
-            switch (position){
+            switch (position) {
                 case 0:
-                    ((MyHolder) holder).uri = Uri.parse("res://com.swpuiot.helpingplatform/"+R.drawable.ic_bookpng);
+                    ((MyHolder) holder).uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.ic_bookpng);
                     break;
                 case 1:
-                    ((MyHolder) holder).uri =  Uri.parse("res://com.swpuiot.helpingplatform/"+R.drawable.ic_wallet);
+                    ((MyHolder) holder).uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.ic_wallet);
                     break;
                 case 2:
-                    ((MyHolder) holder).uri =  Uri.parse("res://com.swpuiot.helpingplatform/"+R.drawable.ic_friend);
+                    ((MyHolder) holder).uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.ic_friend);
                     break;
                 case 3:
-                    ((MyHolder) holder).uri =  Uri.parse("res://com.swpuiot.helpingplatform/"+R.drawable.ic_important);
+                    ((MyHolder) holder).uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.ic_important);
                     break;
             }
-            System.out.println(((MyHolder) holder).uri);
+//            System.out.println(((MyHolder) holder).uri);
             ((MyHolder) holder).simpleDraweeView.setImageURI(((MyHolder) holder).uri);
         }
         if (position == 4) {
@@ -105,7 +103,10 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, textView.getText(), Toast.LENGTH_SHORT).show();
+                    if (getAdapterPosition() == 2) {
+                        Intent intent = new Intent(context, MyFriendActivity.class);
+                        context.startActivity(intent);
+                    }
                 }
             });
         }

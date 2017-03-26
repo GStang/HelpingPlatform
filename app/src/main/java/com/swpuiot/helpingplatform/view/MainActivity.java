@@ -1,35 +1,23 @@
 package com.swpuiot.helpingplatform.view;
 
-import android.app.Activity;
-import android.graphics.Color;
 import android.os.Build;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RadioButton;
-import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
-
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.bean.User;
-import com.swpuiot.helpingplatform.fragment.ChatFragment;
-import com.swpuiot.helpingplatform.fragment.FirstFragment;
 import com.swpuiot.helpingplatform.fragment.NavigationFragment;
-
 import cn.bmob.v3.BmobUser;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     private User user;
     private NavigationFragment fragment = new NavigationFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,5 +49,6 @@ public class MainActivity extends AppCompatActivity {
         }
         getSupportFragmentManager().beginTransaction().add(R.id.layout_content, fragment).commit();
     }
+
 
 }

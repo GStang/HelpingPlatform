@@ -10,4 +10,7 @@
     <color name="colorWhite">#fffffb</color>
     <color name="colorBlue">#5689c8</color>
     <color name="colorGary">#919090</color>
+    <color name="color_line">#dadada</color>
+    <color name="base_color_text_white">#ffffff</color>
+    <color name="base_color_text_black">#3e3e39</color>
 </resources>

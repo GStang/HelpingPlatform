@@ -141,9 +141,9 @@ public class SquareFragment extends Fragment implements View.OnClickListener, Sw
     @Override
     public void onResume() {
         super.onResume();
-        refresh.setRefreshing(true);
-        refreshing = true;
-        getDatas();
+//        refresh.setRefreshing(true);
+//        refreshing = true;
+//        getDatas();
     }
 
     @Override
