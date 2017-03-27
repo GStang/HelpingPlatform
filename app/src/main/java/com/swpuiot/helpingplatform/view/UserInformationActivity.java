@@ -439,6 +439,7 @@ public class UserInformationActivity extends AppCompatActivity implements View.O
                         deletehead();
                         User newUser = new User();
                         newUser.setHeadimg(bmobFile);// 获取文件并赋值给实体类
+                        newUser.setAvatar(bmobFile.getUrl());
                         newUser.update(user.getObjectId(), new UpdateListener() {
                             @Override
                             public void done(BmobException e) {

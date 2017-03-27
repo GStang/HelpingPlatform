@@ -25,24 +25,6 @@
             android:textSize="25sp" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/send_Message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="发送消息" />
-
-    <Button
-        android:id="@+id/get_Message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="接受消息" />
-
-    <Button
-        android:id="@+id/btn_addfriend"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="添加好友" />
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/sw_refresh"
         android:layout_width="match_parent"

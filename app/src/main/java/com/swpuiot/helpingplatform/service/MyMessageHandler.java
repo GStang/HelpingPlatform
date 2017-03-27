@@ -14,6 +14,7 @@ import com.swpuiot.helpingplatform.bean.NewFriend;
 import com.swpuiot.helpingplatform.bean.User;
 import com.swpuiot.helpingplatform.utils.AgreeAddFriendMessage;
 import com.swpuiot.helpingplatform.utils.UserModel;
+import com.swpuiot.helpingplatform.view.MainActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -29,6 +30,7 @@ import cn.bmob.newim.listener.BmobIMMessageHandler;
 import cn.bmob.newim.notification.BmobNotificationManager;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by DELL on 2017/3/24.
@@ -72,8 +74,8 @@ public class MyMessageHandler extends BmobIMMessageHandler {
      * @param event
      */
     private void excuteMessage(final MessageEvent event) {
-        //检测用户信息是否需要更新
-//        UserModel.getInstance().updateUserInfo(event, new UpdateCacheListener() {
+//        //检测用户信息是否需要更新
+//        UserModel.getInstance().updateUserInfo(event, new UpdateListener() {
 //            @Override
 //            public void done(BmobException e) {
 //                BmobIMMessage msg = event.getMessage();

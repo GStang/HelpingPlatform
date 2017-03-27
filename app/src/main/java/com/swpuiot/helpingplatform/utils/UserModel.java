@@ -109,7 +109,7 @@ public class UserModel {
         query.findObjects(new FindListener<User>() {
             @Override
             public void done(List<User> list, BmobException e) {
-                listener.done(list,e);
+                listener.done(list, e);
             }
         });
     }
@@ -121,40 +121,39 @@ public class UserModel {
      * @param listener
      */
     public void updateUserInfo(MessageEvent event, final UpdateListener listener) {
-//        final BmobIMConversation conversation=event.getConversation();
-//        final BmobIMUserInfo info =event.getFromUserInfo();
-//        final BmobIMMessage msg =event.getMessage();
-//        String username =info.getName();
-//        String title =conversation.getConversationTitle();
-//        Logger.i("" + username + "," + title);
-//        //sdk内部，将新会话的会话标题用objectId表示，因此需要比对用户名和会话标题--单聊，后续会根据会话类型进行判断
-//        if(!username.equals(title)) {
-//            UserModel.getInstance().queryUserInfo(info.getUserId(), new QueryUserListener() {
-//                @Override
-//                public void done(User s, BmobException e) {
-//                    if(e==null){
-//                        String name =s.getUsername();
-//                        String avatar = s.getAvatar();
-//                        Logger.i("query success："+name+","+avatar);
-//                        conversation.setConversationIcon(avatar);
-//                        conversation.setConversationTitle(name);
-//                        info.setName(name);
-//                        info.setAvatar(avatar);
-//                        //更新用户资料
-//                        BmobIM.getInstance().updateUserInfo(info);
-//                        //更新会话资料-如果消息是暂态消息，则不更新会话资料
-//                        if(!msg.isTransient()){
-//                            BmobIM.getInstance().updateConversation(conversation);
-//                        }
-//                    }else{
-//                        Logger.e(e);
-//                    }
-//                    listener.done(null);
-//                }
-//            });
-//        }else{
-//            listener.internalDone(null);
-//        }
+        final BmobIMConversation conversation = event.getConversation();
+        final BmobIMUserInfo info = event.getFromUserInfo();
+        final BmobIMMessage msg = event.getMessage();
+        String username = info.getName();
+        String title = conversation.getConversationTitle();
+        Logger.i("" + username + "," + title);
+        //sdk内部，将新会话的会话标题用objectId表示，因此需要比对用户名和会话标题--单聊，后续会根据会话类型进行判断
+        if (!username.equals(title)) {
+            UserModel.getInstance().queryUserInfo(info.getUserId(), new FindListener<User>() {
+                @Override
+                public void done(List<User> list, BmobException e) {
+                    if (e == null) {
+                        User user = list.get(0);
+                        String name = user.getUsername();
+                        String avatar = user.getAvatar();
+                        Logger.i("query success:" + name + "," + avatar);
+                        conversation.setConversationIcon(avatar);
+                        conversation.setConversationTitle(name);
+                        info.setName(name);
+                        info.setAvatar(avatar);
+                        //更新用户资料
+                        BmobIM.getInstance().updateUserInfo(info);
+                        //更新会话资料-如果消息是暂态消息，则不更新会话资料
+                        if (!msg.isTransient()) {
+                            BmobIM.getInstance().updateConversation(conversation);
+                        } else {
+                            Logger.e(e);
+                        }
+                        listener.done(null);
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -162,7 +161,7 @@ public class UserModel {
      */
     public void agreeAddFriend(User friend, SaveListener listener) {
         Friend f = new Friend();
-        User user =BmobUser.getCurrentUser(User.class);
+        User user = BmobUser.getCurrentUser(User.class);
         f.setUser(user);
         f.setFriendUser(friend);
         f.save(listener);

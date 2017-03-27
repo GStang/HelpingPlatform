@@ -52,23 +52,6 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         initView();
-
-//        temp = (BmobIMConversation) getIntent().getSerializableExtra("c");
-//
-//        c = BmobIMConversation.obtain(BmobIMClient.getInstance(), temp);
-//        BmobIMTextMessage msg = new BmobIMTextMessage();
-//        msg.setContent("This is Test");
-//        c.sendMessage(msg, new MessageSendListener() {
-//            @Override
-//            public void done(BmobIMMessage bmobIMMessage, BmobException e) {
-//                if (e==null){
-//                    Toast.makeText(ChatActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
-//                    Log.e("Im", "Send Success");
-//                }else{
-//                    Log.e("IM", "Failed");
-//                }
-//            }
-//        });
     }
 
     private void initView() {
@@ -77,18 +60,15 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
         btn_chat_keyboard = (Button) findViewById(R.id.btn_chat_keyboard);
         btn_chat_send = (Button) findViewById(R.id.btn_chat_send);
         c = BmobIMConversation.obtain(BmobIMClient.getInstance(), (BmobIMConversation) getIntent().getSerializableExtra("c"));
-//        c= BmobIMConversation.obtain(BmobIMClient.getInstance(), (BmobIMConversation) getBundle().getSerializable("c"));
         edit_msg = (EditText) findViewById(R.id.edit_msg);
         recyclerView = (RecyclerView) findViewById(R.id.rc_view);
         layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
-//        adapter = new ChatAdapter(this,)
         recyclerView.setAdapter(adapter);
         initButton();
         btn_chat_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Logger.i("SendMessage");
                 sendMessage();
             }
         });
@@ -144,10 +124,8 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
         BmobIMMessage msg = event.getMessage();
         if (c != null && event != null && c.getConversationId().equals(event.getConversation().getConversationId()) //如果是当前会话的消息
                 && !msg.isTransient()) {//并且不为暂态消息
-//            if(adapter.findPosition(msg)<0){//如果未添加到界面中
-//                adapter.addMessage(msg);
+                adapter.addMessage(msg);
 //                更新该会话下面的已读状态
-            Toast.makeText(ChatActivity.this, event.getMessage().getContent(), Toast.LENGTH_SHORT).show();
             Log.i("IMGet", event.getMessage().getContent());
             Log.i("IMGet", "Success");
             c.updateReceiveStatus(msg);
@@ -165,7 +143,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
         //添加页面消息监听器
         BmobIM.getInstance().addMessageListHandler(this);
         // 有可能锁屏期间，在聊天界面出现通知栏，这时候需要清除通知
-//        BmobNotificationManager.getInstance(this).cancelNotification();
+        BmobNotificationManager.getInstance(this).cancelNotification();
         super.onResume();
     }
 
@@ -193,6 +171,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
     @Override
     public void onMessageReceive(List<MessageEvent> list) {
 //        Log.e("IM", "GETMessage");
+        Logger.i("GetMessage");
         for (int i = 0; i < list.size(); i++) {
             addMessage2Chat(list.get(i));
         }
@@ -243,7 +222,6 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
         @Override
         public void onStart(BmobIMMessage msg) {
             super.onStart(msg);
-//            Logger.i("Start");
             adapter.addMessage(msg);
             edit_msg.setText("");
 //            scrollToBottom();
@@ -254,6 +232,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
             adapter.notifyDataSetChanged();
             edit_msg.setText("");
 //            scrollToBottom();
+            Logger.i("发送成功");
             if (e != null) {
                 Toast.makeText(ChatActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }

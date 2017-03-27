@@ -44,6 +44,8 @@ public class MyFriendAdapter extends RecyclerView.Adapter<MyFriendAdapter.MyFrie
         holder.info = datas.get(position);
         holder.conversation = BmobIM.getInstance().startPrivateConversation(new BmobIMUserInfo(holder.info.getUserId()
                 , holder.info.getName(), holder.info.getAvatar()), null);
+        if (holder.info.getAvatar() != null && !holder.info.getAvatar().equals(""))
+            holder.simpleDraweeView.setImageURI(holder.info.getAvatar());
     }
 
     @Override
@@ -61,9 +63,6 @@ public class MyFriendAdapter extends RecyclerView.Adapter<MyFriendAdapter.MyFrie
 
         public MyFriendViewHolder(View itemView) {
             super(itemView);
-//            com.orhanobut.logger.Logger.i(getAdapterPosition()+"");
-//            info = datas.get(getLayoutPosition()+1);
-
             simpleDraweeView = (SimpleDraweeView) itemView.findViewById(R.id.sdv_head);
             content = (TextView) itemView.findViewById(R.id.tv_friend_content);
             title = (TextView) itemView.findViewById(R.id.tv_friend_name);
@@ -72,7 +71,7 @@ public class MyFriendAdapter extends RecyclerView.Adapter<MyFriendAdapter.MyFrie
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, ChatActivity.class);
-                    intent.putExtra("c",conversation);
+                    intent.putExtra("c", conversation);
                     context.startActivity(intent);
                 }
             });

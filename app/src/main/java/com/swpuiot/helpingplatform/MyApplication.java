@@ -16,7 +16,7 @@ public class MyApplication extends Application {
         super.onCreate();
         Fresco.initialize(getApplicationContext());
         BmobIM.init(getApplicationContext());
-//        BmobIM.registerDefaultMessageHandler(new MyMessageHandler(this));
+        BmobIM.registerDefaultMessageHandler(new MyMessageHandler(this));
     }
 
 

@@ -43,78 +43,19 @@ public class MyFriendActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MyFriendAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private Button buttonSendMessage;
-    private Button buttonGetMessage;
-    private Button buttonAddFriedn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myfriend);
         initView();
-        buttonAddFriedn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                user = new User();
-                user.setObjectId("e76f1b39fb");
-                user.setUsername("笨笨的故事");
-                Friend friend = new Friend();
-                friend.setUser(myuser);
-                friend.setFriendUser(user);
-                friend.save(new SaveListener<String>() {
-                    @Override
-                    public void done(String s, BmobException e) {
-                        if (e == null) {
-                            Toast.makeText(MyFriendActivity.this, "添加好友成功", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Logger.e(e.getMessage() + e.getErrorCode());
-                        }
-                    }
-                });
-            }
-        });
-//        buttonSendMessage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                user = new User();
-//                user.setObjectId("e76f1b39fb");
-//                user.setUsername("笨笨的故事");
-//                Intent intent = new Intent(MyFriendActivity.this, ChatActivity.class );
-//                c = BmobIM.getInstance().startPrivateConversation(new BmobIMUserInfo(user.getObjectId()
-//                        , user.getUsername(), user.getAvatar()), null);
-////                Intent intent = new Intent(MyFriendActivity.this, ChatActivity.class);
-//                intent.putExtra("c", c);
-//                startActivity(intent);
-////                startActivityForResult(intent);
-//            }
-//        });
-
-//        buttonGetMessage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                user = new User();
-//                user.setObjectId("642bcb937a");
-//                user.setUsername("tgs");
-//                Intent intent = new Intent(MyFriendActivity.this, ChatActivity.class );
-//                c = BmobIM.getInstance().startPrivateConversation(new BmobIMUserInfo(user.getObjectId()
-//                        , user.getUsername(), user.getAvatar()), null);
-////                Intent intent = new Intent(MyFriendActivity.this, ChatActivity.class);
-//                intent.putExtra("c", c);
-//                startActivity(intent);
-////                startActivityForResult(intent);
-////                startActivityForResult(intent,2);
-//            }
-//        });
-
         BmobIM.connect(myuser.getObjectId(), new ConnectListener() {
             @Override
             public void done(String s, BmobException e) {
                 if (e == null) {
                     Toast.makeText(MyFriendActivity.this, "连接服务器成功", Toast.LENGTH_SHORT).show();
-                    Log.e("IM", "Connection Success");
-
                 } else {
-                    Log.e("IM", e.getErrorCode() + e.getMessage());
+                    Logger.e(e.getMessage());
                 }
             }
         });
@@ -128,23 +69,25 @@ public class MyFriendActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.rv_myfriend);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-        buttonAddFriedn = (Button) findViewById(R.id.btn_addfriend);
-        buttonSendMessage = (Button) findViewById(R.id.send_Message);
-        buttonGetMessage = (Button) findViewById(R.id.get_Message);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                BmobQuery<Friend> query = new BmobQuery<Friend>("Friend");
-                query.addWhereEqualTo("user", myuser);
-                query.include("friendUser");
-//                query.include("user");
-//                query.order("-updateAt");
-                query.findObjects(new FindListener<Friend>() {
-                    @Override
-                    public void done(List<Friend> list, BmobException e) {
-                        findFriends(list, e);
-                    }
-                });
+                getFriend();
+            }
+        });
+    }
+
+    /**
+     * 获取用户的好友列表
+     */
+    private void getFriend() {
+        BmobQuery<Friend> query = new BmobQuery<Friend>("Friend");
+        query.addWhereEqualTo("user", myuser);
+        query.include("friendUser");
+        query.findObjects(new FindListener<Friend>() {
+            @Override
+            public void done(List<Friend> list, BmobException e) {
+                findFriends(list, e);
             }
         });
     }
