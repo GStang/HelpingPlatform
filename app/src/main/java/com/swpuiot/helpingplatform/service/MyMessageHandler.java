@@ -21,6 +21,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.List;
 import java.util.Map;
 
+import cn.bmob.newim.BmobIM;
 import cn.bmob.newim.bean.BmobIMMessage;
 import cn.bmob.newim.bean.BmobIMMessageType;
 import cn.bmob.newim.bean.BmobIMUserInfo;
@@ -74,7 +75,7 @@ public class MyMessageHandler extends BmobIMMessageHandler {
      * @param event
      */
     private void excuteMessage(final MessageEvent event) {
-//        //检测用户信息是否需要更新
+        //检测用户信息是否需要更新
 //        UserModel.getInstance().updateUserInfo(event, new UpdateListener() {
 //            @Override
 //            public void done(BmobException e) {

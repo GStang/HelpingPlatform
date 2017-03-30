@@ -7,13 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.orhanobut.logger.Logger;
 import com.swpuiot.helpingplatform.R;
+import com.swpuiot.helpingplatform.bean.User;
+import com.swpuiot.helpingplatform.holder.ReceiveTextViewHolder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 
+import cn.bmob.newim.BmobIM;
 import cn.bmob.newim.bean.BmobIMConversation;
 import cn.bmob.newim.bean.BmobIMMessage;
 import cn.bmob.newim.bean.BmobIMMessageType;
@@ -23,6 +26,7 @@ import cn.bmob.v3.BmobUser;
  * Created by DELL on 2017/3/26.
  */
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private LayoutInflater inflater;
     //文本
     private final int TYPE_RECEIVER_TXT = 0;
     private final int TYPE_SEND_TXT = 1;
@@ -52,6 +56,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private String currentUid = "";
     BmobIMConversation c;
     private Context context;
+
     /**
      * 构造函数
      */
@@ -59,7 +64,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public ChatAdapter(Context context, BmobIMConversation c) {
         try {
             this.context = context;
-            currentUid = BmobUser.getCurrentUser().getObjectId();
+            currentUid = BmobUser.getCurrentUser(User.class).getObjectId();
+            inflater = LayoutInflater.from(context);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,11 +74,15 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_chat_send,parent,false);
-        return new SendTextHolder(view);
-//        if (viewType == TYPE_SEND_TXT) {
-//            return new SendTextHolder(parent.getContext(), parent,c,onRecyclerViewListener);
-//        } else if (viewType == TYPE_SEND_IMAGE) {
+        if (viewType == TYPE_SEND_TXT) {
+            View view = inflater.inflate(R.layout.item_chat_send_text, parent, false);
+            return new SendTextHolder(view);
+        }
+        if (viewType == TYPE_RECEIVER_TXT) {
+            View view = inflater.inflate(R.layout.item_chat_receive_text, parent, false);
+            return new ReceiveTextViewHolder(view);
+        } else return null;
+    }
 //            return new SendImageHolder(parent.getContext(), parent,c,onRecyclerViewListener);
 //        } else if (viewType == TYPE_SEND_LOCATION) {
 //            return new SendLocationHolder(parent.getContext(), parent,c,onRecyclerViewListener);
@@ -95,31 +105,41 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //        }else{//开发者自定义的其他类型，可自行处理
 //            return null;
 //        }
-    }
-
-//    @Override
-//    public int getItemViewType(int position) {
-//        BmobIMMessage message = msgs.get(position);
-//        if(message.getMsgType().equals(BmobIMMessageType.IMAGE.getType())){
-//            return message.getFromId().equals(currentUid) ? TYPE_SEND_IMAGE: TYPE_RECEIVER_IMAGE;
-//        }else if(message.getMsgType().equals(BmobIMMessageType.LOCATION.getType())){
-//            return message.getFromId().equals(currentUid) ? TYPE_SEND_LOCATION: TYPE_RECEIVER_LOCATION;
-//        }else if(message.getMsgType().equals(BmobIMMessageType.VOICE.getType())){
-//            return message.getFromId().equals(currentUid) ? TYPE_SEND_VOICE: TYPE_RECEIVER_VOICE;
-//        }else if(message.getMsgType().equals(BmobIMMessageType.TEXT.getType())){
-//            return message.getFromId().equals(currentUid) ? TYPE_SEND_TXT: TYPE_RECEIVER_TXT;
-//        }else if(message.getMsgType().equals(BmobIMMessageType.VIDEO.getType())){
-//            return message.getFromId().equals(currentUid) ? TYPE_SEND_VIDEO: TYPE_RECEIVER_VIDEO;
-//        }else if(message.getMsgType().equals("agree")) {//显示欢迎
-//            return TYPE_AGREE;
-//        }else{
-//            return -1;
-//        }
 //    }
 
     @Override
+    public int getItemViewType(int position) {
+        BmobIMMessage message = msgs.get(position);
+        if (message.getMsgType().equals(BmobIMMessageType.IMAGE.getType())) {
+            return message.getFromId().equals(currentUid) ? TYPE_SEND_IMAGE : TYPE_RECEIVER_IMAGE;
+        } else if (message.getMsgType().equals(BmobIMMessageType.LOCATION.getType())) {
+            return message.getFromId().equals(currentUid) ? TYPE_SEND_LOCATION : TYPE_RECEIVER_LOCATION;
+        } else if (message.getMsgType().equals(BmobIMMessageType.VOICE.getType())) {
+            return message.getFromId().equals(currentUid) ? TYPE_SEND_VOICE : TYPE_RECEIVER_VOICE;
+        } else if (message.getMsgType().equals(BmobIMMessageType.TEXT.getType())) {
+            return message.getFromId().equals(currentUid) ? TYPE_SEND_TXT : TYPE_RECEIVER_TXT;
+        } else if (message.getMsgType().equals(BmobIMMessageType.VIDEO.getType())) {
+            return message.getFromId().equals(currentUid) ? TYPE_SEND_VIDEO : TYPE_RECEIVER_VIDEO;
+        } else if (message.getMsgType().equals("agree")) {//显示欢迎
+            return TYPE_AGREE;
+        } else {
+            return -1;
+        }
+    }
+
+
+    @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((SendTextHolder)holder).textView.setText(msgs.get(position).getContent());
+        if (holder instanceof SendTextHolder) {
+            Logger.i("第一类别");
+            ((SendTextHolder) holder).draweeView.setImageURI(BmobUser.getCurrentUser(User.class).getAvatar());
+            ((SendTextHolder) holder).textView.setText(msgs.get(position).getContent());
+        } else if (holder instanceof ReceiveTextViewHolder) {
+            Logger.i("第二类别");
+            ((ReceiveTextViewHolder) holder).textView.setText(msgs.get(position).getContent());
+            ((ReceiveTextViewHolder) holder).simpleDraweeView.setImageURI(BmobIM.getInstance()
+                    .getUserInfo(msgs.get(position).getFromId()).getAvatar());
+        }
     }
 
     @Override
@@ -135,9 +155,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void addMessage(BmobIMMessage message) {
 //        msgs.addAll(Arrays.asList(message));
         msgs.add(message);
-        com.orhanobut.logger.Logger.i("datachange");
+//        com.orhanobut.logger.Logger.i("datachange");
         notifyDataSetChanged();
-        com.orhanobut.logger.Logger.i(msgs.size()+"");
+//        com.orhanobut.logger.Logger.i(msgs.size() + "");
     }
 
 
@@ -169,10 +189,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    class SendTextHolder extends RecyclerView.ViewHolder{
+    class SendTextHolder extends RecyclerView.ViewHolder {
         private TextView textView;
+        private SimpleDraweeView draweeView;
+
         public SendTextHolder(View itemView) {
             super(itemView);
+            draweeView = (SimpleDraweeView) itemView.findViewById(R.id.sdv_head);
             textView = (TextView) itemView.findViewById(R.id.tv_message);
         }
     }

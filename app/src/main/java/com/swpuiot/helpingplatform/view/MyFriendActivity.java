@@ -97,22 +97,16 @@ public class MyFriendActivity extends AppCompatActivity {
      */
     private void findFriends(List<Friend> list, BmobException e) {
         if (e == null) {
-
-//                            String s = list.get(0).getFriendUser().getUsername();
             Log.i("Friend", "Success");
-//                            Logger.i(list.size()+"");
-//                            list.get(0).getFriendUser().getUsername();
-//                            Logger.i(list.get(0).getFriendUser().toString());
-//
             for (Friend friend : list) {
                 BmobIMUserInfo info = new BmobIMUserInfo
                         (friend.getFriendUser().getObjectId(), friend.getFriendUser()
                                 .getUsername(), friend.getFriendUser().getAvatar());
+                BmobIM.getInstance().updateUserInfo(info);
                 datas.add(info);
             }
             adapter.notifyDataSetChanged();
             swipeRefreshLayout.setRefreshing(false);
-//                            Log.i("Friend", s);
         } else {
             Log.e("IM", e.getMessage() + e.getErrorCode());
         }

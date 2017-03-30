@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.orhanobut.logger.Logger;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.ChatAdapter;
+import com.swpuiot.helpingplatform.bean.User;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import cn.bmob.newim.listener.MessageListHandler;
 import cn.bmob.newim.listener.MessageSendListener;
 import cn.bmob.newim.listener.ObseverListener;
 import cn.bmob.newim.notification.BmobNotificationManager;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 
 public class ChatActivity extends AppCompatActivity implements MessageListHandler, ObseverListener {
@@ -46,6 +48,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
     private Button btn_chat_send;
     private Button btn_chat_keyboard;
     private Button btn_chat_voice;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +65,10 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
         c = BmobIMConversation.obtain(BmobIMClient.getInstance(), (BmobIMConversation) getIntent().getSerializableExtra("c"));
         edit_msg = (EditText) findViewById(R.id.edit_msg);
         recyclerView = (RecyclerView) findViewById(R.id.rc_view);
-        layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        user = BmobUser.getCurrentUser(User.class);
         initButton();
         btn_chat_send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +128,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
         BmobIMMessage msg = event.getMessage();
         if (c != null && event != null && c.getConversationId().equals(event.getConversation().getConversationId()) //如果是当前会话的消息
                 && !msg.isTransient()) {//并且不为暂态消息
-                adapter.addMessage(msg);
+            adapter.addMessage(msg);
 //                更新该会话下面的已读状态
             Log.i("IMGet", event.getMessage().getContent());
             Log.i("IMGet", "Success");
@@ -199,6 +203,9 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
         }
         BmobIMTextMessage msg = new BmobIMTextMessage();
         msg.setContent(text);
+        msg.setFromId(user.getObjectId());
+//        String s = msg.getFromId();
+//        Logger.i(s);
         //可设置额外信息
         Map<String, Object> map = new HashMap<>();
         map.put("level", "1");//随意增加信息
@@ -232,7 +239,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
             adapter.notifyDataSetChanged();
             edit_msg.setText("");
 //            scrollToBottom();
-            Logger.i("发送成功");
+//            Logger.i("发送成功");
             if (e != null) {
                 Toast.makeText(ChatActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
