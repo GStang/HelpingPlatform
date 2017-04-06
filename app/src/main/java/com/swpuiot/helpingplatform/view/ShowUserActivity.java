@@ -1,6 +1,7 @@
 package com.swpuiot.helpingplatform.view;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.swpuiot.helpingplatform.R;
+import com.swpuiot.helpingplatform.adapter.FirstRecyclerAdapter;
 import com.swpuiot.helpingplatform.bean.PostBean;
 import com.swpuiot.helpingplatform.bean.User;
 import com.swpuiot.helpingplatform.utils.AddFriendMessage;
@@ -35,10 +37,8 @@ public class ShowUserActivity extends AppCompatActivity implements View.OnClickL
     private TextView information;
     private Button sendMessage;
     private Button addFriend;
-    private List<PostBean> datas;
-    private PostBean postBean;
     BmobIMUserInfo info;
-    User user;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +59,21 @@ public class ShowUserActivity extends AppCompatActivity implements View.OnClickL
 //        postBean= (PostBean) intent.getSerializableExtra("friends");
 //        name.setText(postBean.getUser().getNickName() == null ? postBean.getUser().getUsername()
 //                : postBean.getUser().getNickName());
+
+        user= (User) getIntent().getSerializableExtra(FirstRecyclerAdapter.ShowInf);
+        name.setText(user.getNickName() == null ? user.getUsername()
+                : user.getNickName());
+        if (user.getHeadimg() == null) {
+            headImg.setImageURI(Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.loading));
+        } else{
+            headImg.setImageURI(user.getHeadimg().getUrl());
+            background.setImageURI(user.getHeadimg().getUrl());
+        }
+        if (user.getSex() == 1){
+            information.setText("男 "+user.getAge()+"岁");
+        }else
+            information.setText("女 "+user.getAge()+"岁");
+
     }
 
     /**

@@ -30,6 +30,7 @@ public class FirstRecyclerAdapter extends RecyclerView.Adapter<FirstRecyclerAdap
     private Context context;
     private List<FirstBean>datas;
     private User user;
+    public static final String ShowInf = "ShowInf";
 
     public interface OnItemClickListener{
         void onItemClick(View view,int position);
@@ -145,6 +146,7 @@ public class FirstRecyclerAdapter extends RecyclerView.Adapter<FirstRecyclerAdap
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent(context, ShowUserActivity.class);
+                    intent.putExtra(ShowInf,datas.get(getAdapterPosition()).getAuthor());
                     context.startActivity(intent);
                 }
             });
