@@ -12,6 +12,8 @@ import android.widget.Toast;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.bean.User;
 import com.swpuiot.helpingplatform.fragment.NavigationFragment;
+
+import cn.bmob.newim.BmobIM;
 import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends AppCompatActivity{
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity{
         if (user != null) {
             Toast.makeText(MainActivity.this, "欢迎您" + BmobUser.getCurrentUser(User.class).getUsername()
                     , Toast.LENGTH_SHORT).show();
+            BmobIM.getInstance().updateUserInfo(user.getUserInfo());
         } else {
             Toast.makeText(MainActivity.this, "游客登录", Toast.LENGTH_SHORT).show();
         }

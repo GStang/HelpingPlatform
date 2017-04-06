@@ -131,11 +131,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof SendTextHolder) {
-            Logger.i("第一类别");
+//            Logger.i("第一类别");
             ((SendTextHolder) holder).draweeView.setImageURI(BmobUser.getCurrentUser(User.class).getAvatar());
             ((SendTextHolder) holder).textView.setText(msgs.get(position).getContent());
         } else if (holder instanceof ReceiveTextViewHolder) {
-            Logger.i("第二类别");
+//            Logger.i("第二类别");
             ((ReceiveTextViewHolder) holder).textView.setText(msgs.get(position).getContent());
             ((ReceiveTextViewHolder) holder).simpleDraweeView.setImageURI(BmobIM.getInstance()
                     .getUserInfo(msgs.get(position).getFromId()).getAvatar());

@@ -1,5 +1,6 @@
 package com.swpuiot.helpingplatform.bean;
 
+import cn.bmob.newim.bean.BmobIMUserInfo;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 
@@ -52,5 +53,9 @@ public class User extends BmobUser {
 
     public void setHeadimg(BmobFile headimg) {
         this.headimg = headimg;
+    }
+
+    public BmobIMUserInfo getUserInfo(){
+        return new BmobIMUserInfo(getObjectId(), getUsername(), getAvatar());
     }
 }

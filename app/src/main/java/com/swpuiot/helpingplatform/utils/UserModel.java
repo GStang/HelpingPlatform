@@ -154,6 +154,7 @@ public class UserModel {
                 }
             });
         }
+        listener.done(null);
     }
 
     /**

@@ -90,7 +90,9 @@
         <service android:name="cn.bmob.newim.core.service.HeartBeatService" />
 
         <activity android:name=".view.MyFriendActivity" />
-        <activity android:name=".view.ChatActivity"></activity>
+        <activity android:name=".view.ChatActivity" />
+        <activity android:name=".view.AddFriendActivit" />
+        <activity android:name=".view.FindUserActivity"></activity>
     </application>
 
 </manifest>

@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -16,6 +18,7 @@ import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.MyFriendAdapter;
 import com.swpuiot.helpingplatform.bean.Friend;
 import com.swpuiot.helpingplatform.bean.User;
+import com.swpuiot.helpingplatform.dao.FriendDao;
 import com.swpuiot.helpingplatform.utils.UserModel;
 
 import java.util.ArrayList;
@@ -31,15 +34,15 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 
+/**
+ * 联系人界面
+ */
 public class MyFriendActivity extends AppCompatActivity {
-    //    private TextView textView;
-    private User user;
     private User myuser;
-    //    private SimpleDraweeView sdv;
-//    private TextView textView;
-//    private LinearLayout linearLayout;
     private List<BmobIMUserInfo> datas;
     public BmobIMConversation c;
+    private FriendDao frienddao;
+    private Toolbar toolbar;
     private RecyclerView recyclerView;
     private MyFriendAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -49,6 +52,8 @@ public class MyFriendActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myfriend);
         initView();
+        frienddao = new FriendDao(this, "MyFriend.db", null, 1);
+        frienddao.getWritableDatabase();
         BmobIM.connect(myuser.getObjectId(), new ConnectListener() {
             @Override
             public void done(String s, BmobException e) {
@@ -61,9 +66,25 @@ public class MyFriendActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 初始化控件
+     */
     private void initView() {
         myuser = BmobUser.getCurrentUser(User.class);
         datas = new ArrayList<>();
+        toolbar = (Toolbar) findViewById(R.id.toolbar_MyFriend);
+        toolbar.inflateMenu(R.menu.menu_myfriend);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.add_friend){
+                    Intent intent = new Intent(MyFriendActivity.this, FindUserActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                return false;
+            }
+        });
         adapter = new MyFriendAdapter(this, datas);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.sw_refresh);
         recyclerView = (RecyclerView) findViewById(R.id.rv_myfriend);
@@ -112,75 +133,12 @@ public class MyFriendActivity extends AppCompatActivity {
         }
     }
 
-//    /**
-//     查询本地会话
-//     */
-//    public void query(){
-//        UserModel.getInstance().queryFriends(new FindListener<Friend>() {
-//
-//            @Override
-//            public void done(List<Friend> list, BmobException e) {
-//                if (e==null){
-//                    datas.addAll(list);
-//                    adapter.notifyDataSetChanged();
-//                }
-//            }
-//
-//
-//
-//
-//        });
-//    }
-//        linearLayout = (LinearLayout) findViewById(R.id.ll_test);
-//        textView = (TextView) findViewById(R.id.tv_test_name);
-//        sdv = (SimpleDraweeView) findViewById(R.id.sdv_testhead);
-//        myuser = BmobUser.getCurrentUser(User.class);
-//        BmobQuery<User> query = new BmobQuery<>();
-//        query.addWhereEqualTo("username", "笨笨的故事");
-//        query.findObjects(new FindListener<User>() {
-//            @Override
-//            public void done(List<User> list, BmobException e) {
-//                if (e == null) {
-//                    user = list.get(0);
-//                    sdv.setImageURI(user.getHeadimg().getUrl());
-//                    textView.setText(user.getUsername());
-//                }
-//            }
-//        });
-//        BmobIM.connect(myuser.getObjectId(), new ConnectListener() {
-//            @Override
-//            public void done(String s, BmobException e) {
-//                if (e == null) {
-//                    Toast.makeText(MyFriendActivity.this, "连接服务器成功", Toast.LENGTH_SHORT).show();
-//                    Log.e("IM", "Connection Success");
-//                } else {
-//                    Log.e("IM", e.getErrorCode() + e.getMessage());
-//                }
-//            }
-//        });
-//
-//        linearLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                c = BmobIM.getInstance().startPrivateConversation(new BmobIMUserInfo(user.getObjectId()
-//                        , user.getUsername(), user.getAvatar()), null);
-//                Intent intent = new Intent(MyFriendActivity.this, ChatActivity.class);
-//                intent.putExtra("c", c);
-//                startActivity(intent);
-//            }
-//        });
-//
-////        BmobIM.getInstance().setOnConnectStatusChangeListener(new ConnectStatusChangeListener() {
-////            @Override
-////            public void onChange(ConnectionStatus status) {
-////                Log.i("IM", status.getCode() + status.getMsg());
-////            }
-////        });
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        BmobIM.getInstance().disConnect();
-//    }
+    /**
+     * 断开服务器的连接
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BmobIM.getInstance().disConnect();
+    }
 }

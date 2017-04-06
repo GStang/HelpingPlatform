@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.swpuiot.helpingplatform.R;
+import com.swpuiot.helpingplatform.holder.AddFriendViewHolder;
 import com.swpuiot.helpingplatform.view.ChatActivity;
 
 import java.util.List;
@@ -22,9 +23,11 @@ import cn.bmob.newim.bean.BmobIMUserInfo;
 /**
  * Created by DELL on 2017/3/24.
  */
-public class MyFriendAdapter extends RecyclerView.Adapter<MyFriendAdapter.MyFriendViewHolder> {
+public class MyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
     private List<BmobIMUserInfo> datas;
+    public static final int ADD_FRIEND = 1;
+    public static final int ITEM = 2;
 
     public MyFriendAdapter(Context context, List<BmobIMUserInfo> datas) {
         this.datas = datas;
@@ -32,25 +35,49 @@ public class MyFriendAdapter extends RecyclerView.Adapter<MyFriendAdapter.MyFrie
     }
 
     @Override
-    public MyFriendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_myfriend, parent, false);
-//        MyFriendViewHolder holder = new MyFriendViewHolder(view);
-        return new MyFriendViewHolder(view);
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            com.orhanobut.logger.Logger.i("ADDFRIEND");
+            return ADD_FRIEND;
+        }
+        else {
+            com.orhanobut.logger.Logger.i("ITEM");
+            return ITEM;
+        }
+//        return super.getItemViewType(position);
     }
 
     @Override
-    public void onBindViewHolder(MyFriendViewHolder holder, int position) {
-        holder.title.setText(datas.get(position).getName());
-        holder.info = datas.get(position);
-        holder.conversation = BmobIM.getInstance().startPrivateConversation(new BmobIMUserInfo(holder.info.getUserId()
-                , holder.info.getName(), holder.info.getAvatar()), null);
-        if (holder.info.getAvatar() != null && !holder.info.getAvatar().equals(""))
-            holder.simpleDraweeView.setImageURI(holder.info.getAvatar());
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == ADD_FRIEND) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_addfriend, parent, false);
+            return new AddFriendViewHolder(view,context);
+        } else {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_myfriend, parent, false);
+            return new MyFriendViewHolder(view);
+        }
     }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof MyFriendViewHolder) {
+            ((MyFriendViewHolder) holder).title.setText(datas.get(position-1).getName());
+            ((MyFriendViewHolder) holder).info = datas.get(position-1);
+            ((MyFriendViewHolder) holder).conversation = BmobIM.getInstance().
+                    startPrivateConversation(new BmobIMUserInfo(((MyFriendViewHolder) holder).info.getUserId()
+                    , ((MyFriendViewHolder) holder).info.getName(), ((MyFriendViewHolder) holder).info.getAvatar()), null);
+            if (((MyFriendViewHolder) holder).info.getAvatar() != null && !((MyFriendViewHolder) holder).info.getAvatar().equals(""))
+                ((MyFriendViewHolder) holder).simpleDraweeView.setImageURI(((MyFriendViewHolder) holder).info.getAvatar());
+        }
+        if (holder instanceof AddFriendViewHolder){
+
+        }
+    }
+
 
     @Override
     public int getItemCount() {
-        return datas.size();
+        return datas.size() + 1;
     }
 
     class MyFriendViewHolder extends RecyclerView.ViewHolder {

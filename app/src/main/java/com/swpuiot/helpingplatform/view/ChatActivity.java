@@ -1,5 +1,6 @@
 package com.swpuiot.helpingplatform.view;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,9 @@ import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.ChatAdapter;
 import com.swpuiot.helpingplatform.bean.User;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,14 +37,15 @@ import cn.bmob.newim.core.BmobIMClient;
 import cn.bmob.newim.event.MessageEvent;
 import cn.bmob.newim.listener.MessageListHandler;
 import cn.bmob.newim.listener.MessageSendListener;
+import cn.bmob.newim.listener.MessagesQueryListener;
 import cn.bmob.newim.listener.ObseverListener;
 import cn.bmob.newim.notification.BmobNotificationManager;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 
-public class ChatActivity extends AppCompatActivity implements MessageListHandler, ObseverListener {
+public class ChatActivity extends AppCompatActivity implements ObseverListener {
     private BmobIMConversation c;
-    private BmobIMConversation temp;
+
     private EditText edit_msg;
     private ChatAdapter adapter;
     private LinearLayoutManager layoutManager;
@@ -55,6 +60,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         initView();
+        EventBus.getDefault().register(this);
     }
 
     private void initView() {
@@ -144,8 +150,8 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
     protected void onResume() {
         //锁屏期间的收到的未读消息需要添加到聊天界面中
 //        addUnReadMessage();
-        //添加页面消息监听器
-        BmobIM.getInstance().addMessageListHandler(this);
+//        添加页面消息监听器
+//        BmobIM.getInstance().addMessageListHandler(this);
         // 有可能锁屏期间，在聊天界面出现通知栏，这时候需要清除通知
         BmobNotificationManager.getInstance(this).cancelNotification();
         super.onResume();
@@ -154,7 +160,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
     @Override
     protected void onPause() {
         //移除页面消息监听器
-        BmobIM.getInstance().removeMessageListHandler(this);
+//        BmobIM.getInstance().removeMessageListHandler(this);
         super.onPause();
     }
 
@@ -170,15 +176,6 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
 //        }
 //        hideSoftInputView();
         super.onDestroy();
-    }
-
-    @Override
-    public void onMessageReceive(List<MessageEvent> list) {
-//        Log.e("IM", "GETMessage");
-        Logger.i("GetMessage");
-        for (int i = 0; i < list.size(); i++) {
-            addMessage2Chat(list.get(i));
-        }
     }
 
     /**
@@ -204,13 +201,22 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
         BmobIMTextMessage msg = new BmobIMTextMessage();
         msg.setContent(text);
         msg.setFromId(user.getObjectId());
-//        String s = msg.getFromId();
-//        Logger.i(s);
         //可设置额外信息
         Map<String, Object> map = new HashMap<>();
         map.put("level", "1");//随意增加信息
         msg.setExtraMap(map);
         c.sendMessage(msg, listener);
+    }
+
+    /**
+     * 隐藏软键盘
+     */
+    public void hideSoftInputView() {
+        InputMethodManager manager = ((InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE));
+        if (getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
+            if (getCurrentFocus() != null)
+                manager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
 
@@ -250,4 +256,35 @@ public class ChatActivity extends AppCompatActivity implements MessageListHandle
         layoutManager.scrollToPositionWithOffset(adapter.getItemCount() - 1, 0);
     }
 
+    /**
+     * 使用EventBus获取信息
+     */
+    @Subscribe
+    public void onEventMainThread(MessageEvent event) {
+        String msg = "收到了消息：";
+        addMessage2Chat(event);
+        Logger.i(msg);
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+
+    /**首次加载，可设置msg为null，下拉刷新的时候，默认取消息表的第一个msg作为刷新的起始时间点，默认按照消息时间的降序排列
+     * @param msg
+     */
+//    public void queryMessages(BmobIMMessage msg){
+//        c.queryMessages(msg, 10, new MessagesQueryListener() {
+//            @Override
+//            public void done(List<BmobIMMessage> list, BmobException e) {
+//                sw_refresh.setRefreshing(false);
+//                if (e == null) {
+//                    if (null != list && list.size() > 0) {
+//                        adapter.addMessages(list);
+//                        layoutManager.scrollToPositionWithOffset(list.size() - 1, 0);
+//                    }
+//                } else {
+//                    toast(e.getMessage() + "(" + e.getErrorCode() + ")");
+//                }
+//            }
+//        });
+//    }
 }
