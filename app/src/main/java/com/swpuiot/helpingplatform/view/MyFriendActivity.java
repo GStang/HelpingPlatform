@@ -47,6 +47,7 @@ public class MyFriendActivity extends AppCompatActivity {
     private MyFriendAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +60,7 @@ public class MyFriendActivity extends AppCompatActivity {
             public void done(String s, BmobException e) {
                 if (e == null) {
                     Toast.makeText(MyFriendActivity.this, "连接服务器成功", Toast.LENGTH_SHORT).show();
+//                    getAllConversation();
                 } else {
                     Logger.e(e.getMessage());
                 }
@@ -67,17 +69,28 @@ public class MyFriendActivity extends AppCompatActivity {
     }
 
     /**
+     * 获得所有的会话
+     */
+//    private void getAllConversation() {
+//        conversations = BmobIM.getInstance().loadAllConversation();
+//        for (BmobIMConversation con : conversations) {
+//            Logger.i(con.getConversationTitle());
+//        }
+//    }
+
+    /**
      * 初始化控件
      */
     private void initView() {
         myuser = BmobUser.getCurrentUser(User.class);
+        getFriend();
         datas = new ArrayList<>();
         toolbar = (Toolbar) findViewById(R.id.toolbar_MyFriend);
         toolbar.inflateMenu(R.menu.menu_myfriend);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.add_friend){
+                if (item.getItemId() == R.id.add_friend) {
                     Intent intent = new Intent(MyFriendActivity.this, FindUserActivity.class);
                     startActivity(intent);
                     return true;
@@ -124,6 +137,7 @@ public class MyFriendActivity extends AppCompatActivity {
                         (friend.getFriendUser().getObjectId(), friend.getFriendUser()
                                 .getUsername(), friend.getFriendUser().getAvatar());
                 BmobIM.getInstance().updateUserInfo(info);
+                datas.clear();
                 datas.add(info);
             }
             adapter.notifyDataSetChanged();

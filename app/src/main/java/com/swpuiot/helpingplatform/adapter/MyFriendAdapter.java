@@ -37,11 +37,11 @@ public class MyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
-            com.orhanobut.logger.Logger.i("ADDFRIEND");
+//            com.orhanobut.logger.Logger.i("ADDFRIEND");
             return ADD_FRIEND;
         }
         else {
-            com.orhanobut.logger.Logger.i("ITEM");
+//            com.orhanobut.logger.Logger.i("ITEM");
             return ITEM;
         }
 //        return super.getItemViewType(position);

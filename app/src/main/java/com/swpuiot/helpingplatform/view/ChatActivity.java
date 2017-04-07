@@ -1,15 +1,15 @@
 package com.swpuiot.helpingplatform.view;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -29,13 +29,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.bmob.newim.BmobIM;
 import cn.bmob.newim.bean.BmobIMConversation;
 import cn.bmob.newim.bean.BmobIMMessage;
 import cn.bmob.newim.bean.BmobIMTextMessage;
 import cn.bmob.newim.core.BmobIMClient;
 import cn.bmob.newim.event.MessageEvent;
-import cn.bmob.newim.listener.MessageListHandler;
 import cn.bmob.newim.listener.MessageSendListener;
 import cn.bmob.newim.listener.MessagesQueryListener;
 import cn.bmob.newim.listener.ObseverListener;
@@ -54,6 +52,8 @@ public class ChatActivity extends AppCompatActivity implements ObseverListener {
     private Button btn_chat_keyboard;
     private Button btn_chat_voice;
     private User user;
+    private SwipeRefreshLayout refresh;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,19 @@ public class ChatActivity extends AppCompatActivity implements ObseverListener {
         btn_chat_voice = (Button) findViewById(R.id.btn_chat_voice);
         btn_chat_keyboard = (Button) findViewById(R.id.btn_chat_keyboard);
         btn_chat_send = (Button) findViewById(R.id.btn_chat_send);
+        refresh = (SwipeRefreshLayout) findViewById(R.id.sw_refresh);
         c = BmobIMConversation.obtain(BmobIMClient.getInstance(), (BmobIMConversation) getIntent().getSerializableExtra("c"));
+//        List<BmobIMMessage> messages = c.getMessages();
+        queryMessages(null);
+//        adapter.addMessages(messages);
+        refresh = (SwipeRefreshLayout) findViewById(R.id.sw_refresh);
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                BmobIMMessage msg = adapter.getFirstMessage();
+                queryMessages(msg);
+            }
+        });
         edit_msg = (EditText) findViewById(R.id.edit_msg);
         recyclerView = (RecyclerView) findViewById(R.id.rc_view);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -271,20 +283,20 @@ public class ChatActivity extends AppCompatActivity implements ObseverListener {
     /**首次加载，可设置msg为null，下拉刷新的时候，默认取消息表的第一个msg作为刷新的起始时间点，默认按照消息时间的降序排列
      * @param msg
      */
-//    public void queryMessages(BmobIMMessage msg){
-//        c.queryMessages(msg, 10, new MessagesQueryListener() {
-//            @Override
-//            public void done(List<BmobIMMessage> list, BmobException e) {
-//                sw_refresh.setRefreshing(false);
-//                if (e == null) {
-//                    if (null != list && list.size() > 0) {
-//                        adapter.addMessages(list);
+    public void queryMessages(BmobIMMessage msg){
+        c.queryMessages(msg, 10, new MessagesQueryListener() {
+            @Override
+            public void done(List<BmobIMMessage> list, BmobException e) {
+                refresh.setRefreshing(false);
+                if (e == null) {
+                    if (null != list && list.size() > 0) {
+                        adapter.addMessages(list);
 //                        layoutManager.scrollToPositionWithOffset(list.size() - 1, 0);
-//                    }
-//                } else {
+                    }
+                } else {
 //                    toast(e.getMessage() + "(" + e.getErrorCode() + ")");
-//                }
-//            }
-//        });
-//    }
+                }
+            }
+        });
+    }
 }

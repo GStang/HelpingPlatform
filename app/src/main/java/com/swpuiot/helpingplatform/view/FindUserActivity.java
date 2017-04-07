@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.FriendAdapter;
 import com.swpuiot.helpingplatform.bean.User;
@@ -38,9 +39,17 @@ public class FindUserActivity extends AppCompatActivity {
                     @Override
                     public void done(List<User> list, BmobException e) {
                         if (e == null) {
-                            Toast.makeText(FindUserActivity.this, "查找成功", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(FindUserActivity.this, "查找成功", Toast.LENGTH_SHORT).show();
+                            if (list.size()==0){
+                                Toast.makeText(FindUserActivity.this, "没有找到对应的用户", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            users.clear();
                             users.addAll(list);
                             adapter.notifyDataSetChanged();
+                        }else
+                        {
+                            Logger.e(e.getMessage());
                         }
                     }
                 });

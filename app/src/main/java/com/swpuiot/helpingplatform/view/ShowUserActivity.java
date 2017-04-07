@@ -53,12 +53,6 @@ public class ShowUserActivity extends AppCompatActivity implements View.OnClickL
         addFriend = (Button) findViewById(R.id.btn_show_add);
         addFriend.setOnClickListener(this);
         sendMessage.setOnClickListener(this);
-//        info = new BmobIMUserInfo(user.getObjectId(), user.getUsername(), user.getAvatar());
-//        datas=new ArrayList<>();
-//        Intent intent=getIntent();
-//        postBean= (PostBean) intent.getSerializableExtra("friends");
-//        name.setText(postBean.getUser().getNickName() == null ? postBean.getUser().getUsername()
-//                : postBean.getUser().getNickName());
 
         user= (User) getIntent().getSerializableExtra(FirstRecyclerAdapter.ShowInf);
         name.setText(user.getNickName() == null ? user.getUsername()

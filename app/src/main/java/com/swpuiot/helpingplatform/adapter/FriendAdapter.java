@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.swpuiot.helpingplatform.R;
@@ -59,10 +60,20 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
             simpleDraweeView = (SimpleDraweeView) itemView.findViewById(R.id.sdv_head);
             textView = (TextView) itemView.findViewById(R.id.tv_username);
             button = (Button) itemView.findViewById(R.id.btn_showuser_inf);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ShowUserActivity.class);
+                    intent.putExtra(FirstRecyclerAdapter.ShowInf, datas.get(getAdapterPosition()));
+                    context.startActivity(intent);
+                }
+            });
             layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, ShowUserActivity.class);
+                    intent.putExtra(FirstRecyclerAdapter.ShowInf, datas.get(getAdapterPosition()));
+                    context.startActivity(intent);
                 }
             });
         }
