@@ -11,7 +11,7 @@ import cn.bmob.v3.datatype.BmobFile;
 public class FirstBean extends BmobObject {
     String title;//任务标题
     String content;//任务内容
-    User author;//任务发布者
+    User author; //任务发布者
     List<BmobFile> files;//发布者头像
     Boolean isSolved;//是否被解决
     Boolean isAlive;//是否可以接单
