@@ -92,6 +92,7 @@ public class ChatActivity extends AppCompatActivity implements ObseverListener {
             @Override
             public void onClick(View v) {
                 sendMessage();
+                hideSoftInputView();
             }
         });
     }

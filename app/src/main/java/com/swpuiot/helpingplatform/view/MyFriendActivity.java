@@ -155,4 +155,10 @@ public class MyFriendActivity extends AppCompatActivity {
         super.onDestroy();
         BmobIM.getInstance().disConnect();
     }
+
+    @Override
+    protected void onResume() {
+        getFriend();
+        super.onResume();
+    }
 }

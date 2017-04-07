@@ -96,7 +96,7 @@ public class ChatFragment extends Fragment {
 
     private CameraUtils mCameraUtils;
     private File imageFile;
-//    private ImageView img_show;
+    //    private ImageView img_show;
     private static final String LOG_TAG = "Camera";
     private File mediaStorageDir = null;
     private String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -105,7 +105,7 @@ public class ChatFragment extends Fragment {
     private static final int CHOOSE_PHOTO = 100;
 
     private File currentImageFile = null;
-//    private String filePath = Environment.getExternalStorageDirectory().toString()+"/aaaa";
+    private Bitmap bitmap;
 
 
     @Nullable
@@ -141,14 +141,14 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        editText_time.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    showDatePickDlg();
-                }
-            }
-        });
+//        editText_time.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus) {
+//                    showDatePickDlg();
+//                }
+//            }
+//        });
 
 
         button_select.setOnClickListener(new View.OnClickListener() {
@@ -184,83 +184,86 @@ public class ChatFragment extends Fragment {
 
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        //打开图片
-//        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_OPEN) {
-//            Uri uri = data.getData();
-//            if (!TextUtils.isEmpty(uri.getAuthority())) {
-//                //查询选择图片
-//                Cursor cursor = this.getContext().getContentResolver().query(
-//                        uri,
-//                        new String[]{MediaStore.Images.Media.DATA},
-//                        null,
-//                        null,
-//                        null);
-//                //返回 没找到选择图片
-//                if (null == cursor) {
-//                    return;
-//                }
-//                //光标移动至开头 获取图片路径
-//                cursor.moveToFirst();
-//                pathImage = cursor.getString(cursor
-//                        .getColumnIndex(MediaStore.Images.Media.DATA));
-//            }
-//        }  //end if 打开图片
-//    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
-            switch (requestCode){
-                //处理图库返回
-                case CHOOSE_PHOTO:
-                    if(resultCode == Activity.RESULT_OK){
-                        photoZoom(data.getData());
-                    }
-                    break;
-                //处理相机返回
-                case TAKE_PHOTO:
-                    if(resultCode == Activity.RESULT_OK){
-                        File file = new File(mediaStorageDir.getPath() + File.separator
-                                + "IMG_" + timeStamp + ".jpg");
-                        photoZoom(Uri.fromFile(file));
-
-                    }
-                    //处理裁剪返回
-                case PHOTO_RESULT:
-                    Bundle bundle = new Bundle();
-                    try {
-                        bundle = data.getExtras();
-                        if (resultCode == Activity.RESULT_OK) {
-                            Bitmap bitmap = bundle.getParcelable("data");
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 75, new ByteArrayOutputStream());
-                            //修改ImageView的图片
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            //处理图库返回
+            case CHOOSE_PHOTO:
+                tempFile = new File(Environment.getExternalStorageDirectory(), PHOTO_IMAGE_FILE_NAME);
+                bitmap = compressImageFromFile(tempFile.getPath());
+                imageItem.add(bitmap);
+//                System.out.println(bitmap.getByteCount());
+                mAdapter.notifyDataSetChanged();
+                if (tempFile != null) {
+                    tempFile.delete();
+                    Log.i("JAVA", "tempFile已删除");
+                }
+                break;
+            //处理相机返回
+            case TAKE_PHOTO:
+                tempFile = new File(Environment.getExternalStorageDirectory(), PHOTO_IMAGE_FILE_NAME);
+                bitmap = compressImageFromFile(tempFile.getAbsolutePath());
+                imageItem.add(bitmap);
+//                System.out.println(bitmap.getByteCount());
+                mAdapter.notifyDataSetChanged();
+                if (tempFile != null) {
+                    tempFile.delete();
+                    Log.i("JAVA", "tempFile已删除");
+                }
+                break;
+            //处理裁剪返回
+            case PHOTO_RESULT:
+                Bundle bundle = new Bundle();
+                try {
+                    bundle = data.getExtras();
+                    if (resultCode == Activity.RESULT_OK) {
+                        Bitmap bitmap = bundle.getParcelable("data");
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, new ByteArrayOutputStream());
+                        //修改ImageView的图片
 //                            photoImage.setImageBitmap(bitmap);
-                            imageItem.add(bitmap);
-                        }
-                    } catch (java.lang.NullPointerException e) {
-                        e.printStackTrace();
+                        imageItem.add(bitmap);
                     }
-                    break;
-            }
+                } catch (java.lang.NullPointerException e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
     }
 
+    /**
+     * 压缩BitMap
+     */
+    public Bitmap compressImageFromFile(String srcPath) {
+        BitmapFactory.Options newOpts = new BitmapFactory.Options();
+        newOpts.inJustDecodeBounds = true;//只读边,不读内容
+        Bitmap bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
 
-    public void photoZoom(Uri uri) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        intent.putExtra("crop", "true");
-        // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 320);
-        intent.putExtra("outputY", 320);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent, PHOTO_RESULT);
+        newOpts.inJustDecodeBounds = false;
+        int w = newOpts.outWidth;
+        int h = newOpts.outHeight;
+        float hh = 800f;//
+        float ww = 480f;//
+        int be = 1;
+        if (w > h && w > ww) {
+            be = (int) (newOpts.outWidth / ww);
+        } else if (w < h && h > hh) {
+            be = (int) (newOpts.outHeight / hh);
+        }
+        if (be <= 0)
+            be = 1;
+        newOpts.inSampleSize = be;//设置采样率
+
+//        newOpts.inPreferredConfig = Bitmap.Config.ARGB_8888;//该模式是默认的,可不设
+        newOpts.inPurgeable = true;// 同时设置才会有效
+        newOpts.inInputShareable = true;//。当系统内存不够时候图片自动被回收
+
+        bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
+//      return compressBmpFromBmp(bitmap);//原来的方法调用了这个方法企图进行二次压缩
+        //其实是无效的,大家尽管尝试
+        return bitmap;
     }
+
 
     protected void dialog(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -288,27 +291,6 @@ public class ChatFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (!TextUtils.isEmpty(pathImage)) {
-            Bitmap addbmp = mCameraUtils.compressImageFromFile(pathImage);
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("itemImage", addbmp);
-//            simpleAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
-//                @Override
-//                public boolean setViewValue(View view, Object data,
-//                                            String textRepresentation) {
-//                    if (view instanceof ImageView && data instanceof Bitmap) {
-//                        ImageView i = (ImageView) view;
-//                        i.setImageBitmap((Bitmap) data);
-//                        return true;
-//                    }
-//                    return false;
-//                }
-//            });
-//            gridView1.setAdapter(simpleAdapter);
-//            simpleAdapter.notifyDataSetChanged();
-            //刷新后释放防止手机休眠后自动添加
-            pathImage = null;
-        }
     }
 
 
@@ -342,10 +324,12 @@ public class ChatFragment extends Fragment {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         //存放相机返回的图片
         File file = new File(Environment.getExternalStorageDirectory().toString());
-        if(file.exists()){file.delete();}
+        if (file.exists()) {
+            file.delete();
+        }
         Uri uri = Uri.fromFile(file);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,uri);
-        startActivityForResult(intent,TAKE_PHOTO);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        startActivityForResult(intent, TAKE_PHOTO);
     }
 
     @Subscribe
@@ -355,17 +339,12 @@ public class ChatFragment extends Fragment {
     }
 
     private void openPhoto() {
-
-//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-////        startActivityForResult(intent,);
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         //选择图片格式
         intent.setType("image/*");
-        intent.putExtra("return-data",true);
-        startActivityForResult(intent,CHOOSE_PHOTO);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, CHOOSE_PHOTO);
     }
-
-
 
 
 }

@@ -111,18 +111,19 @@ public class PublishAdapter extends RecyclerView.Adapter<PublishAdapter.MyPhoto>
                         photo.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (datas.size()>=9){
+                                if (datas.size() >= 9) {
                                     Toast.makeText(context, "图片数量已经达到上限", Toast.LENGTH_SHORT).show();
                                     mPopupWindow.dismiss();
-                                }else{
-
+                                } else {
+                                    //此处应该写相册的逻辑，暂时还没有写
+                                    cameraUtils.openPhotoShop();
                                 }
                             }
                         });
                         take.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (datas.size()>=9){
+                                if (datas.size() >= 9) {
                                     Toast.makeText(context, "图片数量已经达到上限", Toast.LENGTH_SHORT).show();
                                     mPopupWindow.dismiss();
                                     return;
@@ -141,7 +142,7 @@ public class PublishAdapter extends RecyclerView.Adapter<PublishAdapter.MyPhoto>
                         WindowManager.LayoutParams imageParams = ((PublishACtivity) context).getWindow().getAttributes();
                         imageParams.alpha = 0.7f;
                         ((PublishACtivity) context).getWindow().setAttributes(imageParams);
-                    }else{
+                    } else {
                         view.setImageBitmap(datas.get(getAdapterPosition()));
                         dialog.setView(view);
                         dialog.show();

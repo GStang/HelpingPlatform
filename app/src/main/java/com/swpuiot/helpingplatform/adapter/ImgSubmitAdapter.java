@@ -33,17 +33,14 @@ import java.util.List;
 public class ImgSubmitAdapter extends RecyclerView.Adapter<ImgSubmitAdapter.ImagesViewHolder> {
     private Context mContext;
     private List<Bitmap> datas;
-    private CameraUtils utils;
     private PopupWindow mPopupWindow;
     private View popupWindow;
     private Button photo;
     private Button take;
     private Button cancel;
-    private ImageView view;
     public ImgSubmitAdapter(Context context,List<Bitmap> datas){
         mContext = context;
         this.datas = datas;
-        utils = new CameraUtils((AppCompatActivity) mContext);
     }
 
     @Override
