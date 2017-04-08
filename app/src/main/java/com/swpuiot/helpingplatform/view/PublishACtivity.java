@@ -181,9 +181,9 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case IMAGE_REQUEST_CODE:
                 tempFile = new File(Environment.getExternalStorageDirectory(), PHOTO_IMAGE_FILE_NAME);
-                bitmap = myAdapter.cameraUtils.compressImageFromFile(tempFile.getAbsolutePath());
+                bitmap = myAdapter.cameraUtils.compressImageFromFile(tempFile.getPath());
                 datas.add(bitmap);
-                System.out.println(bitmap.getByteCount());
+//                System.out.println(bitmap.getByteCount());
                 myAdapter.notifyDataSetChanged();
                 if (tempFile != null) {
                     tempFile.delete();

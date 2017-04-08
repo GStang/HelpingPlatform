@@ -2,6 +2,7 @@ package com.swpuiot.helpingplatform.fragment;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -34,6 +36,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 
+import com.orhanobut.logger.Logger;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.ImgSubmitAdapter;
 import com.swpuiot.helpingplatform.bean.FirstBean;
@@ -59,6 +62,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cn.bmob.newim.event.MessageEvent;
@@ -66,6 +70,7 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadBatchListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 /**
@@ -93,17 +98,15 @@ public class ChatFragment extends Fragment {
     private boolean success = false;
     private View view;
     private static final int REQUEST_PHOTO = 2;
-
     private CameraUtils mCameraUtils;
     private File imageFile;
-    //    private ImageView img_show;
     private static final String LOG_TAG = "Camera";
     private File mediaStorageDir = null;
     private String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
     private static final int PHOTO_RESULT = 300;
     private static final int TAKE_PHOTO = 200;
     private static final int CHOOSE_PHOTO = 100;
-
+    private FirstBean bean = new FirstBean();
     private File currentImageFile = null;
     private Bitmap bitmap;
 
@@ -141,33 +144,67 @@ public class ChatFragment extends Fragment {
             }
         });
 
-//        editText_time.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) {
-//                    showDatePickDlg();
-//                }
-//            }
-//        });
-
-
         button_select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirstBean bean = new FirstBean();
+
                 bean.setAuthor(user);
                 bean.setAlive(true);
                 bean.setSolved(false);
                 bean.setContent(editText_plan.getText().toString());
+//                List<BmobFile> files = new ArrayList<BmobFile>();
+                final String[] filePaths = new String[imageItem.size() - 1];
+                for (int i = 0; i < imageItem.size() - 1; i++) {
+                    File file = bitmapToFile(imageItem.get(i + 1));
+                    filePaths[i] = file.getPath();
+                }
+                BmobFile.uploadBatch(filePaths, new UploadBatchListener() {
+                    @Override
+                    public void onSuccess(List<BmobFile> list, List<String> list1) {
+                        if (list.size() == filePaths.length) {//如果数量相等，则代表文件全部上传完成
+                            //do something
+                            Toast.makeText(getActivity(), "所有图片上传成功", Toast.LENGTH_SHORT).show();
+                            bean.setFiles(list);
+                            for (String file : filePaths) {
+                                File file1 = new File(file);
+                                if (file1 != null) {
+                                    file1.delete();
+                                }
+                            }
+                            dopublish();
+                        }
+                    }
+
+                    @Override
+                    public void onProgress(int i, int i1, int i2, int i3) {
+
+                    }
+
+                    @Override
+                    public void onError(int i, String s) {
+
+                    }
+                });
+//                bean.setFiles(files);
                 editText_time.setText("");
                 editText_title.setText("");
                 editText_plan.setText("");
                 editText_phone.setText("");
             }
         });
-
-
         return view;
+    }
+
+    private void dopublish() {
+        bean.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e == null) {
+                    Logger.i("发布成功");
+                    imageItem.clear();
+                }
+            }
+        });
     }
 
     protected void showDatePickDlg() {
@@ -190,6 +227,38 @@ public class ChatFragment extends Fragment {
         switch (requestCode) {
             //处理图库返回
             case CHOOSE_PHOTO:
+                if (data != null) {
+                    Uri uri = data.getData();
+                    String imagePath = null;
+                    if (DocumentsContract.isDocumentUri(getActivity(), uri)) {
+                        String docId = DocumentsContract.getDocumentId(uri);
+                        if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
+                            String id = docId.split(":")[1];
+                            String selection = MediaStore.Images.Media._ID + "=" + id;
+                            imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                    selection);
+                        } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
+                            Uri contentUri = ContentUris.withAppendedId(Uri.parse
+                                    ("content://downloads/public_downloads"), Long.valueOf(docId));
+                            imagePath = getImagePath(uri, null);
+                        }
+                    } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+                        imagePath = getImagePath(uri, null);
+                    }
+                    if (imagePath != null) {
+                        Bitmap bitmap = compressImageFromFile(imagePath);
+//                        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+                        imageItem.add(bitmap);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                    if (tempFile != null) {
+                        tempFile.delete();
+                        Log.i("JAVA", "tempFile已删除");
+                    }
+                }
+                break;
+            //处理相机返回
+            case TAKE_PHOTO:
                 tempFile = new File(Environment.getExternalStorageDirectory(), PHOTO_IMAGE_FILE_NAME);
                 bitmap = compressImageFromFile(tempFile.getPath());
                 imageItem.add(bitmap);
@@ -200,35 +269,20 @@ public class ChatFragment extends Fragment {
                     Log.i("JAVA", "tempFile已删除");
                 }
                 break;
-            //处理相机返回
-            case TAKE_PHOTO:
-                tempFile = new File(Environment.getExternalStorageDirectory(), PHOTO_IMAGE_FILE_NAME);
-                bitmap = compressImageFromFile(tempFile.getAbsolutePath());
-                imageItem.add(bitmap);
-//                System.out.println(bitmap.getByteCount());
-                mAdapter.notifyDataSetChanged();
-                if (tempFile != null) {
-                    tempFile.delete();
-                    Log.i("JAVA", "tempFile已删除");
-                }
-                break;
-            //处理裁剪返回
-            case PHOTO_RESULT:
-                Bundle bundle = new Bundle();
-                try {
-                    bundle = data.getExtras();
-                    if (resultCode == Activity.RESULT_OK) {
-                        Bitmap bitmap = bundle.getParcelable("data");
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, new ByteArrayOutputStream());
-                        //修改ImageView的图片
-//                            photoImage.setImageBitmap(bitmap);
-                        imageItem.add(bitmap);
-                    }
-                } catch (java.lang.NullPointerException e) {
-                    e.printStackTrace();
-                }
-                break;
         }
+    }
+
+    private String getImagePath(Uri uri, String selection) {
+        String path = null;
+        Cursor cursor = getActivity().getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(
+                        cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+            cursor.close();
+        }
+        return path;
     }
 
     /**
@@ -320,29 +374,26 @@ public class ChatFragment extends Fragment {
         openCramera();
     }
 
-    private void openCramera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //存放相机返回的图片
-        File file = new File(Environment.getExternalStorageDirectory().toString());
-        if (file.exists()) {
-            file.delete();
-        }
-        Uri uri = Uri.fromFile(file);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        startActivityForResult(intent, TAKE_PHOTO);
-    }
-
     @Subscribe
     public void onEventMainThread(PhotoEvent event) {
         Toast.makeText(getActivity(), "图库", Toast.LENGTH_SHORT).show();
         openPhoto();
     }
 
+    private void openCramera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //存放相机返回的图片
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                Uri.fromFile(new File(Environment.getExternalStorageDirectory(), PHOTO_IMAGE_FILE_NAME)));
+        startActivityForResult(intent, TAKE_PHOTO);
+    }
+
     private void openPhoto() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        //选择图片格式
+//        Intent intent = new Intent(Intent.ACTION_PICK, null);
+//        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        Intent intent = new Intent("android.intent.action.GET_CONTENT");
         intent.setType("image/*");
-        intent.putExtra("return-data", true);
+//        context.startActivityForResult(intent, IMAGE_REQUEST_CODE);
         startActivityForResult(intent, CHOOSE_PHOTO);
     }
 
