@@ -150,11 +150,14 @@ public class UserModel {
                             Logger.e(e);
                         }
                         listener.done(null);
+                    } else {
+                        Logger.i(e.getMessage());
                     }
                 }
             });
+        } else {
+            listener.done(null);
         }
-        listener.done(null);
     }
 
     /**

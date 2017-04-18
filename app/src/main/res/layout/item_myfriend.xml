@@ -17,28 +17,28 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:layout_marginTop="2dp"
             android:id="@+id/tv_friend_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginTop="2dp"
             tools:text="我是名字" />
 
         <TextView
-            android:textColor="@color/colorBlack"
-            android:layout_centerVertical="true"
             android:id="@+id/tv_friend_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/colorBlack"
             tools:text="我是内容" />
 
         <TextView
             android:id="@+id/tv_friend_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
             tools:text="我是时间" />
     </RelativeLayout>
 </LinearLayout>

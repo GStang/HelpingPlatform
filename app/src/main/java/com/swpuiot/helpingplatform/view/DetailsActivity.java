@@ -34,6 +34,9 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 
+/**
+ * 这个部分是用户动态的详细资料部分
+ */
 public class DetailsActivity extends AppCompatActivity {
     TextView authorName;
     TextView createTime;
@@ -67,7 +70,7 @@ public class DetailsActivity extends AppCompatActivity {
         commentBeanBmobQuery.findObjects(new FindListener<CommentBean>() {
             @Override
             public void done(List<CommentBean> list, BmobException e) {
-                if (e==null){
+                if (e == null) {
                     datas.addAll(list);
                     mAdapter.notifyDataSetChanged();
                 }
@@ -87,7 +90,7 @@ public class DetailsActivity extends AppCompatActivity {
         sendTalks = (EditText) findViewById(R.id.et_sendTalks);
         showTalks = (RecyclerView) findViewById(R.id.rv_talk);
         datas = new LinkedList<>();
-        mAdapter = new CommentAdapter(this,datas);
+        mAdapter = new CommentAdapter(this, datas);
         Intent intent = getIntent();
         postBean = (PostBean) intent.getSerializableExtra(PostAdapter.Details);
         showTalks.setLayoutManager(new LinearLayoutManager(this));

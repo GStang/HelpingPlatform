@@ -14,7 +14,9 @@ import com.swpuiot.helpingplatform.bean.User;
 import com.swpuiot.helpingplatform.fragment.NavigationFragment;
 
 import cn.bmob.newim.BmobIM;
+import cn.bmob.newim.listener.ConnectListener;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
 
 public class MainActivity extends AppCompatActivity{
     private User user;
@@ -47,6 +49,16 @@ public class MainActivity extends AppCompatActivity{
             Toast.makeText(MainActivity.this, "欢迎您" + BmobUser.getCurrentUser(User.class).getUsername()
                     , Toast.LENGTH_SHORT).show();
             BmobIM.getInstance().updateUserInfo(user.getUserInfo());
+            BmobIM.connect(user.getObjectId(), new ConnectListener() {
+                @Override
+                public void done(String s, BmobException e) {
+                    if (e==null){
+                        Toast.makeText(MainActivity.this, "连接服务器成功", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(MainActivity.this, "连接服务器失败，请检查您的网络", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         } else {
             Toast.makeText(MainActivity.this, "游客登录", Toast.LENGTH_SHORT).show();
         }

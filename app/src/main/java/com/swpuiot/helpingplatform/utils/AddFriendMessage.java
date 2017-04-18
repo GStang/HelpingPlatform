@@ -2,6 +2,7 @@ package com.swpuiot.helpingplatform.utils;
 
 import android.text.TextUtils;
 
+import com.orhanobut.logger.Logger;
 import com.swpuiot.helpingplatform.Config;
 import com.swpuiot.helpingplatform.bean.NewFriend;
 
@@ -37,7 +38,7 @@ public class AddFriendMessage extends BmobIMExtraMessage{
                 add.setAvatar(avatar);
                 add.setUid(json.getString("uid"));
             }else{
-//                Logger.i("AddFriendMessage的extra为空");
+                Logger.i("AddFriendMessage的extra为空");
             }
         } catch (Exception e) {
             e.printStackTrace();

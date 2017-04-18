@@ -46,11 +46,7 @@
                 android:id="@+id/banner_first"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"/>
-            <Button
-                android:id="@+id/add_data_first"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="添加数据"/>
+
             </LinearLayout>
 
 

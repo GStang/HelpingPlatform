@@ -1,6 +1,7 @@
 package com.swpuiot.helpingplatform.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -69,18 +70,21 @@ public class ChatActivity extends AppCompatActivity implements ObseverListener {
         btn_chat_keyboard = (Button) findViewById(R.id.btn_chat_keyboard);
         btn_chat_send = (Button) findViewById(R.id.btn_chat_send);
         refresh = (SwipeRefreshLayout) findViewById(R.id.sw_refresh);
+//        此处出现问题的原因，可能是isTransient不能被序列化造成的
         c = BmobIMConversation.obtain(BmobIMClient.getInstance(), (BmobIMConversation) getIntent().getSerializableExtra("c"));
 //        List<BmobIMMessage> messages = c.getMessages();
-        queryMessages(null);
+        if (!c.isTransient()) {
+            queryMessages(null);
 //        adapter.addMessages(messages);
-        refresh = (SwipeRefreshLayout) findViewById(R.id.sw_refresh);
-        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                BmobIMMessage msg = adapter.getFirstMessage();
-                queryMessages(msg);
-            }
-        });
+            refresh = (SwipeRefreshLayout) findViewById(R.id.sw_refresh);
+            refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    BmobIMMessage msg = adapter.getFirstMessage();
+                    queryMessages(msg);
+                }
+            });
+        }
         edit_msg = (EditText) findViewById(R.id.edit_msg);
         recyclerView = (RecyclerView) findViewById(R.id.rc_view);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -281,10 +285,12 @@ public class ChatActivity extends AppCompatActivity implements ObseverListener {
     }
 
 
-    /**首次加载，可设置msg为null，下拉刷新的时候，默认取消息表的第一个msg作为刷新的起始时间点，默认按照消息时间的降序排列
+    /**
+     * 首次加载，可设置msg为null，下拉刷新的时候，默认取消息表的第一个msg作为刷新的起始时间点，默认按照消息时间的降序排列
+     *
      * @param msg
      */
-    public void queryMessages(BmobIMMessage msg){
+    public void queryMessages(BmobIMMessage msg) {
         c.queryMessages(msg, 10, new MessagesQueryListener() {
             @Override
             public void done(List<BmobIMMessage> list, BmobException e) {

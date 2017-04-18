@@ -81,7 +81,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (viewType == TYPE_RECEIVER_TXT) {
             View view = inflater.inflate(R.layout.item_chat_receive_text, parent, false);
             return new ReceiveTextViewHolder(view);
-        } else return null;
+        } else {
+            View view = inflater.inflate(R.layout.item_chat_receive_text, parent, false);
+            return new ReceiveTextViewHolder(view);
+        }
     }
 //            return new SendImageHolder(parent.getContext(), parent,c,onRecyclerViewListener);
 //        } else if (viewType == TYPE_SEND_LOCATION) {

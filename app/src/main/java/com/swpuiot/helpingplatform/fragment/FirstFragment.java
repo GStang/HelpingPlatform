@@ -100,6 +100,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 }
                 else {
                     Toast.makeText(getContext(),"查询失败",Toast.LENGTH_SHORT).show();
+                    refreshing = false;
                 }
             }
         });
@@ -111,45 +112,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_first, container, false);
         datas=new ArrayList<>();
-
-
-
         user=BmobUser.getCurrentUser(User.class);
-        addData= (Button) view.findViewById(R.id.add_data_first);
-        addData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final FirstBean bean = new FirstBean();
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.new1);
-                final BmobFile file = new BmobFile(new CameraUtils((AppCompatActivity) getActivity()).bitmapToFile(bitmap));
-
-                file.upload(new UploadFileListener() {
-                    @Override
-                    public void done(BmobException e) {
-                        if (e == null) {
-                            bean.setAuthor(user);
-                            bean.setContent("大三了，想把英语四级过了，希望有大神带我一起学英语，把四级过了，谢谢。");
-                            bean.setTitle("英语四级");
-                            List<BmobFile> list = new LinkedList<BmobFile>();
-                            list.add(file);
-                            bean.setFiles(list);
-                            bean.setSolved(true);
-                            bean.setAlive(false);
-                            bean.save(new SaveListener<String>() {
-                                @Override
-                                public void done(String s, BmobException e) {
-                                    if (e == null) {
-                                        Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                }
-                            });
-                        }
-                    }
-                });
-            }
-        });
-
         bannerImage= Arrays.asList(
                 R.drawable.banner1,
                 R.drawable.banner2,
@@ -170,8 +133,6 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         firstRecyclerAdapter=new FirstRecyclerAdapter(getActivity(),datas);
         recyclerView.setAdapter(firstRecyclerAdapter);
         recyclerViewHeader= (RecyclerViewHeader) view.findViewById(R.id.header_first);
-
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity()
                 ,LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -185,7 +146,6 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 Intent intent = new Intent(getActivity(), InfImplActivity.class);
                 intent.putExtra(InFlmp, datas.get(position));
                 startActivity(intent);
-
             }
 
 
@@ -200,8 +160,9 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         swipeRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.swipe_first);
         refreshing = true;
-        swipeRefreshLayout.setRefreshing(true);
         swipeRefreshLayout.setOnRefreshListener(this);
+        getDatas();
+        swipeRefreshLayout.setRefreshing(true);
 
         banner= (Banner) view.findViewById(R.id.banner_first);
         banner.setImageLoader(new BannerLoader())
@@ -290,11 +251,10 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onResume() {
         super.onResume();
-        swipeRefreshLayout.setRefreshing(true);
-        refreshing=true;
-        getDatas();
+//        swipeRefreshLayout.setRefreshing(true);
+//        refreshing=true;
+//        getDatas();
     }
-
     @Override
     public void onRefresh() {
         if (refreshing){
@@ -304,7 +264,6 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             refreshing=true;
             getDatas();
         }
-
     }
 
 

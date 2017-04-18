@@ -10,8 +10,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.orhanobut.logger.Logger;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.FirstRecyclerAdapter;
+import com.swpuiot.helpingplatform.bean.Friend;
 import com.swpuiot.helpingplatform.bean.PostBean;
 import com.swpuiot.helpingplatform.bean.User;
 import com.swpuiot.helpingplatform.utils.AddFriendMessage;
@@ -27,8 +29,10 @@ import cn.bmob.newim.bean.BmobIMMessage;
 import cn.bmob.newim.bean.BmobIMUserInfo;
 import cn.bmob.newim.core.BmobIMClient;
 import cn.bmob.newim.listener.MessageSendListener;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 public class ShowUserActivity extends AppCompatActivity implements View.OnClickListener {
     private SimpleDraweeView background;
@@ -37,14 +41,13 @@ public class ShowUserActivity extends AppCompatActivity implements View.OnClickL
     private TextView information;
     private Button sendMessage;
     private Button addFriend;
-    BmobIMUserInfo info;
-    private User user;
+    BmobIMUserInfo info;//本界面的用户的信息
+    private User user;//本界面的用户
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_user);
-//        这里还没有写完，user还没有初始化
         background = (SimpleDraweeView) findViewById(R.id.sim_show_background);
         headImg = (SimpleDraweeView) findViewById(R.id.sim_show_head);
         name = (TextView) findViewById(R.id.tv_show_name);
@@ -55,6 +58,7 @@ public class ShowUserActivity extends AppCompatActivity implements View.OnClickL
         sendMessage.setOnClickListener(this);
 
         user= (User) getIntent().getSerializableExtra(FirstRecyclerAdapter.ShowInf);
+        info = user.getUserInfo();
         name.setText(user.getNickName() == null ? user.getUsername()
                 : user.getNickName());
         if (user.getHeadimg() == null) {
@@ -91,6 +95,7 @@ public class ShowUserActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void done(BmobIMMessage msg, BmobException e) {
                 if (e == null) {//发送成功
+                    Logger.i("发送");
                     Toast.makeText(ShowUserActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
                 } else {//发送失败
                     Toast.makeText(ShowUserActivity.this, "发送失败" + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -101,23 +106,37 @@ public class ShowUserActivity extends AppCompatActivity implements View.OnClickL
 
     public void onChatClick() {
         //启动一个会话，设置isTransient设置为false,则会在本地数据库的会话列表中先创建（如果没有）与该用户的会话信息，且将用户信息存储到本地的用户表中
-        BmobIMConversation c = BmobIM.getInstance().startPrivateConversation(info, false, null);
+        BmobIMConversation c = BmobIM.getInstance().startPrivateConversation(info, true, null);
+//        c = BmobIMConversation.obtain(BmobIMClient.getInstance(), c);
         Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("Test", "This is Test");
         intent.putExtra("c", c);
-//        Bundle bundle = new Bundle();
-//        bundle.putSerializable("c", c);
         startActivity(intent);
-//        startActivity(ChatActivity.class, bundle, false);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_show_add:
-                sendAddFriendMessage();
+                BmobQuery<Friend> query = new BmobQuery<>();
+                query.addWhereEqualTo("user", BmobUser.getCurrentUser().getObjectId());
+                query.addWhereEqualTo("friendUser", info.getUserId());
+                query.findObjects(new FindListener<Friend>() {
+                    @Override
+                    public void done(List<Friend> list, BmobException e) {
+                        if (e==null){
+                            if (list.size()==0){
+                                sendAddFriendMessage();
+                            }else {
+                                Toast.makeText(ShowUserActivity.this, "他已经是您的好友", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
                 break;
             case R.id.btn_show_send:
                 onChatClick();
+                break;
         }
     }
 }

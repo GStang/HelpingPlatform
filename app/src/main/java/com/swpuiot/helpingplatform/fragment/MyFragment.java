@@ -51,7 +51,7 @@ public class MyFragment extends Fragment {
         sdvHeader = (SimpleDraweeView) view.findViewById(R.id.sdv_head);
         user = BmobUser.getCurrentUser(User.class);
         Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.head_none);
-        if (user==null||user.getHeadimg() == null) {
+        if (user == null || user.getHeadimg() == null) {
             sdvHeader.setImageURI(uri);
         } else {
             sdvHeader.setImageURI(user.getHeadimg().getFileUrl());
@@ -79,7 +79,7 @@ public class MyFragment extends Fragment {
         else
             tv_name.setText("游客您好，请登录");
 
-        userInformation= (LinearLayout) view.findViewById(R.id.ll_my_login);
+        userInformation = (LinearLayout) view.findViewById(R.id.ll_my_login);
         userInformation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,7 +87,7 @@ public class MyFragment extends Fragment {
                     Toast.makeText(getActivity(), "您还没有登录", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Intent intent=new Intent(getActivity(), UserInformationActivity.class);
+                Intent intent = new Intent(getActivity(), UserInformationActivity.class);
                 startActivityForResult(intent, CHANGE_INFORMATION_SIGN);
             }
         });
@@ -100,7 +100,9 @@ public class MyFragment extends Fragment {
         switch (requestCode) {
             case CHANGE_INFORMATION_SIGN:
                 user = BmobUser.getCurrentUser(User.class);
-                sdvHeader.setImageURI(user.getHeadimg().getFileUrl());
+                String url = user.getHeadimg().getFileUrl();
+                if (url != null)
+                    sdvHeader.setImageURI(url);
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);

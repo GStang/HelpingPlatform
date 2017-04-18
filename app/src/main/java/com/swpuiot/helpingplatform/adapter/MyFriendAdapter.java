@@ -73,15 +73,21 @@ public class MyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((MyFriendViewHolder) holder).conversation.queryMessages(null, 1, new MessagesQueryListener() {
                 @Override
                 public void done(List<BmobIMMessage> list, BmobException e) {
-                    String s = list.get(0).getContent();
-                    SimpleDateFormat sdf= new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-                    long createTime = list.get(0).getCreateTime();
+                    if (e == null) {
+//                        com.orhanobut.logger.Logger.i(list.toString()+" "+list.size());
+                        String s = "";
+                        if (list.size() != 0) {
+                            s = list.get(0).getContent();
+                            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+                            long createTime = list.get(0).getCreateTime();
 //                    long nowtime = createTime -System.currentTimeMillis();
-                    Date date = new Date(createTime);
-                    if (s != null)
-                        ((MyFriendViewHolder) holder).content.setText(s);
-                    ((MyFriendViewHolder) holder).time.setText(sdf.format(date));
+                            Date date = new Date(createTime);
+                            if (s != null)
+                                ((MyFriendViewHolder) holder).content.setText(s);
 
+                            ((MyFriendViewHolder) holder).time.setText(sdf.format(date));
+                        }
+                    }
                 }
             });
             if (((MyFriendViewHolder) holder).info.getAvatar() != null && !((MyFriendViewHolder) holder).info.getAvatar().equals(""))
@@ -112,13 +118,6 @@ public class MyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             content = (TextView) itemView.findViewById(R.id.tv_friend_content);
             title = (TextView) itemView.findViewById(R.id.tv_friend_name);
             time = (TextView) itemView.findViewById(R.id.tv_friend_time);
-//            conversation =BmobIM.getInstance().startPrivateConversation(info,null);
-//            conversation.queryMessages(null, 1, new MessagesQueryListener() {
-//                @Override
-//                public void done(List<BmobIMMessage> list, BmobException e) {
-//
-//                }
-//            });
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

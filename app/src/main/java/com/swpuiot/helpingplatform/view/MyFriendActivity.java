@@ -131,13 +131,13 @@ public class MyFriendActivity extends AppCompatActivity {
      */
     private void findFriends(List<Friend> list, BmobException e) {
         if (e == null) {
-            Log.i("Friend", "Success");
+//            Log.i("Friend", "Success");
+            datas.clear();
             for (Friend friend : list) {
                 BmobIMUserInfo info = new BmobIMUserInfo
                         (friend.getFriendUser().getObjectId(), friend.getFriendUser()
                                 .getUsername(), friend.getFriendUser().getAvatar());
                 BmobIM.getInstance().updateUserInfo(info);
-                datas.clear();
                 datas.add(info);
             }
             adapter.notifyDataSetChanged();
@@ -153,7 +153,7 @@ public class MyFriendActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        BmobIM.getInstance().disConnect();
+//        BmobIM.getInstance().disConnect();
     }
 
     @Override

@@ -119,6 +119,7 @@ public class SquareFragment extends Fragment implements View.OnClickListener, Sw
                     }
                 } else {
                     Toast.makeText(context, "查询失败", Toast.LENGTH_SHORT).show();
+                    refreshing = false;
                 }
             }
         });
