@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.swpuiot.helpingplatform.view.ShareInformationActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_share_information"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorYellow">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="上传文档"
+            android:layout_gravity="center"/>
+    </android.support.v7.widget.Toolbar>
+
+    <Spinner
+        android:id="@+id/spi_kinds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/kinds"
+        android:prompt="@string/navigation_first"
+        />
+    <Button
+        android:id="@+id/btn_share_file"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="选择文件"/>
+    <TextView
+        android:id="@+id/tv_share_file_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"/>
+    </LinearLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="kinds">
+        <item>请选择分类</item>
+        <item>高数</item>
+        <item>大物</item>
+        <item>化学</item>
+        <item>线代</item>
+        <item>模电</item>
+        <item>英语</item>
+        <item>JAVA</item>
+        <item>其它</item>
+    </string-array>
+</resources>

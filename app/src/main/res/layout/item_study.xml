@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/tv_study_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        tools:text="我们上过的编译的当，踩过的坑，十分钟教你解决"
+        android:layout_margin="5dp"
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/tv_study_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:layout_marginRight="5dp"
+        tools:text="BY:笨笨的故事"/>
+
+</LinearLayout>

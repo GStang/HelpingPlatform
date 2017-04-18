@@ -10,11 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.bean.InfBean;
+import com.swpuiot.helpingplatform.fragment.InformationFragment;
 import com.swpuiot.helpingplatform.view.InfImplActivity;
+import com.swpuiot.helpingplatform.view.ShareInformationActivity;
+import com.swpuiot.helpingplatform.view.ShowStudyInformationActivity;
+import com.swpuiot.helpingplatform.view.StudyInformationActivity;
 
 
 import java.util.List;
@@ -26,10 +31,24 @@ import java.util.List;
 public class InfRecyclerAdapter extends RecyclerView.Adapter<InfRecyclerAdapter.InfHolder> {
     private Context context;
     private List<InfBean> datas;
+    public static final String StudyInf = "StudyInf";
+    InformationFragment fragment = new InformationFragment();
 
     public InfRecyclerAdapter(Context context, List<InfBean> datas) {
         this.context = context;
         this.datas = datas;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+
+        void onItemLongClick(View view, int position);
+    }
+
+    private OnItemClickListener onItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -39,10 +58,26 @@ public class InfRecyclerAdapter extends RecyclerView.Adapter<InfRecyclerAdapter.
     }
 
     @Override
-    public void onBindViewHolder(InfHolder holder, int position) {
-        Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/"+datas.get(position).getImgId());
+    public void onBindViewHolder(final InfHolder holder, final int position) {
+        Uri uri = Uri.parse("res://com.swpuiot.helpingplatform/" + datas.get(position).getImgId());
         holder.iv_sbj.setImageURI(uri);
         holder.tv_sbj.setText(datas.get(position).getSbj());
+        if (onItemClickListener != null) {
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onItemClick(holder.itemView, position);
+                }
+            });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    onItemClickListener.onItemLongClick(holder.itemView, position);
+                    return false;
+                }
+            });
+        }
     }
 
     @Override
@@ -61,11 +96,14 @@ public class InfRecyclerAdapter extends RecyclerView.Adapter<InfRecyclerAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context,InfImplActivity.class);
-                    intent.putExtra("sbj",tv_sbj.getText().toString());
-                    context.startActivity(intent);
+                    if (getAdapterPosition() != 8){
+                        Intent intent=new Intent(context,ShowStudyInformationActivity.class);
+                        intent.putExtra(StudyInf,getAdapterPosition());
+                        context.startActivity(intent);
+                    }
                 }
             });
+
         }
     }
 
