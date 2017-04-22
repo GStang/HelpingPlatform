@@ -3,11 +3,13 @@ package com.swpuiot.helpingplatform.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.bean.FirstBean;
 import com.swpuiot.helpingplatform.bean.StudyBean;
@@ -16,7 +18,10 @@ import com.swpuiot.helpingplatform.view.ShowStudyInformationActivity;
 
 import java.util.List;
 
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 /**
  * Created by DuZeming on 2017/4/6.
@@ -46,7 +51,7 @@ public class StudyInformationAdapter extends RecyclerView.Adapter<StudyInformati
 
     @Override
     public StudyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view=inflater.inflate(R.layout.item_study,parent,false);
+        View view=inflater.inflate(R.layout.item_study, parent, false);
         StudyViewHolder studyViewHolder=new StudyViewHolder(view);
         return studyViewHolder;
     }
@@ -55,9 +60,14 @@ public class StudyInformationAdapter extends RecyclerView.Adapter<StudyInformati
     public void onBindViewHolder(final StudyViewHolder holder, final int position) {
         user=datas.get(position).getAuthor();
         BmobFile file=datas.get(position).getStudyFile();
-
         holder.title.setText(file.getFilename());
-        holder.author.setText(user.getUsername());
+
+        if(user.getNickName()==null||user.getNickName().equals("")){
+            holder.author.setText("BY: "+user.getUsername());
+        }
+        else {
+            holder.author.setText("BY: "+user.getNickName());
+        }
 
         if(onItemClickListener!=null){
 
@@ -95,7 +105,9 @@ public class StudyInformationAdapter extends RecyclerView.Adapter<StudyInformati
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent(context, ShowStudyInformationActivity.class);
-                    intent.putExtra(ShowStudyInf,datas.get(getAdapterPosition()).getStudyFile().getUrl());
+                    Logger.i(datas.get(getAdapterPosition()).getStudyFile().getFileUrl());
+                    intent.putExtra(ShowStudyInf, datas.get(getAdapterPosition()).getStudyFile().getFileUrl());
+                    Log.e("Test","success");
                     context.startActivity(intent);
                 }
             });

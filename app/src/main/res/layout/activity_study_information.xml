@@ -17,6 +17,7 @@
             android:text="学习资料"
             android:textSize="20sp"/>
     </android.support.v7.widget.Toolbar>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_study_information"
         android:layout_width="match_parent"

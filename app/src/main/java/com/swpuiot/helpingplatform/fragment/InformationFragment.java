@@ -20,6 +20,8 @@ import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.InfRecyclerAdapter;
 import com.swpuiot.helpingplatform.bean.InfBean;
 import com.swpuiot.helpingplatform.view.ShareInformationActivity;
+import com.swpuiot.helpingplatform.view.ShowStudyInformationActivity;
+import com.swpuiot.helpingplatform.view.StudyInformationActivity;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -33,6 +35,7 @@ public class InformationFragment extends Fragment {
     private List<InfBean> datas;
     private Toolbar toolbar;
     private InfRecyclerAdapter infRecyclerAdapter;
+    public static final String InfFra = "InfFra";
 
 
     @Nullable
@@ -60,8 +63,12 @@ public class InformationFragment extends Fragment {
         infRecyclerAdapter.setOnItemClickListener(new InfRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if (position == 8){
-                    Intent intent=new Intent(getActivity(), ShareInformationActivity.class);
+                if (position == 8) {
+                    Intent intent = new Intent(getActivity(), ShareInformationActivity.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent=new Intent(getActivity(), StudyInformationActivity.class);
+                    intent.putExtra(InfFra,position);
                     startActivity(intent);
                 }
             }

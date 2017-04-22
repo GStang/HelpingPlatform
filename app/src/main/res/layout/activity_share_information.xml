@@ -24,16 +24,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:entries="@array/kinds"
+        android:layout_margin="8dp"
         android:prompt="@string/navigation_first"
         />
     <Button
         android:id="@+id/btn_share_file"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/shape_search"
+        android:layout_margin="5dp"
         android:text="选择文件"/>
     <TextView
         android:id="@+id/tv_share_file_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:textSize="20sp"/>
+    <Button
+        android:id="@+id/btn_information_up"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_search"
+        android:layout_margin="5dp"
+        android:text="开始上传"/>
     </LinearLayout>
