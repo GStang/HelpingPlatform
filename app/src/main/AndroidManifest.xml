@@ -95,7 +95,9 @@
         <activity android:name=".view.FindUserActivity" />
         <activity android:name=".view.ShowStudyInformationActivity" />
         <activity android:name=".view.StudyInformationActivity" />
-        <activity android:name=".view.ShareInformationActivity"></activity>
+        <activity android:name=".view.ShareInformationActivity" />
+        <activity android:name=".view.MyChatActivity"/>
+        <activity android:name=".view.MySquareActivity"/>
     </application>
 
 </manifest>

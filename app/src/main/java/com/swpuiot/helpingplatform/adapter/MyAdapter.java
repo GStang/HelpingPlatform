@@ -14,7 +14,9 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.view.LoginActivity;
 import com.swpuiot.helpingplatform.view.MainActivity;
+import com.swpuiot.helpingplatform.view.MyChatActivity;
 import com.swpuiot.helpingplatform.view.MyFriendActivity;
+import com.swpuiot.helpingplatform.view.MySquareActivity;
 
 import cn.bmob.v3.BmobUser;
 
@@ -23,7 +25,7 @@ import cn.bmob.v3.BmobUser;
  */
 public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
-    private String[] datas = {"我的订单", "我的钱包", "我的好友", "我的收藏"};
+    private String[] datas = {"我的订单", "我的钱包", "我的好友", "我的动态"};
     private static final int TYPE_TEXT = 0;
     private static final int TYPE_OUT = 1;
 
@@ -105,6 +107,12 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 public void onClick(View v) {
                     if (getAdapterPosition() == 2) {
                         Intent intent = new Intent(context, MyFriendActivity.class);
+                        context.startActivity(intent);
+                    } else if (getAdapterPosition() == 0) {
+                        Intent intent = new Intent(context, MyChatActivity.class);
+                        context.startActivity(intent);
+                    } else if (getAdapterPosition() == 3) {
+                        Intent intent = new Intent(context, MySquareActivity.class);
                         context.startActivity(intent);
                     }
                 }

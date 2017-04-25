@@ -1,6 +1,5 @@
 package com.swpuiot.helpingplatform.fragment;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentUris;
 import android.content.DialogInterface;
@@ -20,39 +19,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
-
 
 import com.orhanobut.logger.Logger;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.ImgSubmitAdapter;
 import com.swpuiot.helpingplatform.bean.FirstBean;
-import com.swpuiot.helpingplatform.bean.PostBean;
 import com.swpuiot.helpingplatform.bean.User;
-import com.swpuiot.helpingplatform.bean.YueData;
 import com.swpuiot.helpingplatform.event.CameraEvent;
 import com.swpuiot.helpingplatform.event.PhotoEvent;
 import com.swpuiot.helpingplatform.utils.CameraUtils;
-import com.swpuiot.helpingplatform.view.MainActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -61,17 +51,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import cn.bmob.newim.event.MessageEvent;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadBatchListener;
-import cn.bmob.v3.listener.UploadFileListener;
 
 /**
  * Created by DuZeming on 2017/3/5.
@@ -147,44 +133,49 @@ public class ChatFragment extends Fragment {
         button_select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Logger.i("Onclick");
                 bean.setAuthor(user);
                 bean.setAlive(true);
                 bean.setSolved(false);
                 bean.setContent(editText_plan.getText().toString());
 //                List<BmobFile> files = new ArrayList<BmobFile>();
-                final String[] filePaths = new String[imageItem.size() - 1];
-                for (int i = 0; i < imageItem.size() - 1; i++) {
-                    File file = bitmapToFile(imageItem.get(i + 1));
-                    filePaths[i] = file.getPath();
-                }
-                BmobFile.uploadBatch(filePaths, new UploadBatchListener() {
-                    @Override
-                    public void onSuccess(List<BmobFile> list, List<String> list1) {
-                        if (list.size() == filePaths.length) {//如果数量相等，则代表文件全部上传完成
-                            //do something
-                            Toast.makeText(getActivity(), "所有图片上传成功", Toast.LENGTH_SHORT).show();
-                            bean.setFiles(list);
-                            for (String file : filePaths) {
-                                File file1 = new File(file);
-                                if (file1 != null) {
-                                    file1.delete();
+                Logger.i(imageItem.size()+"");
+                if (imageItem.size()!=1) {
+                    final String[] filePaths = new String[imageItem.size() - 1];
+                    for (int i = 0; i < imageItem.size() - 1; i++) {
+                        File file = bitmapToFile(imageItem.get(i + 1));
+                        filePaths[i] = file.getPath();
+                    }
+                    BmobFile.uploadBatch(filePaths, new UploadBatchListener() {
+                        @Override
+                        public void onSuccess(List<BmobFile> list, List<String> list1) {
+                            if (list.size() == filePaths.length) {//如果数量相等，则代表文件全部上传完成
+                                //do something
+                                Toast.makeText(getActivity(), "所有图片上传成功", Toast.LENGTH_SHORT).show();
+                                bean.setFiles(list);
+                                for (String file : filePaths) {
+                                    File file1 = new File(file);
+                                    if (file1 != null) {
+                                        file1.delete();
+                                    }
                                 }
+                                dopublish();
                             }
-                            dopublish();
                         }
-                    }
 
-                    @Override
-                    public void onProgress(int i, int i1, int i2, int i3) {
+                        @Override
+                        public void onProgress(int i, int i1, int i2, int i3) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onError(int i, String s) {
+                        @Override
+                        public void onError(int i, String s) {
 
-                    }
-                });
+                        }
+                    });
+                }else{
+                    dopublish();
+                }
 //                bean.setFiles(files);
                 editText_time.setText("");
                 editText_title.setText("");
@@ -202,6 +193,8 @@ public class ChatFragment extends Fragment {
                 if (e == null) {
                     Logger.i("发布成功");
                     imageItem.clear();
+                    imageItem.add(bmp);
+                    mAdapter.notifyDataSetChanged();
                 }
             }
         });
