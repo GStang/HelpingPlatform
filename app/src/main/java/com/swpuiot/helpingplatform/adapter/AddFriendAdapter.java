@@ -65,7 +65,7 @@ public class AddFriendAdapter extends RecyclerView.Adapter<AddFriendAdapter.AddF
                 @Override
                 public void onClick(View v) {
                     Logger.i("OnClick");
-                    EventBus.getDefault().post(new AgreeEvent(datas.get(getAdapterPosition())));
+                    EventBus.getDefault().post(new AgreeEvent(datas.get(getAdapterPosition()),getAdapterPosition()));
                 }
             });
         }

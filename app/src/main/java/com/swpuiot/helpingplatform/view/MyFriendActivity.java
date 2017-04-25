@@ -53,19 +53,6 @@ public class MyFriendActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myfriend);
         initView();
-        frienddao = new FriendDao(this, "MyFriend.db", null, 1);
-        frienddao.getWritableDatabase();
-        BmobIM.connect(myuser.getObjectId(), new ConnectListener() {
-            @Override
-            public void done(String s, BmobException e) {
-                if (e == null) {
-                    Toast.makeText(MyFriendActivity.this, "连接服务器成功", Toast.LENGTH_SHORT).show();
-//                    getAllConversation();
-                } else {
-                    Logger.e(e.getMessage());
-                }
-            }
-        });
     }
 
     /**

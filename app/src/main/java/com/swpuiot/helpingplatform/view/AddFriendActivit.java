@@ -1,5 +1,7 @@
 package com.swpuiot.helpingplatform.view;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +14,7 @@ import com.swpuiot.helpingplatform.adapter.AddFriendAdapter;
 import com.swpuiot.helpingplatform.bean.Friend;
 import com.swpuiot.helpingplatform.bean.NewFriend;
 import com.swpuiot.helpingplatform.bean.User;
+import com.swpuiot.helpingplatform.dao.FriendDao;
 import com.swpuiot.helpingplatform.event.AddFriendEvent;
 import com.swpuiot.helpingplatform.event.AgreeEvent;
 import com.swpuiot.helpingplatform.utils.AddFriendMessage;
@@ -42,6 +45,9 @@ public class AddFriendActivit extends AppCompatActivity {
     private RecyclerView recyclerView;
     private AddFriendAdapter adapter;
     private List<BmobIMUserInfo> datas;
+    private SQLiteDatabase database;
+    private FriendDao friendDao;
+    private Cursor cursor;
 
     @Override
 
@@ -53,27 +59,48 @@ public class AddFriendActivit extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.rv_addfriend);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        friendDao = FriendDao.getInstance(null, null, null, 1);
+        database = friendDao.getWritableDatabase();
+        cursor = database.rawQuery("select * from friend", null);
+        int num = cursor.getCount();
+        if (num != 0) {
+            while (cursor.moveToNext()) {
+                String objectid = cursor.getString(0);
+                String username = cursor.getString(1);
+                String headimg = cursor.getString(2);
+//                Logger.i(headimg);
+                datas.add(new BmobIMUserInfo(objectid, username, headimg));
+            }
+        }
+        adapter.notifyDataSetChanged();
+
         EventBus.getDefault().register(this);
     }
 
-    /**
-     * 监听接收新好友
-     */
-    @Subscribe
-    public void onEventMainThread(AddFriendEvent event) {
-        String msg = "收到了消息：";
-        Logger.i(msg);
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-        datas.add(event.getInfo());
-        adapter.notifyDataSetChanged();
-//        IsAggreed(event);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        database.releaseReference();
+        cursor.close();
     }
+//    /**
+//     * 监听接收新好友
+//     */
+//    @Subscribe
+//    public void onEventMainThread(AddFriendEvent event) {
+//        String msg = "收到了消息：";
+//        Logger.i(msg);
+//        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+//        datas.add(event.getInfo());
+//        adapter.notifyDataSetChanged();
+////        IsAggreed(event);
+//    }
 
     /**
      * 监听接受点击了接受按钮，向对方发送确认消息
      */
     @Subscribe
-    public void onEventMainThread(AgreeEvent event) {
+    public void onEventMainThread(final AgreeEvent event) {
         final BmobIMUserInfo info = event.getInfo();
         Logger.i("发送同意消息");
         BmobIMConversation c = BmobIM.getInstance().startPrivateConversation(info, true, null);
@@ -95,9 +122,12 @@ public class AddFriendActivit extends AppCompatActivity {
                         public void done(String s, BmobException e) {
                             if (e == null) {
                                 Toast.makeText(AddFriendActivit.this, "添加好友成功", Toast.LENGTH_SHORT).show();
-                                datas.clear();
+                                datas.remove(event.getPositon());
                                 adapter.notifyDataSetChanged();
-                            }else{
+                                database.delete("friend", "objectid='" + event.getInfo().getUserId() + "'", null);
+                                database.execSQL("delete from friend where objectid ='" + event.getInfo().getUserId() + "'");
+                                adapter.notifyDataSetChanged();
+                            } else {
                                 Toast.makeText(AddFriendActivit.this, "添加好友失败", Toast.LENGTH_SHORT).show();
                             }
                         }
