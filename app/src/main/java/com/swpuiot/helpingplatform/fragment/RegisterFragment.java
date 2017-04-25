@@ -41,7 +41,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_register, container, false);
         initView(view);
         btn_register.setOnClickListener(this);
-
         return view;
     }
 
@@ -72,6 +71,9 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                 user.setUsername(et_username.getText().toString().trim());
                 user.setPassword(et_password.getText().toString().trim());
                 user.setEmail(et_email.getText().toString());
+                user.setAge(0);
+                user.setSex(0);
+                user.setAvatar("http://bmob-cdn-9580.b0.upaiyun.com/2017/04/20/195d9d4d8b9b49f8aab73efeb3b3b74a.jpg");
                 user.signUp(new SaveListener<User>() {
                     @Override
                     public void done(User o, BmobException e) {
