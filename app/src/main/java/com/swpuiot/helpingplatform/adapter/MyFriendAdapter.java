@@ -2,6 +2,8 @@ package com.swpuiot.helpingplatform.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.swpuiot.helpingplatform.R;
+import com.swpuiot.helpingplatform.dao.FriendDao;
 import com.swpuiot.helpingplatform.holder.AddFriendViewHolder;
 import com.swpuiot.helpingplatform.view.ChatActivity;
 
@@ -30,7 +33,7 @@ import cn.bmob.v3.exception.BmobException;
  */
 public class MyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
-    private List<BmobIMUserInfo> datas;
+    public List<BmobIMUserInfo> datas;
     public static final int ADD_FRIEND = 1;
     public static final int ITEM = 2;
 
@@ -94,7 +97,16 @@ public class MyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 ((MyFriendViewHolder) holder).simpleDraweeView.setImageURI(((MyFriendViewHolder) holder).info.getAvatar());
         }
         if (holder instanceof AddFriendViewHolder) {
-
+            FriendDao frienddao = FriendDao.getInstance(null, null, null, 1);
+            SQLiteDatabase database = frienddao.getReadableDatabase();
+            Cursor cursor = database.rawQuery("select * from friend", null);
+            int count = cursor.getCount();
+            com.orhanobut.logger.Logger.i(count + "");
+            if (count==0){
+                ((AddFriendViewHolder)holder).mIsNewFriend.setText("没有新的好友添加");
+            }
+            cursor.close();
+            frienddao.close();
         }
     }
 

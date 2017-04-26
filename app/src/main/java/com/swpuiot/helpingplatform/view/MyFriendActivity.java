@@ -1,6 +1,8 @@
 package com.swpuiot.helpingplatform.view;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,9 +10,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
@@ -46,7 +50,7 @@ public class MyFriendActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MyFriendAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-
+    private Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +59,6 @@ public class MyFriendActivity extends AppCompatActivity {
         initView();
     }
 
-    /**
-     * 获得所有的会话
-     */
-//    private void getAllConversation() {
-//        conversations = BmobIM.getInstance().loadAllConversation();
-//        for (BmobIMConversation con : conversations) {
-//            Logger.i(con.getConversationTitle());
-//        }
-//    }
 
     /**
      * 初始化控件
@@ -96,6 +91,7 @@ public class MyFriendActivity extends AppCompatActivity {
                 getFriend();
             }
         });
+
     }
 
     /**
@@ -118,7 +114,6 @@ public class MyFriendActivity extends AppCompatActivity {
      */
     private void findFriends(List<Friend> list, BmobException e) {
         if (e == null) {
-//            Log.i("Friend", "Success");
             datas.clear();
             for (Friend friend : list) {
                 BmobIMUserInfo info = new BmobIMUserInfo
@@ -140,7 +135,6 @@ public class MyFriendActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        BmobIM.getInstance().disConnect();
     }
 
     @Override
