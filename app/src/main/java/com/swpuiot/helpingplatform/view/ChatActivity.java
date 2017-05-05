@@ -2,7 +2,10 @@ package com.swpuiot.helpingplatform.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,17 +14,25 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.ChatAdapter;
 import com.swpuiot.helpingplatform.bean.User;
+import com.swpuiot.helpingplatform.utils.Util;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -30,18 +41,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.bmob.newim.bean.BmobIMAudioMessage;
 import cn.bmob.newim.bean.BmobIMConversation;
 import cn.bmob.newim.bean.BmobIMMessage;
 import cn.bmob.newim.bean.BmobIMTextMessage;
 import cn.bmob.newim.core.BmobIMClient;
+import cn.bmob.newim.core.BmobRecordManager;
 import cn.bmob.newim.event.MessageEvent;
+import cn.bmob.newim.listener.FileUploadListener;
 import cn.bmob.newim.listener.MessageSendListener;
 import cn.bmob.newim.listener.MessagesQueryListener;
 import cn.bmob.newim.listener.ObseverListener;
+import cn.bmob.newim.listener.OnRecordChangeListener;
 import cn.bmob.newim.notification.BmobNotificationManager;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 
+/**
+ * 聊天界面
+ */
 public class ChatActivity extends AppCompatActivity implements ObseverListener {
     private BmobIMConversation c;
 
@@ -54,13 +72,21 @@ public class ChatActivity extends AppCompatActivity implements ObseverListener {
     private Button btn_chat_voice;
     private User user;
     private SwipeRefreshLayout refresh;
-
+    private Drawable[] drawable_Anims;// 话筒动画
+    private Button btn_speak;
+    BmobRecordManager recordManager;
+    ImageView iv_record;
+    private RelativeLayout layout_record;
+    private TextView tv_voice_tips;
+    private LinearLayout layout_more;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         initView();
+        initButton();
+        initVoiceView();
         EventBus.getDefault().register(this);
     }
 
@@ -70,7 +96,7 @@ public class ChatActivity extends AppCompatActivity implements ObseverListener {
         btn_chat_keyboard = (Button) findViewById(R.id.btn_chat_keyboard);
         btn_chat_send = (Button) findViewById(R.id.btn_chat_send);
         refresh = (SwipeRefreshLayout) findViewById(R.id.sw_refresh);
-//        此处出现问题的原因，可能是isTransient不能被序列化造成的
+//        临时聊天此处出现问题的原因，可能是isTransient不能被序列化造成的
         c = BmobIMConversation.obtain(BmobIMClient.getInstance(), (BmobIMConversation) getIntent().getSerializableExtra("c"));
 //        List<BmobIMMessage> messages = c.getMessages();
         if (!c.isTransient()) {
@@ -91,11 +117,26 @@ public class ChatActivity extends AppCompatActivity implements ObseverListener {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         user = BmobUser.getCurrentUser(User.class);
-        initButton();
+        layout_more = (LinearLayout) findViewById(R.id.layout_more);
         btn_chat_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendMessage();
+                hideSoftInputView();
+            }
+        });
+        btn_speak = (Button) findViewById(R.id.btn_speak);
+        iv_record = (ImageView) findViewById(R.id.iv_record);
+        layout_record = (RelativeLayout) findViewById(R.id.layout_record);
+        tv_voice_tips = (TextView) findViewById(R.id.tv_voice_tips);
+        btn_chat_voice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edit_msg.setVisibility(View.GONE);
+                layout_more.setVisibility(View.GONE);
+                btn_chat_voice.setVisibility(View.GONE);
+                btn_chat_keyboard.setVisibility(View.VISIBLE);
+                btn_speak.setVisibility(View.VISIBLE);
                 hideSoftInputView();
             }
         });
@@ -105,20 +146,21 @@ public class ChatActivity extends AppCompatActivity implements ObseverListener {
      * 初始化Button的界面，隐藏和显示，并监听是否有内容
      */
     private void initButton() {
-//        edit_msg.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_UP) {
-//                    scrollToBottom();
-//                }
-//                return false;
-//            }
-//        });
+        /**触碰输入栏下拉到底部*/
+        edit_msg.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_UP) {
+                    scrollToBottom();
+                }
+                return false;
+            }
+        });
         edit_msg.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                scrollToBottom();
+                scrollToBottom();
             }
 
             @Override
@@ -141,6 +183,149 @@ public class ChatActivity extends AppCompatActivity implements ObseverListener {
             }
         });
     }
+
+
+    /**
+     * 初始化语音布局
+     *
+     * @param
+     * @return void
+     */
+    private void initVoiceView() {
+        btn_speak.setOnTouchListener(new VoiceTouchListener());
+        initVoiceAnimRes();
+        initRecordManager();
+    }
+    /**
+     * 初始化语音动画资源
+     * @Title: initVoiceAnimRes
+     * @param
+     * @return void
+     */
+    private void initVoiceAnimRes() {
+        drawable_Anims = new Drawable[] {
+                getResources().getDrawable(R.mipmap.chat_icon_voice2),
+                getResources().getDrawable(R.mipmap.chat_icon_voice3),
+                getResources().getDrawable(R.mipmap.chat_icon_voice4),
+                getResources().getDrawable(R.mipmap.chat_icon_voice5),
+                getResources().getDrawable(R.mipmap.chat_icon_voice6) };
+    }
+
+    private void initRecordManager(){
+        // 语音相关管理器
+        recordManager = BmobRecordManager.getInstance(this);
+        // 设置音量大小监听--在这里开发者可以自己实现：当剩余10秒情况下的给用户的提示，类似微信的语音那样
+        recordManager.setOnRecordChangeListener(new OnRecordChangeListener() {
+
+            @Override
+            public void onVolumnChanged(int value) {
+                iv_record.setImageDrawable(drawable_Anims[value]);
+            }
+
+            @Override
+            public void onTimeChanged(int recordTime, String localPath) {
+                Logger.i("voice", "已录音长度:" + recordTime);
+                if (recordTime >= BmobRecordManager.MAX_RECORD_TIME) {// 1分钟结束，发送消息
+                    // 需要重置按钮
+                    btn_speak.setPressed(false);
+                    btn_speak.setClickable(false);
+                    // 取消录音框
+                    layout_record.setVisibility(View.INVISIBLE);
+                    // 发送语音消息
+                    sendVoiceMessage(localPath, recordTime);
+                    //是为了防止过了录音时间后，会多发一条语音出去的情况。
+                    new Handler().postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            btn_speak.setClickable(true);
+                        }
+                    }, 1000);
+                }
+            }
+        });
+    }
+
+    /**
+     * 长按说话
+     * @author smile
+     * @date 2014-7-1 下午6:10:16
+     */
+    class VoiceTouchListener implements View.OnTouchListener {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    if (!Util.checkSdCard()) {
+                        Toast.makeText(ChatActivity.this, "发送语音消息需要sdcard支持", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                    try {
+                        v.setPressed(true);
+                        layout_record.setVisibility(View.VISIBLE);
+                        tv_voice_tips.setText(getString(R.string.voice_cancel_tips));
+                        // 开始录音
+                        recordManager.startRecording(c.getConversationId());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                case MotionEvent.ACTION_MOVE: {
+                    if (event.getY() < 0) {
+                        tv_voice_tips.setText(getString(R.string.voice_cancel_tips));
+                        tv_voice_tips.setTextColor(Color.RED);
+                    } else {
+                        tv_voice_tips.setText(getString(R.string.voice_up_tips));
+                        tv_voice_tips.setTextColor(Color.WHITE);
+                    }
+                    return true;
+                }
+                case MotionEvent.ACTION_UP:
+                    v.setPressed(false);
+                    layout_record.setVisibility(View.INVISIBLE);
+                    try {
+                        if (event.getY() < 0) {// 放弃录音
+                            recordManager.cancelRecording();
+                            Logger.i("voice", "放弃发送语音");
+                        } else {
+                            int recordTime = recordManager.stopRecording();
+                            if (recordTime > 1) {
+                                // 发送语音文件
+                                sendVoiceMessage(recordManager.getRecordFilePath(c.getConversationId()),recordTime);
+                            } else {// 录音时间过短，则提示录音过短的提示
+                                layout_record.setVisibility(View.GONE);
+                                showShortToast().show();
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
+
+    Toast toast;
+
+    /**
+     * 显示录音时间过短的Toast
+     * @Title: showShortToast
+     * @return void
+     */
+    private Toast showShortToast() {
+        if (toast == null) {
+            toast = new Toast(this);
+        }
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.include_chat_voice_short, null);
+        toast.setView(view);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        return toast;
+    }
+
 
     /**
      * 添加消息到聊天界面中
@@ -224,6 +409,20 @@ public class ChatActivity extends AppCompatActivity implements ObseverListener {
         msg.setExtraMap(map);
         c.sendMessage(msg, listener);
     }
+
+    /**
+     * 发送语音消息
+     * @Title: sendVoiceMessage
+     * @param  local
+     * @param  length
+     * @return void
+     */
+    private void sendVoiceMessage(String local, int length) {
+        Logger.i("发送语音消息");
+        BmobIMAudioMessage audio =new BmobIMAudioMessage(local);
+        c.sendMessage(audio, listener);
+    }
+
 
     /**
      * 隐藏软键盘

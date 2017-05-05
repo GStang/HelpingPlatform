@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import cn.bmob.newim.BmobIM;
 import cn.bmob.newim.bean.BmobIMConversation;
 import cn.bmob.newim.bean.BmobIMMessage;
+import cn.bmob.newim.bean.BmobIMMessageType;
 import cn.bmob.newim.bean.BmobIMUserInfo;
 import cn.bmob.newim.listener.MessagesQueryListener;
 import cn.bmob.v3.exception.BmobException;
@@ -80,10 +81,13 @@ public class MyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //                        com.orhanobut.logger.Logger.i(list.toString()+" "+list.size());
                         String s = "";
                         if (list.size() != 0) {
+                            String type = list.get(0).getMsgType();
                             s = list.get(0).getContent();
                             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
                             long createTime = list.get(0).getCreateTime();
-//                    long nowtime = createTime -System.currentTimeMillis();
+                            if (type.equals(BmobIMMessageType.VOICE.getType())) {
+                                s = "语音";
+                            }
                             Date date = new Date(createTime);
                             if (s != null)
                                 ((MyFriendViewHolder) holder).content.setText(s);
@@ -102,8 +106,8 @@ public class MyFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Cursor cursor = database.rawQuery("select * from friend", null);
             int count = cursor.getCount();
             com.orhanobut.logger.Logger.i(count + "");
-            if (count==0){
-                ((AddFriendViewHolder)holder).mIsNewFriend.setText("没有新的好友添加");
+            if (count == 0) {
+                ((AddFriendViewHolder) holder).mIsNewFriend.setText("没有新的好友添加");
             }
             cursor.close();
             frienddao.close();

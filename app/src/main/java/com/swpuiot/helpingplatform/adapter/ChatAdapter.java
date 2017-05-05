@@ -12,15 +12,22 @@ import com.orhanobut.logger.Logger;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.bean.User;
 import com.swpuiot.helpingplatform.holder.ReceiveTextViewHolder;
+import com.swpuiot.helpingplatform.holder.ReceiveVoiceHolder;
+import com.swpuiot.helpingplatform.holder.SendVoiceViewHolder;
+import com.swpuiot.helpingplatform.utils.NewRecordPlayClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.newim.BmobIM;
+import cn.bmob.newim.bean.BmobIMAudioMessage;
 import cn.bmob.newim.bean.BmobIMConversation;
 import cn.bmob.newim.bean.BmobIMMessage;
 import cn.bmob.newim.bean.BmobIMMessageType;
+import cn.bmob.newim.core.BmobDownloadManager;
+import cn.bmob.newim.listener.FileDownloadListener;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
 
 /**
  * Created by DELL on 2017/3/26.
@@ -81,6 +88,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (viewType == TYPE_RECEIVER_TXT) {
             View view = inflater.inflate(R.layout.item_chat_receive_text, parent, false);
             return new ReceiveTextViewHolder(view);
+        } else if (viewType == TYPE_RECEIVER_VOICE) {
+            View view = inflater.inflate(R.layout.item_chat_receive_voice, parent, false);
+            return new ReceiveVoiceHolder(view);
+        } else if (viewType == TYPE_SEND_VOICE) {
+            View view = inflater.inflate(R.layout.item_chat_send_voice, parent, false);
+            return new SendVoiceViewHolder(view);
         } else {
             View view = inflater.inflate(R.layout.item_chat_receive_text, parent, false);
             return new ReceiveTextViewHolder(view);
@@ -97,9 +110,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //            return new ReceiveImageHolder(parent.getContext(), parent,onRecyclerViewListener);
 //        } else if (viewType == TYPE_RECEIVER_LOCATION) {
 //            return new ReceiveLocationHolder(parent.getContext(), parent,onRecyclerViewListener);
-//        } else if (viewType == TYPE_RECEIVER_VOICE) {
-//            return new ReceiveVoiceHolder(parent.getContext(), parent,onRecyclerViewListener);
-//        } else if (viewType == TYPE_SEND_VIDEO) {
+//        }
+// else if (viewType == TYPE_SEND_VIDEO) {
 //            return new SendVideoHolder(parent.getContext(), parent,c,onRecyclerViewListener);
 //        } else if (viewType == TYPE_RECEIVER_VIDEO) {
 //            return new ReceiveVideoHolder(parent.getContext(), parent,onRecyclerViewListener);
@@ -142,6 +154,52 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ((ReceiveTextViewHolder) holder).textView.setText(msgs.get(position).getContent());
             ((ReceiveTextViewHolder) holder).simpleDraweeView.setImageURI(BmobIM.getInstance()
                     .getUserInfo(msgs.get(position).getFromId()).getAvatar());
+        } else if (holder instanceof SendVoiceViewHolder) {
+            BmobIMMessage msg = msgs.get(position);
+            final BmobIMAudioMessage message = BmobIMAudioMessage.buildFromDB(true, msg);
+            ((SendVoiceViewHolder) holder).simpleDraweeView.setImageURI(BmobUser.getCurrentUser(User.class).getAvatar());
+            ((SendVoiceViewHolder) holder).imageView.setOnClickListener
+                    (new NewRecordPlayClickListener(context, message
+                            , ((SendVoiceViewHolder) holder).imageView));
+        } else if (holder instanceof ReceiveVoiceHolder) {
+            BmobIMMessage msg = msgs.get(position);
+            final BmobIMAudioMessage message = BmobIMAudioMessage.buildFromDB(true, msg);
+            ((ReceiveVoiceHolder) holder).simpleDraweeView.setImageURI(BmobIM.getInstance()
+                    .getUserInfo(msg.getFromId()).getAvatar());
+            boolean isExists = BmobDownloadManager.isAudioExist(currentUid, message);
+            Logger.i(!isExists + "");
+            if (!isExists) {//若指定格式的录音文件不存在，则需要下载，因为其文件比较小，故放在此下载
+                BmobDownloadManager downloadTask = new BmobDownloadManager(context, msg, new FileDownloadListener() {
+                    @Override
+                    public void onStart() {
+                        Logger.i("开始下载");
+//                        progress_load.setVisibility(View.VISIBLE);
+//                        tv_voice_length.setVisibility(View.GONE);
+//                        iv_voice.setVisibility(View.INVISIBLE);//只有下载完成才显示播放的按钮
+                    }
+
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            Logger.i("下载完成");
+//                            progress_load.setVisibility(View.GONE);
+//                            tv_voice_length.setVisibility(View.VISIBLE);
+//                            tv_voice_length.setText(message.getDuration()+"\''");
+//                            iv_voice.setVisibility(View.VISIBLE);
+                        } else {
+                            Logger.i("发生了异常");
+//                            progress_load.setVisibility(View.GONE);
+//                            tv_voice_length.setVisibility(View.GONE);
+//                            iv_voice.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                });
+                downloadTask.execute(message.getContent());
+            }
+            ((ReceiveVoiceHolder) holder).imageView.setOnClickListener(
+                    new NewRecordPlayClickListener(context, message
+                            , ((ReceiveVoiceHolder) holder).imageView)
+            );
         }
     }
 

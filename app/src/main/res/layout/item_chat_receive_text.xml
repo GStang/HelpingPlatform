@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="11dp"
     android:orientation="horizontal">
 
     <com.facebook.drawee.view.SimpleDraweeView
@@ -17,6 +19,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:background="@drawable/chat_left_qp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="15dp"
+        android:paddingTop="8dp"
         android:textColor="@color/colorBlack"
         android:textSize="20sp"
         tools:text="我是内容" />
