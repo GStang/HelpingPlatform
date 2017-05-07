@@ -140,6 +140,16 @@ public class ChatActivity extends AppCompatActivity implements ObseverListener {
                 hideSoftInputView();
             }
         });
+        btn_chat_keyboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edit_msg.setVisibility(View.VISIBLE);
+                layout_more.setVisibility(View.VISIBLE);
+                btn_chat_voice.setVisibility(View.VISIBLE);
+                btn_chat_keyboard.setVisibility(View.GONE);
+                btn_speak.setVisibility(View.GONE);
+            }
+        });
     }
 
     /**
