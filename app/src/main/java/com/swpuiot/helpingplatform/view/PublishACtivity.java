@@ -3,9 +3,9 @@ package com.swpuiot.helpingplatform.view;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -30,6 +30,11 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadBatchListener;
 
+/**
+ * 发布动态的界面
+ *
+ * @author DELL
+ */
 public class PublishACtivity extends AppCompatActivity implements View.OnClickListener {
     private Toolbar toolbar;
     private EditText editContent;
@@ -88,6 +93,9 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
+    /**
+     * 上传文件
+     */
     private void doupdateFile() {
         final String[] filePaths = new String[datas.size() - 1];
         for (int i = 0; i < datas.size() - 1; i++) {
@@ -124,6 +132,9 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    /**
+     * 发布动态
+     */
     private void dopublish() {
 
         postBean.setContent(editContent.getText().toString().trim());
@@ -150,6 +161,9 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    /**
+     * 接受图片
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

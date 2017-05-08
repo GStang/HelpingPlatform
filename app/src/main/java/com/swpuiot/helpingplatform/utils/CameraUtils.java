@@ -1,6 +1,5 @@
 package com.swpuiot.helpingplatform.utils;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.UUID;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
@@ -30,6 +30,7 @@ public class CameraUtils {
     private AppCompatActivity context;
     private User user;
     public static final String PHOTO_IMAGE_FILE_NAME = BmobUser.getCurrentUser(User.class).getUsername() + "dongtai.jpg";
+
     public static final int CAMERA_REQUEST_CODE = 100;
     public static final int IMAGE_REQUEST_CODE = 101;
     public static final int RESULT_REQUEST_CODE = 102;
@@ -48,7 +49,8 @@ public class CameraUtils {
     }
 
     public File bitmapToFile(Bitmap bitmap) {
-        tempFile = new File(Environment.getExternalStorageDirectory(), PHOTO_IMAGE_FILE_NAME);
+        String PHOTO_IMAGE_FILE_UPDATE = UUID.randomUUID().toString().substring(1,10)+".jpg";
+        tempFile = new File(Environment.getExternalStorageDirectory(), PHOTO_IMAGE_FILE_UPDATE);
         try {
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(tempFile));
             if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos)) {
