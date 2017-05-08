@@ -59,9 +59,21 @@
             android:layout_height="wrap_content"
             android:inputType="datetime"
             android:hint="在此输入时间"
-            android:background="@android:drawable/edit_text"
+            android:layout_margin="6dp"
+            android:background="@drawable/drawable_edit_normal"
+            android:textSize="16sp"
+            android:padding="5dp"
             android:windowSoftInputMode="adjustResize"/>
-
+        <EditText
+            android:id="@+id/chat_edit_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="请输入标题"
+            android:background="@drawable/drawable_edit_normal"
+            android:textSize="16sp"
+            android:layout_margin="6dp"
+            android:padding="5dp"
+            android:windowSoftInputMode="adjustResize"/>
 
         <EditText
             android:id="@+id/chat_edit_title"
@@ -69,7 +81,10 @@
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:hint="输入科目"
-            android:background="@android:drawable/edit_text"
+            android:background="@drawable/drawable_edit_normal"
+            android:textSize="16sp"
+            android:layout_margin="6dp"
+            android:padding="5dp"
             android:windowSoftInputMode="adjustResize"/>
 
         <EditText
@@ -83,17 +98,13 @@
             android:maxLines="5"
             android:scrollbars="vertical"
             android:hint="描述一下你的计划吧..."
-            android:background="@android:drawable/edit_text"
+            android:background="@drawable/drawable_edit_normal"
+            android:textSize="16sp"
+            android:layout_margin="6dp"
+            android:padding="5dp"
             android:windowSoftInputMode="adjustResize"/>
 
-        <EditText
-            android:id="@+id/chat_edit_phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone"
-            android:hint="请输入手机号"
-            android:background="@android:drawable/edit_text"
-            android:windowSoftInputMode="adjustResize"/>
+
 
         <TextView
             android:layout_gravity="center"

@@ -128,6 +128,7 @@ public class CameraUtils {
     public void openPhotoShop(){
         Intent intent = new Intent(Intent.ACTION_PICK, null);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+//        intent.putExtra("return-data", true);
         context.startActivityForResult(intent, IMAGE_REQUEST_CODE);
     }
 

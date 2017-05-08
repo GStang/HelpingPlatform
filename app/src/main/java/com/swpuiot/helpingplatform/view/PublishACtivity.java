@@ -1,10 +1,13 @@
 package com.swpuiot.helpingplatform.view;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,14 +16,17 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.orhanobut.logger.Logger;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.PublishAdapter;
 import com.swpuiot.helpingplatform.bean.PostBean;
 import com.swpuiot.helpingplatform.bean.User;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,11 +45,11 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
     private Toolbar toolbar;
     private EditText editContent;
     private User user;
+    private ProgressBar progressBar;
     private List<Bitmap> datas;
     private RecyclerView recyclerView;
     public static final int CAMERA_REQUEST_CODE = 100;
     public static final int IMAGE_REQUEST_CODE = 101;
-    public static final int RESULT_REQUEST_CODE = 102;
     public static final String PHOTO_IMAGE_FILE_NAME = BmobUser.getCurrentUser(User.class).getUsername() + "dongtai.jpg";
     private File tempFile;
     private PublishAdapter myAdapter;
@@ -56,7 +62,7 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_publish_activity);
         datas = new LinkedList<>();
         myAdapter = new PublishAdapter(this, datas);
-
+        progressBar = (ProgressBar) findViewById(R.id.progress_load);
         toolbar = (Toolbar) findViewById(R.id.toolbar_publish);
         editContent = (EditText) findViewById(R.id.et_publish);
         user = BmobUser.getCurrentUser(User.class);
@@ -72,8 +78,10 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_publish:
+                        item.setEnabled(false);
                         if (editContent.getText().toString().trim().equals("")) {
                             Toast.makeText(PublishACtivity.this, "内容不能为空", Toast.LENGTH_SHORT).show();
+                            item.setEnabled(true);
                             return false;
                         }
                         if (datas.size() != 1) {
@@ -85,6 +93,7 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
                             postBean.setZan(0);
                             dopublish();
                         }
+                        item.setEnabled(true);
                         return true;
                     default:
                         return false;
@@ -97,6 +106,8 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
      * 上传文件
      */
     private void doupdateFile() {
+        progressBar.setVisibility(View.VISIBLE);
+
         final String[] filePaths = new String[datas.size() - 1];
         for (int i = 0; i < datas.size() - 1; i++) {
             File file = myAdapter.cameraUtils.bitmapToFile(datas.get(i + 1));
@@ -115,13 +126,15 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
                             file1.delete();
                         }
                     }
+                    progressBar.setVisibility(View.GONE);
                     dopublish();
                 }
             }
 
             @Override
             public void onProgress(int i, int i1, int i2, int i3) {
-
+                Logger.i(i3+"");
+                progressBar.setProgress(i3);
             }
 
             @Override
@@ -172,33 +185,22 @@ public class PublishACtivity extends AppCompatActivity implements View.OnClickLi
                 tempFile = new File(Environment.getExternalStorageDirectory(), PHOTO_IMAGE_FILE_NAME);
                 bitmap = myAdapter.cameraUtils.compressImageFromFile(tempFile.getPath());
                 datas.add(bitmap);
-//                System.out.println(bitmap.getByteCount());
                 myAdapter.notifyDataSetChanged();
                 if (tempFile != null) {
                     tempFile.delete();
                     Log.i("JAVA", "tempFile已删除");
                 }
-//                myAdapter.cameraUtils.startPhotoZoom(Uri.fromFile(tempFile));
-//                startPhotoZoom(Uri.fromFile(tempFile));
-                break;
-            case RESULT_REQUEST_CODE: // 有可能点击舍弃
-//                if (data != null) {
-//                    // 拿到图片设置, 然后需要删除tempFile
-//                    Bundle bundle = data.getExtras();
-//                    if (bundle != null) {
-//                        final Bitmap bitmap = bundle.getParcelable("data");
-//                        datas.add(bitmap);
-//                        myAdapter.notifyDataSetChanged();
-////                    myAdapter.cameraUtils.setImageToView(data);
-//                    }
-//                }
                 break;
             case IMAGE_REQUEST_CODE:
-                tempFile = new File(Environment.getExternalStorageDirectory(), PHOTO_IMAGE_FILE_NAME);
-                bitmap = myAdapter.cameraUtils.compressImageFromFile(tempFile.getPath());
-                datas.add(bitmap);
-//                System.out.println(bitmap.getByteCount());
-                myAdapter.notifyDataSetChanged();
+                Uri uri = data.getData();
+                ContentResolver resolver = getContentResolver();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(resolver, uri);
+                    datas.add(bitmap);
+                    myAdapter.notifyDataSetChanged();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 if (tempFile != null) {
                     tempFile.delete();
                     Log.i("JAVA", "tempFile已删除");

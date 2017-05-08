@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -52,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
@@ -72,8 +74,6 @@ public class ChatFragment extends Fragment {
     private Toolbar toolbar_chat;
     private User user;
     private RecyclerView gridView1;              //网格显示缩略图
-    private final int IMAGE_OPEN = 1;        //打开图片标记
-    private String pathImage;                //选择图片路径
     private Bitmap bmp;                      //导入临时图片
     private ImgSubmitAdapter mAdapter;
     private ArrayList<Bitmap> imageItem;
@@ -81,19 +81,10 @@ public class ChatFragment extends Fragment {
     private File tempFile;
     public static final String PHOTO_IMAGE_FILE_NAME =
             BmobUser.getCurrentUser(User.class).getUsername() + "question.jpg";
-    private boolean success = false;
-    private View view;
-    private static final int REQUEST_PHOTO = 2;
     private CameraUtils mCameraUtils;
-    private File imageFile;
-    private static final String LOG_TAG = "Camera";
-    private File mediaStorageDir = null;
-    private String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-    private static final int PHOTO_RESULT = 300;
     private static final int TAKE_PHOTO = 200;
     private static final int CHOOSE_PHOTO = 100;
     private FirstBean bean = new FirstBean();
-    private File currentImageFile = null;
     private Bitmap bitmap;
 
 
@@ -133,14 +124,15 @@ public class ChatFragment extends Fragment {
         button_select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Logger.i("Onclick");
+                button_select.setEnabled(false);
                 bean.setAuthor(user);
+                bean.setTitle(editText_phone.getText().toString());
                 bean.setAlive(true);
                 bean.setSolved(false);
                 bean.setContent(editText_plan.getText().toString());
 //                List<BmobFile> files = new ArrayList<BmobFile>();
-                Logger.i(imageItem.size()+"");
-                if (imageItem.size()!=1) {
+                Logger.i(imageItem.size() + "");
+                if (imageItem.size() != 1) {
                     final String[] filePaths = new String[imageItem.size() - 1];
                     for (int i = 0; i < imageItem.size() - 1; i++) {
                         File file = bitmapToFile(imageItem.get(i + 1));
@@ -170,10 +162,10 @@ public class ChatFragment extends Fragment {
 
                         @Override
                         public void onError(int i, String s) {
-
+                            button_select.setEnabled(true);
                         }
                     });
-                }else{
+                } else {
                     dopublish();
                 }
 //                bean.setFiles(files);
@@ -195,7 +187,9 @@ public class ChatFragment extends Fragment {
                     imageItem.clear();
                     imageItem.add(bmp);
                     mAdapter.notifyDataSetChanged();
+                    button_select.setEnabled(true);
                 }
+                button_select.setEnabled(true);
             }
         });
     }
@@ -345,7 +339,8 @@ public class ChatFragment extends Fragment {
      * bitmap转换为File
      */
     public File bitmapToFile(Bitmap bitmap) {
-        tempFile = new File(Environment.getExternalStorageDirectory(), PHOTO_IMAGE_FILE_NAME);
+        String fileName = UUID.randomUUID().toString().substring(1, 10) + ".jpg";
+        tempFile = new File(Environment.getExternalStorageDirectory(), fileName);
         System.out.println(tempFile.getName());
         try {
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(tempFile));
@@ -374,6 +369,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void openCramera() {
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         //存放相机返回的图片
         intent.putExtra(MediaStore.EXTRA_OUTPUT,
