@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.swpuiot.helpingplatform.R;
+import com.swpuiot.helpingplatform.view.AboutUsActivity;
 import com.swpuiot.helpingplatform.view.LoginActivity;
 import com.swpuiot.helpingplatform.view.MainActivity;
 import com.swpuiot.helpingplatform.view.MyChatActivity;
@@ -25,7 +26,7 @@ import cn.bmob.v3.BmobUser;
  */
 public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
-    private String[] datas = {"我的订单", "我的钱包", "我的好友", "我的动态"};
+    private String[] datas = {"我的订单", "我接受的订单", "我的钱包", "我的好友", "我的动态", "关于我们"};
     private static final int TYPE_TEXT = 0;
     private static final int TYPE_OUT = 1;
 
@@ -36,7 +37,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemViewType(int position) {
         System.out.println(position);
-        if (position == 4)
+        if (position == 6)
             return TYPE_OUT;
         else
             return TYPE_TEXT;
@@ -62,26 +63,31 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 //        ((MyHolder)holder).textView.setText(datas[position]);
-        if (position != 4) {
+        if (position != 6) {
             ((MyHolder) holder).textView.setText(datas[position]);
             switch (position) {
                 case 0:
                     ((MyHolder) holder).uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.ic_bookpng);
                     break;
                 case 1:
-                    ((MyHolder) holder).uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.ic_wallet);
+                    ((MyHolder) holder).uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.ic_action_myorder);
                     break;
                 case 2:
-                    ((MyHolder) holder).uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.ic_friend);
+                    ((MyHolder) holder).uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.ic_wallet);
                     break;
                 case 3:
+                    ((MyHolder) holder).uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.ic_friend);
+                    break;
+                case 4:
                     ((MyHolder) holder).uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.ic_important);
                     break;
+                case 5:
+                    ((MyHolder) holder).uri = Uri.parse("res://com.swpuiot.helpingplatform/" + R.drawable.ic_action_name);
             }
 //            System.out.println(((MyHolder) holder).uri);
             ((MyHolder) holder).simpleDraweeView.setImageURI(((MyHolder) holder).uri);
         }
-        if (position == 4) {
+        if (position == 6) {
             ((FootHolder) holder).btn_out.getText();
         }
     }
@@ -105,14 +111,17 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (getAdapterPosition() == 2) {
+                    if (getAdapterPosition() == 3) {
                         Intent intent = new Intent(context, MyFriendActivity.class);
                         context.startActivity(intent);
                     } else if (getAdapterPosition() == 0) {
                         Intent intent = new Intent(context, MyChatActivity.class);
                         context.startActivity(intent);
-                    } else if (getAdapterPosition() == 3) {
+                    } else if (getAdapterPosition() == 4) {
                         Intent intent = new Intent(context, MySquareActivity.class);
+                        context.startActivity(intent);
+                    }else if (getAdapterPosition() == 5){
+                        Intent intent = new Intent(context, AboutUsActivity.class);
                         context.startActivity(intent);
                     }
                 }

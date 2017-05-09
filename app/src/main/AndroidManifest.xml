@@ -30,7 +30,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/MyAppTheme">
         <meta-data
             android:name="Bmob_APP_KEY"
             android:value="9541a295b6acddf6d9bf7ddb52f1227c" />
@@ -96,8 +96,9 @@
         <activity android:name=".view.ShowStudyInformationActivity" />
         <activity android:name=".view.StudyInformationActivity" />
         <activity android:name=".view.ShareInformationActivity" />
-        <activity android:name=".view.MyChatActivity"/>
-        <activity android:name=".view.MySquareActivity"/>
+        <activity android:name=".view.MyChatActivity" />
+        <activity android:name=".view.MySquareActivity" />
+        <activity android:name=".view.AboutUsActivity"></activity>
     </application>
 
 </manifest>
