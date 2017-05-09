@@ -130,7 +130,6 @@ public class SquareFragment extends Fragment implements View.OnClickListener, Sw
      */
     public void getDatas() {
         BmobQuery<PostBean> query = new BmobQuery<>();
-
         try {
             String time = datas.get(0).getCreatedAt();
             Logger.i(time);
@@ -139,7 +138,9 @@ public class SquareFragment extends Fragment implements View.OnClickListener, Sw
             date = sdf.parse(time);
             query.addWhereGreaterThan("createdAt", new BmobDate(date));
         } catch (Exception e) {
-            Logger.i("第一次获取数据");
+            Logger.i("没有数据");
+            getDatasAcrossBottom();
+            return;
         }
 
         query.include("user");

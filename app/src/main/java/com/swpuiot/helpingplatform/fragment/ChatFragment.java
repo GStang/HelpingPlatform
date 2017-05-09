@@ -181,6 +181,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void done(String s, BmobException e) {
                 if (e == null) {
+                    Toast.makeText(getActivity(), "发布成功", Toast.LENGTH_SHORT).show();
                     Logger.i("发布成功");
                     imageItem.clear();
                     imageItem.add(bmp);

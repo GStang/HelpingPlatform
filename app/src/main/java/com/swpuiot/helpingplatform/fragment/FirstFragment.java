@@ -23,26 +23,35 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.Toast;
+
 import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
+import com.orhanobut.logger.Logger;
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.adapter.FirstRecyclerAdapter;
 import com.swpuiot.helpingplatform.bean.First;
 import com.swpuiot.helpingplatform.bean.FirstBean;
+import com.swpuiot.helpingplatform.bean.PostBean;
 import com.swpuiot.helpingplatform.bean.User;
 import com.swpuiot.helpingplatform.utils.BannerLoader;
 import com.swpuiot.helpingplatform.utils.CameraUtils;
 import com.swpuiot.helpingplatform.view.BannerActivity;
 import com.swpuiot.helpingplatform.view.InfImplActivity;
 import com.swpuiot.helpingplatform.view.SearchActivity;
+import com.swpuiot.mylibrary.MyRecyclerView;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerClickListener;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -52,14 +61,14 @@ import cn.bmob.v3.listener.UploadFileListener;
 /**
  * Created by DuZeming on 2017/3/5.
  */
-public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private Banner banner;
-    private List<Integer>bannerImage;
-    private List<String>bannerTitle;
-    private RecyclerView recyclerView;
+    private List<Integer> bannerImage;
+    private List<String> bannerTitle;
+    private MyRecyclerView recyclerView;
     private FirstRecyclerAdapter firstRecyclerAdapter;
-    private static final int REFRESH_COMPLETE=0x110;
+    private static final int REFRESH_COMPLETE = 0x110;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
     private RecyclerViewHeader recyclerViewHeader;
@@ -68,58 +77,109 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private Button toastCancel;
     private First first;
     private Button addData;
-    private List<FirstBean>datas;
+    private List<FirstBean> datas;
     private User user;
     public static final String InFlmp = "InFlmp";
-    private Boolean refreshing=false;
+    private Boolean refreshing = false;
 
 
-
-    private List<String>bannerUri=Arrays.asList(
+    private List<String> bannerUri = Arrays.asList(
             "https://kuaibao.qq.com/s/20170318A03LZN00\n",
             "https://kuaibao.qq.com/s/20170107I01ACJ00\n",
             "https://kuaibao.qq.com/s/20170319A00U5700\n",
             "https://kuaibao.qq.com/s/20170317C06DLA00\n"
     );
 
-    public void getDatas(){
-        BmobQuery<FirstBean>query=new BmobQuery<>();
+    /**
+     * 通过下拉刷新加载
+     */
+    public void getDatas() {
+        BmobQuery<FirstBean> query = new BmobQuery<>();
+        try {
+            String time = datas.get(0).getCreatedAt();
+            Logger.i(time);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = null;
+            date = sdf.parse(time);
+            query.addWhereGreaterThan("createdAt", new BmobDate(date));
+        } catch (Exception e) {
+            Logger.i("没有数据");
+            getDatasAcrossBottom();
+            return;
+        }
         query.include("author");
         query.findObjects(new FindListener<FirstBean>() {
             @Override
             public void done(List<FirstBean> list, BmobException e) {
+                if (e == null) {
+                    for (FirstBean bean : list) {
+                        try {
+                            String s = datas.get(0).getObjectId();
+                            if (bean.getObjectId().equals(s)) {
+                            } else {
+                                datas.add(0, bean);
+                            }
+                        } catch (Exception ignored) {
+                            datas.add(0, bean);
+                        }
 
-                if (e==null){
-                    datas.clear();
-                    firstRecyclerAdapter.notifyItemRangeRemoved(0, firstRecyclerAdapter.getItemCount());
+                    }
+                    recyclerView.getAdapter().notifyDataSetChanged();
                     swipeRefreshLayout.setRefreshing(false);
-                    refreshing=false;
-                    Toast.makeText(getContext(),"查询成功，共有"+list.size()+"条数据",Toast.LENGTH_SHORT).show();
-                    datas.addAll(list);
-                    firstRecyclerAdapter.notifyDataSetChanged();
-                }
-                else {
-                    Toast.makeText(getContext(),"查询失败",Toast.LENGTH_SHORT).show();
                     refreshing = false;
+                } else {
+                    Toast.makeText(getContext(), "查询失败", Toast.LENGTH_SHORT).show();
+                    refreshing = false;
+                    swipeRefreshLayout.setRefreshing(false);
                 }
             }
         });
     }
 
+    /**
+     * 通过上拉分页加载
+     */
+    private void getDatasAcrossBottom() {
+        BmobQuery<FirstBean> query = new BmobQuery<>();
+        query.include("author");
+        query.order("-createdAt");
+        query.setSkip(datas.size());
+        query.setLimit(6);
+        query.findObjects(new FindListener<FirstBean>() {
+            @Override
+            public void done(List<FirstBean> list, BmobException e) {
+                if (e == null) {
+                    datas.addAll(list);
+                    Logger.i(list.size() + " ");
+                    if (list.size() == 6) {
+                        datas.remove(datas.size() - 1);
+                        Logger.i(list.size() + " ");
+                        recyclerView.notifyMoreFinish(true);
+                    } else {
+                        recyclerView.notifyMoreFinish(false);
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "查询失败", Toast.LENGTH_SHORT).show();
+                    Logger.i(e.getMessage());
+
+                }
+            }
+        });
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_first, container, false);
-        datas=new ArrayList<>();
-        user=BmobUser.getCurrentUser(User.class);
-        bannerImage= Arrays.asList(
+        View view = inflater.inflate(R.layout.fragment_first, container, false);
+        datas = new ArrayList<>();
+        user = BmobUser.getCurrentUser(User.class);
+        bannerImage = Arrays.asList(
                 R.drawable.banner1,
                 R.drawable.banner2,
                 R.drawable.banner3,
                 R.drawable.banner4
         );
-        bannerTitle=Arrays.asList(
+        bannerTitle = Arrays.asList(
                 "每日一笑",
                 "思维问答",
                 "时事政要",
@@ -129,12 +189,20 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 //        first.initData();
 
-        recyclerView= (RecyclerView) view.findViewById(R.id.recycler_first);
-        firstRecyclerAdapter=new FirstRecyclerAdapter(getActivity(),datas);
+        recyclerView = (MyRecyclerView) view.findViewById(R.id.recycler_first);
+        firstRecyclerAdapter = new FirstRecyclerAdapter(getActivity(), datas);
         recyclerView.setAdapter(firstRecyclerAdapter);
-        recyclerViewHeader= (RecyclerViewHeader) view.findViewById(R.id.header_first);
+        recyclerView.setAutoLoadMoreEnable(true, R.layout.list_foot_loading);
+        recyclerView.setLoadMoreListener(new MyRecyclerView.LoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                Logger.i("Add");
+                getDatasAcrossBottom();
+            }
+        });
+        recyclerViewHeader = (RecyclerViewHeader) view.findViewById(R.id.header_first);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity()
-                ,LinearLayoutManager.VERTICAL, false);
+                , LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -158,13 +226,14 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
         });
 
-        swipeRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.swipe_first);
-        refreshing = true;
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_first);
+//        refreshing = true;
         swipeRefreshLayout.setOnRefreshListener(this);
-        getDatas();
-        swipeRefreshLayout.setRefreshing(true);
+//        getDatas();
+        getDatasAcrossBottom();
+//        swipeRefreshLayout.setRefreshing(true);
 
-        banner= (Banner) view.findViewById(R.id.banner_first);
+        banner = (Banner) view.findViewById(R.id.banner_first);
         banner.setImageLoader(new BannerLoader())
                 .setImages(bannerImage)
                 .setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE)
@@ -182,7 +251,7 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         });
 
 
-        toolbar= (Toolbar) view.findViewById(R.id.toolbar_first);
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar_first);
         setHasOptionsMenu(true);
         toolbar.inflateMenu(R.menu.menu_first_toolbar);
 
@@ -201,10 +270,10 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
         });
 
-        popopWindow=getActivity().getLayoutInflater().inflate(R.layout.activity_toast,null);
+        popopWindow = getActivity().getLayoutInflater().inflate(R.layout.activity_toast, null);
 
-        mPopupWindow=new PopupWindow(popopWindow, WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,true);
+        mPopupWindow = new PopupWindow(popopWindow, WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT, true);
         mPopupWindow.setTouchable(true);
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
@@ -234,15 +303,13 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 return false;
             }
         });
-        toastCancel= (Button) mPopupWindow.getContentView().findViewById(R.id.btn_toast_cancel);
+        toastCancel = (Button) mPopupWindow.getContentView().findViewById(R.id.btn_toast_cancel);
         toastCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPopupWindow.dismiss();
             }
         });
-
-
 
 
         return view;
@@ -255,20 +322,16 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 //        refreshing=true;
 //        getDatas();
     }
+
     @Override
     public void onRefresh() {
-        if (refreshing){
+        if (refreshing) {
             return;
-        }
-        else {
-            refreshing=true;
+        } else {
+            refreshing = true;
             getDatas();
         }
     }
-
-
-
-
 
 
 }
