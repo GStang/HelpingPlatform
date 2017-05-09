@@ -11,10 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 
 import com.swpuiot.helpingplatform.R;
 import com.swpuiot.helpingplatform.view.MainActivity;
+
+import at.markushi.ui.CircleButton;
 
 /**
  * Created by DuZeming on 2017/3/5.
@@ -23,7 +27,7 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
 
     private RadioButton navigationFirst;
     private RadioButton navigationSquare;
-    private FloatingActionButton navigationChat;
+    private ImageButton navigationChat;
     private RadioButton navigationInformation;
     private RadioButton navigationMy;
     private FragmentManager manager;
@@ -69,7 +73,7 @@ public class NavigationFragment extends Fragment implements View.OnClickListener
         navigationFirst.setOnClickListener(this);
         navigationSquare = (RadioButton) view.findViewById(R.id.btn_navigation_square);
         navigationSquare.setOnClickListener(this);
-        navigationChat = (FloatingActionButton) view.findViewById(R.id.btn_navigation_chat);
+        navigationChat = (ImageButton) view.findViewById(R.id.btn_navigation_chat);
         navigationChat.setOnClickListener(this);
         navigationInformation = (RadioButton) view.findViewById(R.id.btn_navigation_information);
         navigationInformation.setOnClickListener(this);

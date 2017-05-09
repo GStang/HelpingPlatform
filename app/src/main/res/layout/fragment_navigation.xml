@@ -1,70 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal">
+
 
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal">
+
         <RadioButton
             android:id="@+id/btn_navigation_first"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:textSize="10sp"
             android:layout_weight="2"
-            android:text="@string/navigation_first"
             android:button="@null"
             android:checked="true"
-            android:textColor="@drawable/navigation_text"
             android:drawableTop="@drawable/navigation_first"
+            android:gravity="center_horizontal"
+            android:text="@string/navigation_first"
+            android:textColor="@drawable/navigation_text"
+            android:textSize="10sp" />
 
-            android:gravity="center_horizontal"/>
         <RadioButton
             android:id="@+id/btn_navigation_square"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="@string/navigation_square"
             android:button="@null"
-            android:textSize="10sp"
-            android:textColor="@drawable/navigation_text"
             android:drawableTop="@drawable/navigation_square"
-            android:gravity="center_horizontal"/>
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/btn_navigation_chat"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:fabSize="mini"
-            android:layout_weight="1"
-            app:backgroundTint="@color/colorYellow"
-            android:src="@drawable/ic_chat"
+            android:gravity="center_horizontal"
+            android:text="@string/navigation_square"
+            android:textColor="@drawable/navigation_text"
+            android:textSize="10sp" />
 
-            />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+
+        </Space>
+
         <RadioButton
             android:id="@+id/btn_navigation_information"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="@string/navigation_information"
             android:button="@null"
-            android:textSize="10sp"
-            android:textColor="@drawable/navigation_text"
             android:drawableTop="@drawable/navigation_information"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal"
+            android:text="@string/navigation_information"
+            android:textColor="@drawable/navigation_text"
+            android:textSize="10sp" />
+
         <RadioButton
             android:id="@+id/btn_navigation_my"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="@string/navigation_my"
             android:button="@null"
-            android:textSize="10sp"
-            android:textColor="@drawable/navigation_text"
             android:drawableTop="@drawable/navigation_my"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal"
+            android:text="@string/navigation_my"
+            android:textColor="@drawable/navigation_text"
+            android:textSize="10sp" />
     </RadioGroup>
 
-</LinearLayout>
+    <ImageButton
+        android:id="@+id/btn_navigation_chat"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/selecter_btn_yue"
+        android:src="@drawable/chat_add_normal" />
+
+</RelativeLayout>
