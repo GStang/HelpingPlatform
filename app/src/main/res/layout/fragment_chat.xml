@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:background="#fff"
+    android:orientation="vertical"
     android:weightSum="1">
 
 
@@ -25,21 +25,20 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="25dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:text="约一下"
                 android:textColor="@color/colorBlack"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
+                android:textSize="25dp" />
 
             <ImageButton
                 android:id="@+id/chat_button_select"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="3dp"
-                android:background="@drawable/image_btn_press"
-                />
+                android:background="@drawable/image_btn_press" />
 
         </RelativeLayout>
     </FrameLayout>
@@ -51,66 +50,72 @@
         android:gravity="center"
         android:orientation="vertical">
 
+        <ProgressBar
+            android:visibility="invisible"
+            android:id="@+id/progress_load"
+            style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
 
         <EditText
             android:id="@+id/chat_edit_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="datetime"
-            android:hint="在此输入时间"
             android:layout_margin="6dp"
             android:background="@drawable/drawable_edit_normal"
-            android:textSize="16sp"
+            android:hint="在此输入时间"
+            android:inputType="datetime"
             android:padding="5dp"
-            android:windowSoftInputMode="adjustResize"/>
+            android:textSize="16sp"
+            android:windowSoftInputMode="adjustResize" />
+
         <EditText
             android:id="@+id/chat_edit_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="请输入标题"
-            android:background="@drawable/drawable_edit_normal"
-            android:textSize="16sp"
             android:layout_margin="6dp"
+            android:background="@drawable/drawable_edit_normal"
+            android:hint="请输入标题"
             android:padding="5dp"
-            android:windowSoftInputMode="adjustResize"/>
+            android:textSize="16sp"
+            android:windowSoftInputMode="adjustResize" />
 
         <EditText
             android:id="@+id/chat_edit_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:hint="输入科目"
-            android:background="@drawable/drawable_edit_normal"
-            android:textSize="16sp"
             android:layout_margin="6dp"
+            android:background="@drawable/drawable_edit_normal"
+            android:hint="输入科目"
+            android:inputType="textMultiLine"
             android:padding="5dp"
-            android:windowSoftInputMode="adjustResize"/>
+            android:textSize="16sp"
+            android:windowSoftInputMode="adjustResize" />
 
         <EditText
             android:id="@+id/chat_edit_plan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:background="@drawable/drawable_edit_normal"
             android:enabled="true"
             android:gravity="top"
-            android:inputType="textMultiLine"
-            android:minLines="3"
-            android:maxLines="5"
-            android:scrollbars="vertical"
             android:hint="描述一下你的计划吧..."
-            android:background="@drawable/drawable_edit_normal"
-            android:textSize="16sp"
-            android:layout_margin="6dp"
+            android:inputType="textMultiLine"
+            android:maxLines="5"
+            android:minLines="3"
             android:padding="5dp"
-            android:windowSoftInputMode="adjustResize"/>
-
+            android:scrollbars="vertical"
+            android:textSize="16sp"
+            android:windowSoftInputMode="adjustResize" />
 
 
         <TextView
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="添加张图片吧！"/>
+            android:layout_gravity="center"
+            android:text="添加张图片吧！" />
 
 
     </LinearLayout>
@@ -125,13 +130,12 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@color/colorWhite"
-            android:horizontalSpacing="5dp"
-            android:verticalSpacing="5dp"
-            android:numColumns="4"
             android:columnWidth="90dp"
+            android:gravity="center"
+            android:horizontalSpacing="5dp"
+            android:numColumns="4"
             android:stretchMode="columnWidth"
-            android:gravity="center">
-        </android.support.v7.widget.RecyclerView>
+            android:verticalSpacing="5dp"></android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
 </LinearLayout>

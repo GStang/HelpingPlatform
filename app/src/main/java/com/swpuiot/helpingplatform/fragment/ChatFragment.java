@@ -29,6 +29,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
@@ -65,7 +66,7 @@ import cn.bmob.v3.listener.UploadBatchListener;
  * Created by DuZeming on 2017/3/5.
  */
 public class ChatFragment extends Fragment {
-
+    private ProgressBar progressBar;
     private EditText editText_time;
     private EditText editText_title;
     private EditText editText_plan;
@@ -92,6 +93,7 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
+        progressBar = (ProgressBar) view.findViewById(R.id.progress_load);
         toolbar_chat = (Toolbar) view.findViewById(R.id.toolbar_chat);
         editText_time = (EditText) view.findViewById(R.id.chat_edit_time);
         editText_title = (EditText) view.findViewById(R.id.chat_edit_title);
@@ -157,7 +159,8 @@ public class ChatFragment extends Fragment {
 
                         @Override
                         public void onProgress(int i, int i1, int i2, int i3) {
-
+                            progressBar.setVisibility(View.VISIBLE);
+                            progressBar.setProgress(i3);
                         }
 
                         @Override
@@ -168,11 +171,6 @@ public class ChatFragment extends Fragment {
                 } else {
                     dopublish();
                 }
-//                bean.setFiles(files);
-                editText_time.setText("");
-                editText_title.setText("");
-                editText_plan.setText("");
-                editText_phone.setText("");
             }
         });
         return view;
@@ -188,6 +186,11 @@ public class ChatFragment extends Fragment {
                     imageItem.add(bmp);
                     mAdapter.notifyDataSetChanged();
                     button_select.setEnabled(true);
+                    editText_time.setText("");
+                    editText_title.setText("");
+                    editText_plan.setText("");
+                    editText_phone.setText("");
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
                 button_select.setEnabled(true);
             }
