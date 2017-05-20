@@ -23,7 +23,7 @@ import at.markushi.ui.CircleButton;
 /**
  * Created by DuZeming on 2017/3/5.
  */
-public class NavigationFragment extends Fragment implements View.OnClickListener {
+public class  NavigationFragment extends Fragment implements View.OnClickListener {
 
     private RadioButton navigationFirst;
     private RadioButton navigationSquare;

@@ -213,6 +213,8 @@ public class FirstFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(getActivity(), InfImplActivity.class);
                 intent.putExtra(InFlmp, datas.get(position));
+                intent.putExtra("send_id",datas.get(position).getObjectId());
+                System.out.println("传送的id是"+datas.get(position).getObjectId());
                 startActivity(intent);
             }
 
